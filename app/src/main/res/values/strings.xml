@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Nordusk</string>
+
+    <!--Settings-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Splash-->
+    <string name="txt_login">Login</string>
+
+   <!-- Login-->
+    <string name="txt_emailmobile">Email/Mobile</string>
+    <string name="txt_password">Password</string>
+    <string name="txt_loginas">Login As: </string>
+    <string name="txt_forgotpswrd">Forgot Password?</string>
+</resources>
