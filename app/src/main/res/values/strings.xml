@@ -14,4 +14,18 @@
     <string name="txt_password">Password</string>
     <string name="txt_loginas">Login As: </string>
     <string name="txt_forgotpswrd">Forgot Password?</string>
+
+    <!--Dashboard-->
+
+    <string name="txt_addcounter">Add Counter</string>
+    <string name="txt_adddistributor">Add Distributor</string>
+    <string name="txt_viewcounter">View Counter</string>
+    <string name="txt_viewdistributor">View Distributor</string>
+
+    <array name="options_dashboard">
+    <item>@string/txt_addcounter</item>
+    <item>@string/txt_adddistributor</item>
+    <item>@string/txt_viewcounter</item>
+    <item>@string/txt_viewdistributor</item>
+    </array>
 </resources>

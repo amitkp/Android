@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.nordusk.MainActivity;
 import com.nordusk.R;
 
 public class Login extends AppCompatActivity {
@@ -31,7 +30,7 @@ public class Login extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Login.this, MainActivity.class));
+                startActivity(new Intent(Login.this, Dashboard.class));
             }
         });
 
