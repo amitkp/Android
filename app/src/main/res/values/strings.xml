@@ -10,7 +10,7 @@
     <string name="txt_login">Login</string>
 
    <!-- Login-->
-    <string name="txt_emailmobile">Email/Mobile</string>
+    <string name="txt_emailmobile">Username</string>
     <string name="txt_password">Password</string>
     <string name="txt_loginas">Login As: </string>
     <string name="txt_forgotpswrd">Forgot Password?</string>
@@ -21,6 +21,18 @@
     <string name="txt_adddistributor">Add Distributor</string>
     <string name="txt_viewcounter">View Counter</string>
     <string name="txt_viewdistributor">View Distributor</string>
+
+   <!-- Url-->
+    <string name="base_url">http://dynamicsglobal.net/app/</string>
+    <string name="loginasync_url">login.php?</string>
+
+
+    <!--Utility String-->
+    <string name="txt_CheckNetwork">Check your internet connection</string>
+    <string name="txt_passwordLength">Password should be at least 6 characters long</string>
+    <string name="ValidateEmptyPwd">Enter a valid Password</string>
+    <string name="ValidateEmptyUid">Enter valid User ID</string>
+
 
     <array name="options_dashboard">
     <item>@string/txt_addcounter</item>
