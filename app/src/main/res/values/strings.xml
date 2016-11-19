@@ -4,7 +4,7 @@
     <!--Settings-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Log Out</string>
 
     <!--Splash-->
     <string name="txt_login">Login</string>
@@ -24,7 +24,7 @@
 
    <!-- Url-->
     <string name="base_url">http://dynamicsglobal.net/app/</string>
-    <string name="loginasync_url">login.php?</string>
+    <string name="loginasync_url">logout.php?</string>
 
 
     <!--Utility String-->

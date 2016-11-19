@@ -16,6 +16,8 @@ import android.widget.GridView;
 
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
+import com.nordusk.webservices.LoginAsync;
+import com.nordusk.webservices.LogoutAsync;
 
 public class Dashboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,7 +91,24 @@ public class Dashboard extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            LogoutAsync logoutAsync=new LogoutAsync(Dashboard.this,null);
+            logoutAsync.setOnContentListParserListner(new LogoutAsync.OnContentListSchedules() {
+                @Override
+                public void OnSuccess(String responsecode) {
+
+                }
+
+                @Override
+                public void OnError(String str_err) {
+
+                }
+
+                @Override
+                public void OnConnectTimeout() {
+
+                }
+            });
+
         }
 
         return super.onOptionsItemSelected(item);
