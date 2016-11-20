@@ -30,6 +30,7 @@ public class Dashboard extends AppCompatActivity {
     private GridView grid_dashboard_item;
     private static int REQUEST_LOCATION = 2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

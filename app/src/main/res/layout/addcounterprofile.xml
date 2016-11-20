@@ -51,7 +51,7 @@
             android:id="@+id/counterdtls_edtxt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Counter Name"
+            android:hint="Counter Name*"
             android:layout_margin="@dimen/dp_10"
 
             ></EditText>
@@ -89,7 +89,7 @@
             android:layout_marginBottom="@dimen/dp_10"
             android:textColor="@color/TabTextColor"
             android:textSize="@dimen/medium_textSize"
-            android:text="Counter Location : Tap to locate"></TextView>
+            android:text="Counter Location : Tap to locate*"></TextView>
 
         <RelativeLayout
             android:id="@+id/rltv_devider3"
@@ -139,6 +139,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile Number*"
+            android:inputType="number"
             android:layout_margin="@dimen/dp_10"
             ></EditText>
 
@@ -147,6 +148,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email ID"
+
+            android:inputType="textEmailAddress"
             android:layout_margin="@dimen/dp_10"
             ></EditText>
 
