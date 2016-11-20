@@ -32,7 +32,6 @@
     <string name="addcounter_url">counter_distributer_add.php?</string>
 
 
-
     <!--Utility String-->
     <string name="txt_CheckNetwork">Check your internet connection</string>
     <string name="txt_passwordLength">Password should be at least 6 characters long</string>

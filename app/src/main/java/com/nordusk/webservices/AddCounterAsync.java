@@ -25,12 +25,13 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
         private ProgressDialog mpProgressDialog;
         private JSONObject jsonObject = null;
 
-        private String countername="",mobile="",lattitude="",longitude="",address="",email="";
+        private String type="",countername="",mobile="",lattitude="",longitude="",address="",email="";
 
 
 
-        public AddCounterAsync(Activity context,String countername,String mobile,String lattitude,String longitude,String address,String email, JSONObject jsonObject) {
+        public AddCounterAsync(Activity context,String type,String countername,String mobile,String lattitude,String longitude,String address,String email, JSONObject jsonObject) {
         this.context = context;
+            this.type=type;
             this.countername=countername;
             this.mobile=mobile;
             this.lattitude=lattitude;
@@ -61,7 +62,7 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
 //            http://dynamicsglobal.net/app/counter_distributer_add.php?"type="+1+"&name="+Counter1+"&address="+saltlake+"&territory="+kolkata+"&anniversary="+2015-11-21+"&dob="+1989-05-08+"&mobile="+9674970045+"&alternative_mobile="+9674970046+"&email="+samotosh@gmail.com+"&latitude="+100+"&longitude="+101+"&userId="+10
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url)+ "type="+1+"&name="+countername+"&address="+address+"&territory="+address+"&anniversary="+"2015-11-21"+"&dob="+"1989-05-08"+"&mobile="+mobile+"&alternative_mobile="+mobile+"&email="+email+"&latitude="+lattitude+"&longitude="+longitude+"&userId="+new Prefs(context).getString("userid","")+"", jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url)+ "type="+type+"&name="+countername+"&address="+address+"&territory="+address+"&anniversary="+"2015-11-21"+"&dob="+"1989-05-08"+"&mobile="+mobile+"&alternative_mobile="+mobile+"&email="+email+"&latitude="+lattitude+"&longitude="+longitude+"&userId="+new Prefs(context).getString("userid","")+"", jsonObject);
             //String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.logoutasync_url)+ "userId="+"", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {

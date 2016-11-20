@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.nordusk.R;
 import com.nordusk.UI.AddCounter;
+import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.MapsActivity;
 
 /**
@@ -70,6 +71,11 @@ public class GridDashboardAdapter extends BaseAdapter{
 
                 if(position==0){
                     Intent intent=new Intent(mContext,AddCounter.class);
+                    mContext.startActivity(intent);
+                }
+
+                if(position==1){
+                    Intent intent=new Intent(mContext,AddDistributer.class);
                     mContext.startActivity(intent);
                 }
 

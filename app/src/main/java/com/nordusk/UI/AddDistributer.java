@@ -12,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class AddCounter extends AppCompatActivity implements LocationListener {
+public class AddDistributer extends AppCompatActivity implements LocationListener {
 
     private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid;
     private Button submit;
@@ -34,13 +33,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
-    private String lat="",longitude = "";
-    String complete_address="";
+    private String lat = "", longitude = "";
+    String complete_address = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.addcounterprofile);
+        setContentView(R.layout.adddistributer);
 
         initView();
         setListener();
@@ -95,7 +94,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
-        submit=(Button)findViewById(R.id.counterprofile_btn_submit);
+        submit = (Button) findViewById(R.id.counterprofile_btn_submit);
     }
 
 
@@ -146,8 +145,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             postalcode = (addresses.get(0).getPostalCode() == null ? "" : "" + addresses.get(0).getPostalCode());
             knownname = (addresses.get(0).getFeatureName() == null ? "" : "" + addresses.get(0).getFeatureName());
 
-            address_details =addressone+addresstwo+ city + state + country + postalcode + knownname;
-            Toast.makeText(AddCounter.this, address_details, Toast.LENGTH_SHORT).show();
+            address_details = addressone + addresstwo + city + state + country + postalcode + knownname;
+            Toast.makeText(AddDistributer.this, address_details, Toast.LENGTH_SHORT).show();
 
 
 //            procedure two
@@ -158,10 +157,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                     addressFragments.add(address.getAddressLine(i));
                 }
                 complete_address = TextUtils.join(System.getProperty("line.separator"),
-                        addressFragments).replaceAll("\\s+","");
+                        addressFragments).replaceAll("\\s+", "");
 
-if(press_current_loc)
-                txt_current_loc.setText(complete_address);
+                if (press_current_loc)
+                    txt_current_loc.setText(complete_address);
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -202,11 +201,11 @@ if(press_current_loc)
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    AddCounterAsync addCounterAsync=new AddCounterAsync(AddCounter.this,"1",edt_countername.getText().toString().trim(),edt_mobileno.getText().toString().trim(),lat,longitude,complete_address,edt_emailid.getText().toString().trim(),null);
+                    AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, "2", edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), null);
                     addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                         @Override
                         public void OnSuccess(String responsecode) {
-                            Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -221,15 +220,12 @@ if(press_current_loc)
                     });
 
                     addCounterAsync.execute();
-                }
-                else
-                    Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(AddCounter.this, "Please press on current location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddDistributer.this, "Please press on current location", Toast.LENGTH_SHORT).show();
         } else
-            Toast.makeText(AddCounter.this, "Please enter counter name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddDistributer.this, "Please enter counter name", Toast.LENGTH_SHORT).show();
 
     }
-
-
 }

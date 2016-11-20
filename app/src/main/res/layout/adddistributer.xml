@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/dp_10"
+    >
+
+    <TextView
+        android:id="@+id/txt_counterprofile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/big_textSize"
+        android:text="Distributor Profile">
+    </TextView>
+
+    <ScrollView
+        android:id="@+id/counterprofile_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/lnr_counterprofile"
+            android:layout_width="match_parent"
+            android:layout_margin="15dp"
+            android:background="#ffffff"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_hdr_counterdtls"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:textColor="@color/colorPrimary"
+                android:layout_height="wrap_content"
+                android:text="Distributor Details"
+                android:textSize="@dimen/medium_textSize"></TextView>
+            <RelativeLayout
+                android:id="@+id/rltv_devider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/colorPrimary">
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Distributor Name*"
+                android:layout_margin="@dimen/dp_10"
+
+                ></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Distributor Address"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <TextView
+                android:id="@+id/txt_hdr_counterphoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/TabTextColor"
+                android:textSize="@dimen/medium_textSize"
+                android:text="Distributor Photo"></TextView>
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/dp_10"
+                android:src="@drawable/store" />
+
+            <TextView
+                android:id="@+id/txt_courentlocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:textColor="@color/TabTextColor"
+                android:textSize="@dimen/medium_textSize"
+                android:text="Distributor Location : Tap to locate*"></TextView>
+
+            <RelativeLayout
+                android:id="@+id/rltv_devider3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:background="@color/colorPrimary">
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txt_courentownerdetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/medium_textSize"
+                android:text="Distributor Location"></TextView>
+
+            <RelativeLayout
+                android:id="@+id/rltv_devider2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/colorPrimary">
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_ownername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Distributor Owner Name"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Date of Birth"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_mobilenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile Number*"
+                android:inputType="number"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_emailid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Email ID"
+
+                android:inputType="textEmailAddress"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <Button
+                android:id="@+id/counterprofile_btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SUBMIT"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="@dimen/dp_15">
+            </Button>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
