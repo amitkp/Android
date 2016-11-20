@@ -65,6 +65,7 @@ public class Dashboard extends AppCompatActivity {
 
     private void locationEnable() {
 
+
         Util.enableLocationCommon(Dashboard.this, REQUEST_LOCATION);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
