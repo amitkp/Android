@@ -85,6 +85,7 @@ public class Splash extends AppCompatActivity {
         userId=new Prefs(Splash.this).getString("userid","");
         if(userId!=null && userId.length()>0){
             startActivity(new Intent(Splash.this,Dashboard.class));
+
             finish();
         }
     }
