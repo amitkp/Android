@@ -33,7 +33,7 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
         this.jsonObject = jsonObject;
         mpProgressDialog = new ProgressDialog(context);
         mpProgressDialog.setMessage("Logging in..");
-       
+        mpProgressDialog.show();
         mpProgressDialog.setCancelable(false);
     }
 
@@ -70,14 +70,10 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
             if (onContentListParserListner != null) {
                 onContentListParserListner.OnConnectTimeout();
             }
-        } else if (responsecode.equals(HttpConnectionUrl.RESPONSECODE_SUCCESS)) {
-            if (onContentListParserListner != null) {
-                onContentListParserListner.OnSuccess(responsecode);
-            }
-        } else if (responsecode.equals(HttpConnectionUrl.RESPONSECODE_INVALIDCREDENTIAL)) {
-            onContentListParserListner.OnError(responseMessage);
-        } else if (responsecode.equals(HttpConnectionUrl.RESPONSECODE_ERROR)) {
-            onContentListParserListner.OnError(responseMessage);
+        }
+        if (onContentListParserListner != null) {
+            onContentListParserListner.OnSuccess(response_msg);
+
         } else {
             HttpConnectionUrl.serverErrorMessage(context, responsecode);
         }
@@ -92,8 +88,8 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
 //                mobile_number = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "result");
 
 
+                responseMessage = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "response_msg");
 
-                context.startActivity(new Intent(context, Dashboard.class));
 
 
 

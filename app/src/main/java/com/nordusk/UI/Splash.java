@@ -89,9 +89,11 @@ public class Splash extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if(isGranted){
                         startActivity(new Intent(Splash.this,Login.class));
+                        finish();
                     }
                 }else{
                     startActivity(new Intent(Splash.this,Login.class));
+                    finish();
                 }
 
             }
