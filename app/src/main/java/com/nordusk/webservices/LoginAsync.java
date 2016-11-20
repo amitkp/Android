@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.nordusk.R;
 import com.nordusk.UI.Dashboard;
+import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 
 import org.json.JSONObject;
@@ -93,10 +94,10 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
                 responseMessage = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "response_msg");
 //                mobile_number = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "result");
 
-//                Prefs my_prefs = new Prefs(context);
-//                my_prefs.setString("userid",HttpConnectionUrl.getJSONKeyvalue(jsonObject, "userid"));
-//                my_prefs.setString("name", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "name"));
-//                my_prefs.setString("mobile_no", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "mobile_no"));
+                Prefs my_prefs = new Prefs(context);
+                my_prefs.setString("userid",HttpConnectionUrl.getJSONKeyvalue(jsonObject, "userid"));
+                my_prefs.setString("name", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "name"));
+                my_prefs.setString("mobile_no", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "mobile_no"));
 
 
 
