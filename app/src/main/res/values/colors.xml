@@ -7,5 +7,6 @@
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBg">#eaf2f8</color>
+    <color name="TabTextColor">#e7913c</color>
 
 </resources>

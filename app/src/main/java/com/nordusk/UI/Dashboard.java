@@ -50,43 +50,17 @@ public class Dashboard extends AppCompatActivity {
        // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
        // navigationView.setNavigationItemSelectedListener(this);
         
-        setAdapter();
+
     }
 
-    private void setAdapter() {
 
-        grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
-
-        grid_dashboard_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                switch (position)
-                {
-                    case 0:
-
-                        startActivity(new Intent(Dashboard.this,AddCounter.class));
-
-                        break;
-                    case 1:
-
-                        break;
-                    case 2:
-
-                        break;
-                    case 3:
-
-                        break;
-
-                }
-
-            }
-        });
-    }
 
     private void initView() {
         
         grid_dashboard_item=(GridView)findViewById(R.id.dashboard_grid);
+
+        grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
+
     }
 
     @Override

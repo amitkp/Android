@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nordusk.R;
+import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.MapsActivity;
 
 /**
@@ -66,6 +67,11 @@ public class GridDashboardAdapter extends BaseAdapter{
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(position==0){
+                    Intent intent=new Intent(mContext,AddCounter.class);
+                    mContext.startActivity(intent);
+                }
 
                 if(position==4){
                     Intent intent=new Intent(mContext,MapsActivity.class);

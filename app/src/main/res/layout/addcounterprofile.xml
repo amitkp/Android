@@ -33,28 +33,44 @@
         <TextView
             android:id="@+id/txt_hdr_counterdtls"
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:textColor="@color/colorPrimary"
             android:layout_height="wrap_content"
-            android:text="Counter Details"></TextView>
+            android:text="Counter Details"
+            android:textSize="@dimen/medium_textSize"></TextView>
+        <RelativeLayout
+            android:id="@+id/rltv_devider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/colorPrimary">
+            </RelativeLayout>
 
         <EditText
             android:id="@+id/counterdtls_edtxt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Counter Name"
-            android:textColorHint="#000000"></EditText>
+            android:layout_margin="@dimen/dp_10"
+
+            ></EditText>
 
         <EditText
             android:id="@+id/counterdtls_edtxt_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Counter Address"
-            android:textColorHint="#000000"></EditText>
+            android:layout_margin="@dimen/dp_10"
+            ></EditText>
 
         <TextView
             android:id="@+id/txt_hdr_counterphoto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:textColor="@color/TabTextColor"
+            android:textSize="@dimen/medium_textSize"
             android:text="Counter Photo"></TextView>
 
         <ImageView
@@ -62,6 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/dp_10"
             android:src="@drawable/store" />
 
         <TextView
@@ -69,48 +86,80 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Counter Location"></TextView>
+            android:layout_marginBottom="@dimen/dp_10"
+            android:textColor="@color/TabTextColor"
+            android:textSize="@dimen/medium_textSize"
+            android:text="Counter Location : Tap to locate"></TextView>
+
+        <RelativeLayout
+            android:id="@+id/rltv_devider3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:background="@color/colorPrimary">
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/txt_courentownerdetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/medium_textSize"
             android:text="Counter Location"></TextView>
+
+        <RelativeLayout
+            android:id="@+id/rltv_devider2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/colorPrimary">
+        </RelativeLayout>
 
         <EditText
             android:id="@+id/counterdtls_edtxt_ownername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Counter Owner Name"
-            android:textColorHint="#000000"></EditText>
+            android:layout_margin="@dimen/dp_10"
+            ></EditText>
 
         <EditText
             android:id="@+id/counterdtls_edtxt_dob"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Date of Birth"
-            android:textColorHint="#000000"></EditText>
+            android:layout_margin="@dimen/dp_10"
+            ></EditText>
 
         <EditText
             android:id="@+id/counterdtls_edtxt_mobilenumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mobile Number"
-            android:textColorHint="#000000"></EditText>
+            android:hint="Mobile Number*"
+            android:layout_margin="@dimen/dp_10"
+            ></EditText>
 
         <EditText
             android:id="@+id/counterdtls_edtxt_emailid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Email ID"
-            android:textColorHint="#000000"></EditText>
+            android:layout_margin="@dimen/dp_10"
+            ></EditText>
 
         <Button
             android:id="@+id/counterprofile_btn_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SUBMIT">
+            android:text="SUBMIT"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/colorWhite"
+            android:layout_marginBottom="@dimen/dp_15">
             </Button>
 
     </LinearLayout>

@@ -9,7 +9,9 @@
 
     <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_50">50dp</dimen>
     <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
 
     <!--    Text Size-->
     <dimen name="small_textSize">10sp</dimen>
