@@ -12,23 +12,23 @@ import android.widget.TextView;
 
 import com.nordusk.R;
 import com.nordusk.UI.MapsActivity;
+import com.nordusk.UI.MapsActivityContractorDistributor;
 
 /**
  * Created by DELL on 17-11-2016.
  */
-public class GridDashboardAdapter extends BaseAdapter{
+public class GridDashboardAdapter extends BaseAdapter {
 
-    private int[] img_ids={R.drawable.store,R.drawable.distributor,R.drawable.placeholder,R.drawable.placeholders,R.drawable.placeholder};
+    private int[] img_ids = {R.drawable.store, R.drawable.distributor, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
     private Activity mContext;
     private LayoutInflater layoutInflater;
 
-    public GridDashboardAdapter(Activity context)
-    {
-        this.mContext=context;
-        this.layoutInflater=(LayoutInflater)context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        options_dashboard=context.getResources().getStringArray(R.array.options_dashboard);
+    public GridDashboardAdapter(Activity context) {
+        this.mContext = context;
+        this.layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        options_dashboard = context.getResources().getStringArray(R.array.options_dashboard);
     }
 
 
@@ -67,9 +67,19 @@ public class GridDashboardAdapter extends BaseAdapter{
             @Override
             public void onClick(View v) {
 
-                if(position==4){
-                    Intent intent=new Intent(mContext,MapsActivity.class);
-                   mContext.startActivity(intent);
+                if (position == 2) {
+                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                    intent.putExtra("type","1");
+                    mContext.startActivity(intent);
+
+                } else if (position == 3) {
+                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                    intent.putExtra("type","2");
+                    mContext.startActivity(intent);
+
+                } else if (position == 4) {
+                    Intent intent = new Intent(mContext, MapsActivity.class);
+                    mContext.startActivity(intent);
                 }
             }
         });
@@ -77,8 +87,7 @@ public class GridDashboardAdapter extends BaseAdapter{
         return convertView;
     }
 
-    public class Holder
-    {
+    public class Holder {
         private ImageView img_icon;
         private TextView txt_option;
     }

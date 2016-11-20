@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,10 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     PolylineOptions lineOptions = new PolylineOptions();;
     ArrayList<LatLng> points=new ArrayList<LatLng>();
 
@@ -43,7 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        startService(new Intent(this, LocationUpdateService.class));
+
     }
 
 

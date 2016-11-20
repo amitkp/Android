@@ -41,8 +41,8 @@ public class Login extends AppCompatActivity {
 //                startActivity(new Intent(Login.this, Dashboard.class));
 
 //                if (HttpConnectionUrl.isNetworkAvailable(Login.this)) {
-                    if (validateInputs())
-                        loginAsyncCall();
+                if (validateInputs())
+                    loginAsyncCall();
 
 
 //                }
@@ -56,28 +56,32 @@ public class Login extends AppCompatActivity {
 
     private void loginAsyncCall() {
 
-        LoginAsync loginAsync = new LoginAsync(Login.this,edt_username.getText().toString().trim(),edt_password.getText().toString().trim() , null);
-        loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
-            @Override
-            public void OnSuccess(String response_code) {
+        if(HttpConnectionUrl.isNetworkAvailable(Login.this)) {
+            LoginAsync loginAsync = new LoginAsync(Login.this, edt_username.getText().toString().trim(), edt_password.getText().toString().trim(), null);
+            loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
+                @Override
+                public void OnSuccess(String response_code) {
 
-                Toast.makeText(Login.this, response_code, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Login.this, Dashboard.class));
-                finish();
+                    Toast.makeText(Login.this, response_code, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Login.this, Dashboard.class));
+                    finish();
 
-            }
+                }
 
-            @Override
-            public void OnError(String str_err) {
-                Toast.makeText(Login.this, str_err, Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void OnError(String str_err) {
+                    Toast.makeText(Login.this, str_err, Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void OnConnectTimeout() {
-                Toast.makeText(Login.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
-            }
-        });
-        loginAsync.execute();
+                @Override
+                public void OnConnectTimeout() {
+                    Toast.makeText(Login.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                }
+            });
+            loginAsync.execute();
+        }else{
+            Toast.makeText(Login.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private boolean validateInputs() {
