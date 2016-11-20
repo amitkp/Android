@@ -30,4 +30,14 @@ public class Prefs {
             e.printStackTrace();
         }
     }
+
+    public void clearData(){
+        try {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor e = prefs.edit();
+            e.clear().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,7 +5,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Log Out</string>
-    <string name="google_maps_key">AIzaSyDcxVYLHCcQ2OfEU4Pk24Jj5pDiKOIUTdY</string>
+    <string name="google_maps_key">AIzaSyDNH8bVB0ybiFk9SrCw12oYo4NTu3PFeM0</string>
 
     <!--Splash-->
     <string name="txt_login">Login</string>

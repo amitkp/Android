@@ -39,7 +39,7 @@ public class GridDashboardAdapter extends BaseAdapter{
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return options_dashboard[i];
     }
 
     @Override
