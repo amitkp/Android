@@ -34,7 +34,9 @@
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".UI.MapsActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".UI.MapsActivityContractorDistributor"
             android:screenOrientation="portrait"></activity>
 
         <activity android:name=".UI.AddCounter"

@@ -7,6 +7,7 @@ import android.telephony.TelephonyManager;
  * Created by DELL on 20-11-2016.
  */
 public class Util {
+    public static  boolean isServiceRunning=false;
 
     /**
      * get the device IMEI no and save it into shared preference

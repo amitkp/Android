@@ -16,6 +16,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.nordusk.utility.Prefs;
+import com.nordusk.webservices.HttpConnectionUrl;
+import com.nordusk.webservices.UserTraceInsertAsync;
 
 import java.util.ArrayList;
 
@@ -23,13 +26,13 @@ import java.util.ArrayList;
  * Created by NeeloyG on 16-11-2016.
  */
 public class LocationUpdateService extends Service {
-    public static final int TWO_MINUTES = 300000; // 120 seconds
+    public static final int TWO_MINUTES = 600000; // 120 seconds
     public static Boolean isRunning = false;
 
     public LocationManager mLocationManager;
     public LocationUpdaterListener mLocationListener;
     public Location previousBestLocation = null;
-    public static ArrayList<LatLng> points=new ArrayList<LatLng>();
+    public static ArrayList<LatLng> points = new ArrayList<LatLng>();
 
     @Nullable
     @Override
@@ -95,7 +98,10 @@ public class LocationUpdateService extends Service {
                 previousBestLocation = location;
                 try {
                     // Script to post location data to server..
-                    Log.e("location",location.getLatitude()+","+location.getLongitude());
+                    Log.e("location", location.getLatitude() + "," + location.getLongitude());
+
+                    callService(new Prefs(getApplicationContext()).getString("userid", ""), Double.toString(location.getLatitude()),
+                            Double.toString(location.getLongitude()));
                     LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
                     points.add(position);
 
@@ -170,5 +176,28 @@ public class LocationUpdateService extends Service {
             return provider2 == null;
         }
         return provider1.equals(provider2);
+    }
+
+    private void callService(String user, String Lat, String Longi) {
+        if (HttpConnectionUrl.isNetworkAvailable(getApplicationContext())) {
+            UserTraceInsertAsync userTraceInsertAsync = new UserTraceInsertAsync(getApplicationContext(), user, Lat, Longi);
+            userTraceInsertAsync.setOnContentListParserListner(new UserTraceInsertAsync.OnContentListSchedules() {
+                @Override
+                public void OnSuccess() {
+
+                }
+
+                @Override
+                public void OnError(String str_err) {
+
+                }
+
+                @Override
+                public void OnConnectTimeout() {
+
+                }
+            });
+            userTraceInsertAsync.execute();
+        }
     }
 }
