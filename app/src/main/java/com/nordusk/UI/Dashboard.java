@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
+import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.LogoutAsync;
 
 public class Dashboard extends AppCompatActivity {
@@ -89,6 +90,7 @@ public class Dashboard extends AppCompatActivity {
                 @Override
                 public void OnSuccess(String responsecode) {
                     Toast.makeText(Dashboard.this, responsecode, Toast.LENGTH_SHORT).show();
+                    new Prefs(Dashboard.this).clearData();
                     startActivity(new Intent(Dashboard.this, Login.class));
                     finish();
                 }
@@ -103,6 +105,8 @@ public class Dashboard extends AppCompatActivity {
                     Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
                 }
             });
+
+            logoutAsync.execute();
 
         }
 

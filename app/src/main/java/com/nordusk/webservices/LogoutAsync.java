@@ -22,7 +22,6 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
 
     private String responsecode = "";
     private String responseMessage = "";
-    private String response_msg = "";
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
 
@@ -32,7 +31,7 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
 
         this.jsonObject = jsonObject;
         mpProgressDialog = new ProgressDialog(context);
-        mpProgressDialog.setMessage("Logging in..");
+        mpProgressDialog.setMessage("Logging out..");
         mpProgressDialog.show();
         mpProgressDialog.setCancelable(false);
     }
@@ -71,11 +70,15 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
                 onContentListParserListner.OnConnectTimeout();
             }
         }
-        if (onContentListParserListner != null) {
-            onContentListParserListner.OnSuccess(response_msg);
+        if (onContentListParserListner != null && responsecode.equalsIgnoreCase("200")) {
+            onContentListParserListner.OnSuccess(responseMessage);
 
         } else {
-            HttpConnectionUrl.serverErrorMessage(context, responsecode);
+            if(responseMessage!=null && responseMessage.length()>0){
+                onContentListParserListner.OnError(responseMessage);
+            }else {
+                HttpConnectionUrl.serverErrorMessage(context, responsecode);
+            }
         }
     }
 

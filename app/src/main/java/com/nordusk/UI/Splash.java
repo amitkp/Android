@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import com.nordusk.R;
 import com.nordusk.animation.HTextView;
 import com.nordusk.animation.HTextViewType;
+import com.nordusk.utility.Prefs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,6 +80,13 @@ public class Splash extends AppCompatActivity {
         hTextView.setText("Hello Nordust");
 
         btn_login=(Button)findViewById(R.id.splash_btn_login);
+
+        String userId="";
+        userId=new Prefs(Splash.this).getString("userid","");
+        if(userId!=null && userId.length()>0){
+            startActivity(new Intent(Splash.this,Dashboard.class));
+            finish();
+        }
     }
 
     private void setListener() {
