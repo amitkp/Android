@@ -116,6 +116,10 @@ public class Dashboard extends AppCompatActivity {
 
             logoutAsync.execute();
 
+        }else if(id==R.id.action_chnge){
+
+            Toast.makeText(Dashboard.this, "Under Development", Toast.LENGTH_SHORT).show();
+
         }
 
         return super.onOptionsItemSelected(item);
