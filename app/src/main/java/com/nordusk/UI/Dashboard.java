@@ -1,7 +1,11 @@
 package com.nordusk.UI;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
 import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.LogoutAsync;
 
 import java.util.HashMap;
@@ -21,11 +26,14 @@ import java.util.HashMap;
 public class Dashboard extends AppCompatActivity {
     
     private GridView grid_dashboard_item;
+    private static int REQUEST_LOCATION = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        locationEnable();
         
         initView();
         
@@ -54,6 +62,24 @@ public class Dashboard extends AppCompatActivity {
         
 
     }
+
+    private void locationEnable() {
+
+        Util.enableLocationCommon(Dashboard.this, REQUEST_LOCATION);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Check Permissions Now
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION);
+
+            }
+        }
+    }
+
 
 
 
@@ -143,4 +169,6 @@ public class Dashboard extends AppCompatActivity {
 //        drawer.closeDrawer(GravityCompat.START);
 //        return true;
 //    }
+
+
 }
