@@ -22,6 +22,9 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by DELL on 20-11-2016.
  */
@@ -142,4 +145,12 @@ public class Util {
         // Showing Alert Message
         alertDialog.show();
     }
+
+    public static String getCurrentDate() {
+        SimpleDateFormat currentDate = new SimpleDateFormat("yyyy/MM/dd");
+        Date todayDate = new Date();
+        String thisDate = currentDate.format(todayDate);
+        return thisDate;
+    }
+
 }

@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.nordusk.*;
 import com.nordusk.R;
 import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.ListTraceAsync;
 import com.nordusk.webservices.PointsTraceList;
@@ -89,7 +90,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            }
 //        }
         mPrefs=new Prefs(MapsActivity.this);
-        populateData(mPrefs.getString("mobile_no",""),"2016-11-19");
+        String date="";
+        date= Util.getCurrentDate();
+        populateData(mPrefs.getString("mobile_no",""),date);
 
 
     }

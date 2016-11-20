@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,8 @@ import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.LogoutAsync;
 
-import java.util.HashMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Dashboard extends AppCompatActivity {
     
@@ -39,6 +41,8 @@ public class Dashboard extends AppCompatActivity {
         
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         startService(new Intent(this, LocationUpdateService.class));
 
@@ -170,6 +174,4 @@ public class Dashboard extends AppCompatActivity {
 //        drawer.closeDrawer(GravityCompat.START);
 //        return true;
 //    }
-
-
 }
