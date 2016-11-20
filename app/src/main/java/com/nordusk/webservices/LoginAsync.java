@@ -2,18 +2,13 @@ package com.nordusk.webservices;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.nordusk.R;
 import com.nordusk.UI.Dashboard;
-import com.nordusk.utility.Prefs;
-import com.nordusk.utility.Util;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -95,10 +90,10 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
 //                mobile_number = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "result");
 
-                Prefs my_prefs = new Prefs(context);
-                my_prefs.setString("userid",HttpConnectionUrl.getJSONKeyvalue(jsonObject, "userid"));
-                my_prefs.setString("name", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "name"));
-                my_prefs.setString("mobile_no", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "mobile_no"));
+//                Prefs my_prefs = new Prefs(context);
+//                my_prefs.setString("userid",HttpConnectionUrl.getJSONKeyvalue(jsonObject, "userid"));
+//                my_prefs.setString("name", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "name"));
+//                my_prefs.setString("mobile_no", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "mobile_no"));
 
                 context.startActivity(new Intent(context, Dashboard.class));
 

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 
 import com.nordusk.R;
 import com.nordusk.UI.Dashboard;
-import com.nordusk.utility.Prefs;
 
 import org.json.JSONObject;
 
@@ -48,7 +47,8 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
 
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url)+ "userId="+ new Prefs(context).getString("userid","")+"", jsonObject);
+           // String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url)+ "userId="+ new Prefs(context).getString("userid","")+"", jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.logoutasync_url)+ "userId="+"", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
                 parseResponseData(responsedata[1]);
