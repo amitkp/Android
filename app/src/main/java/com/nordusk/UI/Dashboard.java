@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridView;
@@ -13,6 +14,9 @@ import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
 import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.LogoutAsync;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Dashboard extends AppCompatActivity {
     
@@ -27,6 +31,8 @@ public class Dashboard extends AppCompatActivity {
         
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         startService(new Intent(this, LocationUpdateService.class));
 
