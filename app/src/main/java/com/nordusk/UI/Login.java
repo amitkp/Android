@@ -62,12 +62,14 @@ public class Login extends AppCompatActivity {
             public void OnSuccess(String response_code) {
 
                 Toast.makeText(Login.this, response_code, Toast.LENGTH_SHORT);
+                startActivity(new Intent(Login.this, Dashboard.class));
+                finish();
 
             }
 
             @Override
             public void OnError(String str_err) {
-
+                Toast.makeText(Login.this, str_err, Toast.LENGTH_SHORT);
             }
 
             @Override

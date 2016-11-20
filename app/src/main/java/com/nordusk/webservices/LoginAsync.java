@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.nordusk.R;
 import com.nordusk.UI.Dashboard;
+import com.nordusk.utility.Util;
 
 import org.json.JSONObject;
 
@@ -25,6 +26,8 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
     private String Username="",Password="";
+    private String deviceId="";
+
 
     public LoginAsync(Activity context, String username,String password, JSONObject jsonObject) {
         this.context = context;
@@ -32,8 +35,11 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
         this.jsonObject = jsonObject;
         mpProgressDialog = new ProgressDialog(context);
         mpProgressDialog.setMessage("Logging in..");
+        mpProgressDialog.show();
         this.Username=username;
         this.Password=password;
+        this.deviceId= Util.getDeviceId(context);
+
         mpProgressDialog.setCancelable(false);
     }
 
@@ -48,7 +54,7 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
 
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url)+ "username="+Username+"&password="+Password+"&deviceId="+ "101"+"", jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url)+ "username="+Username+"&password="+Password+"&deviceId="+ deviceId+"", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
                 parseResponseData(responsedata[1]);
@@ -69,14 +75,10 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
             if (onContentListParserListner != null) {
                 onContentListParserListner.OnConnectTimeout();
             }
-        } else if (responsecode.equals(HttpConnectionUrl.RESPONSECODE_SUCCESS)) {
+        }
             if (onContentListParserListner != null) {
-                onContentListParserListner.OnSuccess(responsecode);
-            }
-        } else if (responsecode.equals(HttpConnectionUrl.RESPONSECODE_INVALIDCREDENTIAL)) {
-            onContentListParserListner.OnError(responseMessage);
-        } else if (responsecode.equals(HttpConnectionUrl.RESPONSECODE_ERROR)) {
-            onContentListParserListner.OnError(responseMessage);
+                onContentListParserListner.OnSuccess(response_msg);
+
         } else {
             HttpConnectionUrl.serverErrorMessage(context, responsecode);
         }
@@ -88,6 +90,7 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
             jsonObject = new JSONObject(response);
             responsecode = jsonObject.getString("response_code");
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
+                responseMessage = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "response_msg");
 //                mobile_number = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "result");
 
 //                Prefs my_prefs = new Prefs(context);
@@ -95,7 +98,7 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
 //                my_prefs.setString("name", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "name"));
 //                my_prefs.setString("mobile_no", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "mobile_no"));
 
-                context.startActivity(new Intent(context, Dashboard.class));
+
 
 
 

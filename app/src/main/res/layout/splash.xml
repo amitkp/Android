@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-android:background="@color/colorBg"
+    android:background="#01253f"
     tools:context=".UI.Splash">
 
     <LinearLayout
@@ -23,79 +23,76 @@ android:background="@color/colorBg"
 
 
             <ImageView
+                android:id="@+id/img_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/img_icon"
-                android:src="@mipmap/ic_launcher"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:src="@drawable/nordusk_logo" />
 
             <TextView
                 android:id="@+id/txt_appname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:gravity="center_horizontal"
-                android:textColor="@color/colorPrimary"
+                android:layout_below="@+id/img_icon"
 
-                android:layout_below="@+id/img_icon">
-                </TextView>
+                android:gravity="center_horizontal"></TextView>
         </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/splash_lnr_groupanim"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="3"
-        android:weightSum="4">
-
-        <ImageView
-            android:id="@+id/splash_imgone"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/splash_lnr_groupanim"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:weightSum="4">
 
-        <ImageView
-            android:id="@+id/splash_imgtwo"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/splash_imgone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/icon_1" />
+
+            <ImageView
+                android:id="@+id/splash_imgtwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/icon_2" />
+
+            <ImageView
+                android:id="@+id/splash_imgthree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/icon_3" />
+
+            <ImageView
+                android:id="@+id/splash_imgfour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/icon_4" />
+        </LinearLayout>
+
+        <com.nordusk.animation.HTextView
+            android:id="@+id/splash_htxt"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_below="@+id/imageView"
+            android:layout_centerInParent="true"
+            android:layout_weight="3.5"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:text="@string/app_name"
 
-        <ImageView
-            android:id="@+id/splash_imgthree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/splash_imgfour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher" />
-    </LinearLayout>
-
-    <com.nordusk.animation.HTextView
-        android:id="@+id/splash_htxt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-android:layout_weight="3.5"
-        android:layout_centerInParent="true"
-        android:clickable="true"
-        android:onClick="onClick"
-        android:text="@string/app_name"
-
-        android:textColor="@color/colorPrimary"
-        htext:animateType="scale" />
+            android:textColor="@android:color/white"
+            htext:animateType="scale" />
 
         <Button
             android:id="@+id/splash_btn_login"
@@ -103,10 +100,9 @@ android:layout_weight="3.5"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:background="@color/colorPrimary"
-            android:textColor="@color/colorWhite"
+            android:text="@string/txt_login"
             android:textAllCaps="false"
-            android:text="@string/txt_login">
-            </Button>
+            android:textColor="@color/colorWhite"></Button>
 
     </LinearLayout>
 
