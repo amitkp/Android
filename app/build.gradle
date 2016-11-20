@@ -26,6 +26,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-//    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-//    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+    compile 'com.google.android.gms:play-services:9.4.0'
+
 }
