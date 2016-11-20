@@ -1,7 +1,9 @@
 package com.nordusk.UI;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,16 +11,24 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
 import com.nordusk.utility.Prefs;
+import com.nordusk.webservices.ChangepasswordAsync;
+import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.LogoutAsync;
 
@@ -29,6 +39,7 @@ public class Dashboard extends AppCompatActivity {
     
     private GridView grid_dashboard_item;
     private static int REQUEST_LOCATION = 2;
+    private Prefs mPrefs;
 
 
     @Override
@@ -38,7 +49,9 @@ public class Dashboard extends AppCompatActivity {
 
         locationEnable();
         
+        mPrefs=new Prefs(Dashboard.this);
         initView();
+
         
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -148,7 +161,8 @@ public class Dashboard extends AppCompatActivity {
 
         }else if(id==R.id.action_chnge){
 
-            Toast.makeText(Dashboard.this, "Under Development", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Dashboard.this, "Under Development", Toast.LENGTH_SHORT).show();
+            showValidateUserDialog();
 
         }
 
@@ -179,4 +193,78 @@ public class Dashboard extends AppCompatActivity {
 //        drawer.closeDrawer(GravityCompat.START);
 //        return true;
 //    }
+
+    public void showValidateUserDialog() {
+
+        final EditText old_password,new_password,cnfrm_password;
+        final Dialog mDialog_SelectSelectAccount = new Dialog(Dashboard.this,
+                android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount
+                .setContentView(R.layout.chnge_pswrd);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        old_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        new_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_pswrd);
+        cnfrm_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_cnf_pswrd);
+
+
+
+
+
+
+        Button login_btn_login = (Button) mDialog_SelectSelectAccount.findViewById(R.id.login_btn_login);
+
+        login_btn_login.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                // validate
+                if(old_password.getText().toString().trim()!=null &&
+                        new_password.getText().toString().trim()!=null &&cnfrm_password.getText().toString().trim()!=null  ){
+                    if(new_password.getText().toString().trim().equalsIgnoreCase(cnfrm_password.getText().toString().trim())){
+
+                        if(HttpConnectionUrl.isNetworkAvailable(Dashboard.this)){
+                            ChangepasswordAsync changepasswordAsync=new ChangepasswordAsync
+                                    (Dashboard.this,mPrefs.getString("userid",""),old_password.getText().toString().trim(),cnfrm_password.getText().toString().trim());
+                            changepasswordAsync.setOnContentListParserListner(new ChangepasswordAsync.OnContentListSchedules() {
+                                @Override
+                                public void OnSuccess(String message) {
+                                    Toast.makeText(Dashboard.this, message, Toast.LENGTH_SHORT).show();
+                                    mDialog_SelectSelectAccount.dismiss();
+                                }
+
+                                @Override
+                                public void OnError(String str_err) {
+                                    Toast.makeText(Dashboard.this, str_err, Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void OnConnectTimeout() {
+                                    Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            changepasswordAsync.execute();
+                        }else{
+                            Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }else{
+                        Toast.makeText(Dashboard.this, "New password and confirm password must be same", Toast.LENGTH_SHORT).show();
+                    }
+
+                }else{
+                    Toast.makeText(Dashboard.this, "Please provide all fields", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mDialog_SelectSelectAccount.show();
+    }
+
 }
