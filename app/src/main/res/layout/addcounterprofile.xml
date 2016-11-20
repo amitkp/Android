@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/dp_10"
+    >
+
+    <TextView
+        android:id="@+id/txt_counterprofile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/big_textSize"
+        android:text="Counter Profile">
+        </TextView>
+
+    <ScrollView
+        android:id="@+id/counterprofile_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/lnr_counterprofile"
+        android:layout_width="match_parent"
+        android:layout_margin="15dp"
+        android:background="#ffffff"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_hdr_counterdtls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Counter Details"></TextView>
+
+        <EditText
+            android:id="@+id/counterdtls_edtxt_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Counter Name"
+            android:textColorHint="#000000"></EditText>
+
+        <EditText
+            android:id="@+id/counterdtls_edtxt_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Counter Address"
+            android:textColorHint="#000000"></EditText>
+
+        <TextView
+            android:id="@+id/txt_hdr_counterphoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Counter Photo"></TextView>
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/store" />
+
+        <TextView
+            android:id="@+id/txt_courentlocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Counter Location"></TextView>
+
+        <TextView
+            android:id="@+id/txt_courentownerdetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Counter Location"></TextView>
+
+        <EditText
+            android:id="@+id/counterdtls_edtxt_ownername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Counter Owner Name"
+            android:textColorHint="#000000"></EditText>
+
+        <EditText
+            android:id="@+id/counterdtls_edtxt_dob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Date of Birth"
+            android:textColorHint="#000000"></EditText>
+
+        <EditText
+            android:id="@+id/counterdtls_edtxt_mobilenumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mobile Number"
+            android:textColorHint="#000000"></EditText>
+
+        <EditText
+            android:id="@+id/counterdtls_edtxt_emailid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email ID"
+            android:textColorHint="#000000"></EditText>
+
+        <Button
+            android:id="@+id/counterprofile_btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SUBMIT">
+            </Button>
+
+    </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

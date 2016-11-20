@@ -11,5 +11,12 @@
     <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_5">5dp</dimen>
 
+    <!--    Text Size-->
+    <dimen name="small_textSize">10sp</dimen>
+    <dimen name="textSize">12sp</dimen>
+    <dimen name="big_textSize">25sp</dimen>
+    <dimen name="medium_textSize">16sp</dimen>
+    <dimen name="bigger_textSize">25sp</dimen>
+
 
 </resources>

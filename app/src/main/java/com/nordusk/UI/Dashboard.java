@@ -6,12 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
 import com.nordusk.webservices.LogoutAsync;
+
+import java.util.HashMap;
 
 public class Dashboard extends AppCompatActivity {
     
@@ -51,6 +55,32 @@ public class Dashboard extends AppCompatActivity {
     private void setAdapter() {
 
         grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
+
+        grid_dashboard_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position)
+                {
+                    case 0:
+
+                        startActivity(new Intent(Dashboard.this,AddCounter.class));
+
+                        break;
+                    case 1:
+
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+
+                        break;
+
+                }
+
+            }
+        });
     }
 
     private void initView() {
