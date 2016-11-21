@@ -64,7 +64,7 @@ public class Splash extends AppCompatActivity {
 
 
 
-        hTextView.setText("Hello Nordust");
+        hTextView.setText("Hello Nordusk");
         hTextView.setAnimateType(HTextViewType.LINE);
 
 
