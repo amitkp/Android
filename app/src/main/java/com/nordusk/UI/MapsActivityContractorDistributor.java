@@ -114,7 +114,7 @@ public class MapsActivityContractorDistributor extends AppCompatActivity impleme
 
                 @Override
                 public void OnError(String str_err) {
-
+                    Toast.makeText(MapsActivityContractorDistributor.this, str_err, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

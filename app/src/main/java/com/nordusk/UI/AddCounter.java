@@ -147,7 +147,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             knownname = (addresses.get(0).getFeatureName() == null ? "" : "" + addresses.get(0).getFeatureName());
 
             address_details =addressone+addresstwo+ city + state + country + postalcode + knownname;
-            Toast.makeText(AddCounter.this, address_details, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(AddCounter.this, address_details, Toast.LENGTH_SHORT).show();
 
 
 //            procedure two
@@ -207,11 +207,12 @@ if(press_current_loc)
                         @Override
                         public void OnSuccess(String responsecode) {
                             Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                            finish();
                         }
 
                         @Override
                         public void OnError(String str_err) {
-
+                            Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

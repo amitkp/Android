@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:padding="5dp"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/big_textSize"
         android:text="Distributor Profile">
@@ -130,7 +131,7 @@
                 android:id="@+id/counterdtls_edtxt_dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Date of Birth"
+                android:hint="Date of Birth(YYYY-MM-DD)"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
 

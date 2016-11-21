@@ -41,7 +41,7 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
 
         this.jsonObject = jsonObject;
         mpProgressDialog = new ProgressDialog(context);
-        mpProgressDialog.setMessage("Logging out..");
+        mpProgressDialog.setMessage("Loading..");
         mpProgressDialog.show();
         mpProgressDialog.setCancelable(false);
     }

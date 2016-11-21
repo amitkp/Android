@@ -41,12 +41,12 @@
         <activity
             android:name=".UI.AddCounter"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+             />
 
         <activity
             android:name=".UI.AddDistributer"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+             />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

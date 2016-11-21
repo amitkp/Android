@@ -89,10 +89,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                lineOptions.add(LocationUpdateService.points.get(i));
 //            }
 //        }
-        mPrefs=new Prefs(MapsActivity.this);
-        String date="";
-        date= Util.getCurrentDate();
-        populateData(mPrefs.getString("mobile_no",""),date);
+        mPrefs = new Prefs(MapsActivity.this);
+        String date = "";
+        String mobile = "";
+        if (getIntent().getStringExtra("mobile") != null && getIntent().getStringExtra("mobile").length() > 0
+                && getIntent().getStringExtra("date") != null && getIntent().getStringExtra("date").length() > 0) {
+            date = getIntent().getStringExtra("date");
+            mobile = getIntent().getStringExtra("mobile");
+
+        } else {
+            date = Util.getCurrentDate();
+            mobile = mPrefs.getString("mobile_no", "");
+        }
+
+        populateData(mobile, date);
 
 
     }
@@ -112,8 +122,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 lat = Double.parseDouble(arrayList.get(i).getLatitude());
                                 longi = Double.parseDouble(arrayList.get(i).getLongitude());
                                 LatLng latLng = new LatLng(lat, longi);
-                                if(i==0)
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                if (i == 0) {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                    mMap.addMarker(new MarkerOptions().position(latLng));
+                                }
+                                if(i==arrayList.size()-1){
+                                    mMap.addMarker(new MarkerOptions().position(latLng));
+                                }
                                 lineOptions.add(latLng);
                             }
 

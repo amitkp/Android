@@ -146,7 +146,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             knownname = (addresses.get(0).getFeatureName() == null ? "" : "" + addresses.get(0).getFeatureName());
 
             address_details = addressone + addresstwo + city + state + country + postalcode + knownname;
-            Toast.makeText(AddDistributer.this, address_details, Toast.LENGTH_SHORT).show();
+           // Toast.makeText(AddDistributer.this, address_details, Toast.LENGTH_SHORT).show();
 
 
 //            procedure two
@@ -206,11 +206,12 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                         @Override
                         public void OnSuccess(String responsecode) {
                             Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                            finish();
                         }
 
                         @Override
                         public void OnError(String str_err) {
-
+                            Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
