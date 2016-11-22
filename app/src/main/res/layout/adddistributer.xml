@@ -136,11 +136,27 @@
                 ></EditText>
 
             <EditText
+                android:id="@+id/distridtls_edtxt_territory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Territory"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <EditText
                 android:id="@+id/counterdtls_edtxt_mobilenumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Mobile Number*"
                 android:inputType="number"
+                android:layout_margin="@dimen/dp_10"
+                ></EditText>
+
+            <EditText
+                android:id="@+id/distridtls_edtxt_anniversary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Anniversary"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
 

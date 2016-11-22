@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,15 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordusk.R;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class AddDistributer extends AppCompatActivity implements LocationListener {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid;
+    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid,edt_aniversary;
     private Button submit;
     private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
@@ -35,6 +38,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private boolean press_current_loc = false;
     private String lat = "", longitude = "";
     String complete_address = "";
+    private SimpleDateFormat dateFormatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,27 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                 validateInputs();
             }
         });
+
+        edt_dob.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                Util.setDateFromDatePicker(edt_dob, AddDistributer.this, dateFormatter);
+                return false;
+            }
+        });
+
+        edt_aniversary.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                Util.setDateFromDatePicker(edt_aniversary, AddDistributer.this, dateFormatter);
+                return false;
+            }
+        });
     }
 
     private void initView() {
@@ -89,6 +114,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
         edt_dob = (EditText) findViewById(R.id.counterdtls_edtxt_dob);
+        edt_aniversary=(EditText)findViewById(R.id.distridtls_edtxt_anniversary);
         edt_mobileno = (EditText) findViewById(R.id.counterdtls_edtxt_mobilenumber);
         edt_emailid = (EditText) findViewById(R.id.counterdtls_edtxt_emailid);
 
