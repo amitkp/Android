@@ -2,6 +2,7 @@ package com.nordusk.utility;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -23,6 +26,7 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -30,6 +34,7 @@ import java.util.Date;
  */
 public class Util {
     public static  boolean isServiceRunning=false;
+
 
     /**
      * get the device IMEI no and save it into shared preference
@@ -151,6 +156,37 @@ public class Util {
         Date todayDate = new Date();
         String thisDate = currentDate.format(todayDate);
         return thisDate;
+    }
+
+
+    public static void setDateFromDatePicker(final EditText edt_date, Context context, final SimpleDateFormat dateFormatter) {
+
+        Calendar newCalendar = Calendar.getInstance();
+        try {
+            if (!edt_date.getText().toString().isEmpty()) {
+                int year = Integer.parseInt(edt_date.getText().toString().substring(0, 4));
+                int month = Integer.parseInt(edt_date.getText().toString().substring(5, 7));
+                int day = Integer.parseInt(edt_date.getText().toString().substring(8, 10));
+                newCalendar.set(year, month - 1, day);
+            }
+        } catch (Exception ex) {
+        }
+        DatePickerDialog fromDatePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                edt_date.setText(dateFormatter.format(newDate.getTime()));
+
+
+
+
+            }
+
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        fromDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+        fromDatePickerDialog.show();
     }
 
 }

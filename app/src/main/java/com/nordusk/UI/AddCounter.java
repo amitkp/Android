@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,15 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordusk.R;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class AddCounter extends AppCompatActivity implements LocationListener {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid;
+    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid,edt_territory,edt_aniversary;
     private Button submit;
     private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
@@ -36,6 +39,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private boolean press_current_loc = false;
     private String lat="",longitude = "";
     String complete_address="";
+    private SimpleDateFormat dateFormatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,29 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 validateInputs();
             }
         });
+
+
+
+        edt_dob.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                Util.setDateFromDatePicker(edt_dob, AddCounter.this, dateFormatter);
+                return false;
+            }
+        });
+
+        edt_aniversary.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                Util.setDateFromDatePicker(edt_aniversary, AddCounter.this, dateFormatter);
+                return false;
+            }
+        });
     }
 
     private void initView() {
@@ -90,8 +117,12 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
         edt_dob = (EditText) findViewById(R.id.counterdtls_edtxt_dob);
+
         edt_mobileno = (EditText) findViewById(R.id.counterdtls_edtxt_mobilenumber);
         edt_emailid = (EditText) findViewById(R.id.counterdtls_edtxt_emailid);
+        edt_territory=(EditText)findViewById(R.id.counterdtls_edtxt_territory);
+
+        edt_aniversary=(EditText)findViewById(R.id.counterdtls_edtxt_anniversary);
 
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
