@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -24,8 +25,12 @@ import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
 import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.ChangepasswordAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by DELL on 17-11-2016.
@@ -38,6 +43,7 @@ public class GridDashboardAdapter extends BaseAdapter {
     private Activity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
+    private SimpleDateFormat dateFormatter;
 
 
     public GridDashboardAdapter(Activity context) {
@@ -101,11 +107,10 @@ public class GridDashboardAdapter extends BaseAdapter {
 
                 } else if (position == 4) {
                     if (mPrefs.getString("designation", "").equalsIgnoreCase("1")) {
-                        Intent intent = new Intent(mContext, MapsActivity.class);
-                        mContext.startActivity(intent);
+                        showTrackDialog("sales");
 
                     } else {
-                        showTrackDialog();
+                        showTrackDialog("all");
                     }
 
                 }
@@ -120,7 +125,7 @@ public class GridDashboardAdapter extends BaseAdapter {
         private TextView txt_option;
     }
 
-    public void showTrackDialog() {
+    public void showTrackDialog(final String tag) {
 
         final EditText old_password, new_password;
         final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
@@ -138,6 +143,10 @@ public class GridDashboardAdapter extends BaseAdapter {
         old_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
         new_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_pswrd);
 
+        if(tag.equalsIgnoreCase("sales")){
+            old_password.setVisibility(View.GONE);
+        }
+
 
         Button login_btn_login = (Button) mDialog_SelectSelectAccount.findViewById(R.id.login_btn_login);
 
@@ -146,19 +155,56 @@ public class GridDashboardAdapter extends BaseAdapter {
             @Override
             public void onClick(View arg0) {
                 // validate
-                if (old_password.getText().toString().trim() != null && old_password.getText().toString().trim().length() > 0
-                        &&
-                        new_password.getText().toString().trim() != null && new_password.getText().toString().trim().length() > 0) {
-                    Intent intent = new Intent(mContext, MapsActivity.class);
-                    intent.putExtra("mobile",old_password.getText().toString().trim());
-                    intent.putExtra("date",new_password.getText().toString().trim());
-                    mContext.startActivity(intent);
+
+                if (tag.equalsIgnoreCase("all")) {
+
+
+                    if (old_password.getText().toString().trim() != null && old_password.getText().toString().trim().length() > 0
+                            &&
+                            new_password.getText().toString().trim() != null && new_password.getText().toString().trim().length() > 0) {
+                        Intent intent = new Intent(mContext, MapsActivity.class);
+                        intent.putExtra("mobile", old_password.getText().toString().trim().replaceAll("\\s+", ""));
+                        intent.putExtra("date", new_password.getText().toString().trim());
+                        intent.putExtra("tag", tag);
+                        mContext.startActivity(intent);
+                    } else {
+                        Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
+                    }
+
                 } else {
-                    Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
+                    if (new_password.getText().toString().trim() != null && new_password.getText().toString().trim().length() > 0) {
+
+                        Intent intent = new Intent(mContext, MapsActivity.class);
+                        intent.putExtra("date", new_password.getText().toString().trim());
+                        intent.putExtra("tag", tag);
+                        mContext.startActivity(intent);
+                    }
                 }
+            }
+        });
+
+
+        new_password.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                        Util.setDateFromDatePicker(new_password, mContext, dateFormatter);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+
+                }
+
+                return true;
             }
         });
 
         mDialog_SelectSelectAccount.show();
     }
+
+
 }

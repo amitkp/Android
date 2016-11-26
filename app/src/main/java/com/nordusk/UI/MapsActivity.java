@@ -98,7 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mobile = getIntent().getStringExtra("mobile");
 
         } else {
-            date = Util.getCurrentDate();
+            date = getIntent().getStringExtra("date");
             mobile = mPrefs.getString("mobile_no", "");
         }
 

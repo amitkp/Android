@@ -132,6 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Date of Birth(YYYY-MM-DD)"
+            android:focusableInTouchMode="false"
             android:layout_margin="@dimen/dp_10"
             ></EditText>
 
@@ -157,6 +158,7 @@
             android:id="@+id/counterdtls_edtxt_anniversary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusableInTouchMode="false"
             android:hint="Anniversary"
             android:layout_margin="@dimen/dp_10"
             ></EditText>

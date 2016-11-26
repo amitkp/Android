@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.nordusk.R;
+import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.LoginAsync;
 
@@ -61,6 +63,8 @@ public class Login extends AppCompatActivity {
             loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
                 @Override
                 public void OnSuccess(String response_code) {
+
+                    new Prefs(Login.this).setString("UserName",edt_username.getText().toString().trim());
 
                     Toast.makeText(Login.this, response_code, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Login.this, Dashboard.class));

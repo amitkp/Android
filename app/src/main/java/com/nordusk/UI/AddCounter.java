@@ -92,10 +92,20 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         edt_dob.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                // TODO Auto-generated method stub
+                switch(event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN :
+                        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-                Util.setDateFromDatePicker(edt_dob, AddCounter.this, dateFormatter);
-                return false;
+                        Util.setDateFromDatePicker(edt_dob, AddCounter.this, dateFormatter);
+                        break;
+                    case MotionEvent.ACTION_UP  :
+                        break;
+
+                }
+
+                return true;
             }
         });
 
@@ -103,10 +113,20 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                // TODO Auto-generated method stub
+                switch(event.getAction())
+                {
+                    case MotionEvent.ACTION_DOWN :
+                        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-                Util.setDateFromDatePicker(edt_aniversary, AddCounter.this, dateFormatter);
-                return false;
+                        Util.setDateFromDatePicker(edt_aniversary, AddCounter.this, dateFormatter);
+                        break;
+                    case MotionEvent.ACTION_UP  :
+                        break;
+
+                }
+
+                return true;
             }
         });
     }

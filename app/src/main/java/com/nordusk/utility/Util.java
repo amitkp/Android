@@ -184,7 +184,7 @@ public class Util {
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-        fromDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+//        fromDatePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
         fromDatePickerDialog.show();
     }
