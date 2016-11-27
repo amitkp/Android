@@ -2,190 +2,199 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-   android:background="@color/colorPrimary"
-    android:orientation="vertical"
     android:layout_margin="@dimen/dp_10"
-    >
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/txt_counterprofile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/big_textSize"
         android:padding="5dp"
-        android:text="Counter Profile">
-        </TextView>
+        android:text="Counter Profile"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/big_textSize"></TextView>
 
     <ScrollView
         android:id="@+id/counterprofile_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/lnr_counterprofile"
-        android:layout_width="match_parent"
-        android:layout_margin="15dp"
-        android:background="#ffffff"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/lnr_counterprofile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:background="#ffffff"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txt_hdr_counterdtls"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:textColor="@color/colorPrimary"
-            android:layout_height="wrap_content"
-            android:text="Counter Details"
-            android:textSize="@dimen/medium_textSize"></TextView>
-        <RelativeLayout
-            android:id="@+id/rltv_devider"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:background="@color/colorPrimary">
+            <TextView
+                android:id="@+id/txt_hdr_counterdtls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="Counter Details"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/medium_textSize"></TextView>
+
+            <RelativeLayout
+                android:id="@+id/rltv_devider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/colorPrimary"></RelativeLayout>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:hint="Counter Name*"
+
+                ></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:hint="Counter Address"></EditText>
+
+            <TextView
+                android:id="@+id/txt_hdr_counterphoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Counter Photo"
+                android:textColor="@color/TabTextColor"
+                android:textSize="@dimen/medium_textSize"></TextView>
+
+            <RelativeLayout
+                android:id="@+id/rltv_pic_contain"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/image_counter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+
+                     />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="New Text"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/colorWhite"
+                    android:id="@+id/textView_imgselect"
+                    android:layout_alignBottom="@+id/imageView6"
+                     />
+
+
             </RelativeLayout>
 
-        <EditText
-            android:id="@+id/counterdtls_edtxt_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Counter Name*"
-            android:layout_margin="@dimen/dp_10"
 
-            ></EditText>
+            <TextView
+                android:id="@+id/txt_courentlocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:gravity="center_horizontal"
+                android:text="Counter Location : Tap to locate*"
+                android:textColor="@color/TabTextColor"
+                android:textSize="@dimen/medium_textSize"></TextView>
 
-        <EditText
-            android:id="@+id/counterdtls_edtxt_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Counter Address"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
+            <RelativeLayout
+                android:id="@+id/rltv_devider3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@color/colorPrimary"></RelativeLayout>
 
-        <TextView
-            android:id="@+id/txt_hdr_counterphoto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:textColor="@color/TabTextColor"
-            android:textSize="@dimen/medium_textSize"
-            android:text="Counter Photo"></TextView>
+            <TextView
+                android:id="@+id/txt_courentownerdetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="Counter Location"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/medium_textSize"></TextView>
 
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/dp_10"
-            android:src="@drawable/store" />
+            <RelativeLayout
+                android:id="@+id/rltv_devider2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/colorPrimary"></RelativeLayout>
 
-        <TextView
-            android:id="@+id/txt_courentlocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:textColor="@color/TabTextColor"
-            android:textSize="@dimen/medium_textSize"
-            android:text="Counter Location : Tap to locate*"></TextView>
+            <EditText
+                android:id="@+id/counterdtls_edtxt_ownername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:hint="Counter Owner Name"></EditText>
 
-        <RelativeLayout
-            android:id="@+id/rltv_devider3"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:background="@color/colorPrimary">
-        </RelativeLayout>
+            <EditText
+                android:id="@+id/counterdtls_edtxt_dob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:focusableInTouchMode="false"
+                android:hint="Date of Birth(YYYY-MM-DD)"></EditText>
 
-        <TextView
-            android:id="@+id/txt_courentownerdetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_10"
-            android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/medium_textSize"
-            android:text="Counter Location"></TextView>
+            <EditText
+                android:id="@+id/counterdtls_edtxt_territory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:hint="Territory"></EditText>
 
-        <RelativeLayout
-            android:id="@+id/rltv_devider2"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:background="@color/colorPrimary">
-        </RelativeLayout>
-
-        <EditText
-            android:id="@+id/counterdtls_edtxt_ownername"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Counter Owner Name"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
-
-        <EditText
-            android:id="@+id/counterdtls_edtxt_dob"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Date of Birth(YYYY-MM-DD)"
-            android:focusableInTouchMode="false"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
-
-        <EditText
-            android:id="@+id/counterdtls_edtxt_territory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Territory"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
-
-        <EditText
-            android:id="@+id/counterdtls_edtxt_mobilenumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Mobile Number*"
-            android:inputType="number"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
+            <EditText
+                android:id="@+id/counterdtls_edtxt_mobilenumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:hint="Mobile Number*"
+                android:inputType="number"></EditText>
 
 
-        <EditText
-            android:id="@+id/counterdtls_edtxt_anniversary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusableInTouchMode="false"
-            android:hint="Anniversary"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
+            <EditText
+                android:id="@+id/counterdtls_edtxt_anniversary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:focusableInTouchMode="false"
+                android:hint="Anniversary"></EditText>
 
-        <EditText
-            android:id="@+id/counterdtls_edtxt_emailid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Email ID"
+            <EditText
+                android:id="@+id/counterdtls_edtxt_emailid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
 
-            android:inputType="textEmailAddress"
-            android:layout_margin="@dimen/dp_10"
-            ></EditText>
+                android:hint="Email ID"
+                android:inputType="textEmailAddress"></EditText>
 
-        <Button
-            android:id="@+id/counterprofile_btn_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SUBMIT"
-            android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginRight="@dimen/dp_15"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/colorWhite"
-            android:layout_marginBottom="@dimen/dp_15">
-            </Button>
+            <Button
+                android:id="@+id/counterprofile_btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_15"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:background="@color/colorPrimary"
+                android:text="SUBMIT"
+                android:textColor="@color/colorWhite"></Button>
 
-    </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

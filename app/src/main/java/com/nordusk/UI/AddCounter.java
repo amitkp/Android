@@ -1,22 +1,31 @@
 package com.nordusk.UI;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +33,22 @@ import com.nordusk.R;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +65,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private String lat="",longitude = "";
     String complete_address="";
     private SimpleDateFormat dateFormatter;
+    private String userChoosenTask;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private ImageView img_pic;
+    private TextView txt_select;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +122,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 // TODO Auto-generated method stub
-                switch(event.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN :
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
                         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
                         Util.setDateFromDatePicker(edt_dob, AddCounter.this, dateFormatter);
                         break;
-                    case MotionEvent.ACTION_UP  :
+                    case MotionEvent.ACTION_UP:
                         break;
 
                 }
@@ -114,19 +142,27 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             public boolean onTouch(View v, MotionEvent event) {
 
                 // TODO Auto-generated method stub
-                switch(event.getAction())
-                {
-                    case MotionEvent.ACTION_DOWN :
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
                         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
                         Util.setDateFromDatePicker(edt_aniversary, AddCounter.this, dateFormatter);
                         break;
-                    case MotionEvent.ACTION_UP  :
+                    case MotionEvent.ACTION_UP:
                         break;
 
                 }
 
                 return true;
+            }
+        });
+
+        txt_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                selectImage();
+
             }
         });
     }
@@ -147,8 +183,25 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit=(Button)findViewById(R.id.counterprofile_btn_submit);
+        img_pic=(ImageView)findViewById(R.id.image_counter);
+        txt_select=(TextView)findViewById(R.id.textView_imgselect);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case Util.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(userChoosenTask.equals("Take Photo"))
+                        cameraIntent();
+                    else if(userChoosenTask.equals("Choose from Library"))
+                        galleryIntent();
+                } else {
+                    //code for deny
+                }
+                break;
+        }
+    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -227,25 +280,25 @@ if(press_current_loc)
     }
 
 
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions,
-                                           int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION) {
-
-            if (grantResults.length == 1
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // We can now safely use the API we requested access to
-
-            } else {
-                // Permission was denied or request was cancelled
-                finish();
-            }
-
-
-        } else {
-            // Permission was denied or request was cancelled
-        }
-    }
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String[] permissions,
+//                                           int[] grantResults) {
+//        if (requestCode == REQUEST_LOCATION) {
+//
+//            if (grantResults.length == 1
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                // We can now safely use the API we requested access to
+//
+//            } else {
+//                // Permission was denied or request was cancelled
+//                finish();
+//            }
+//
+//
+//        } else {
+//            // Permission was denied or request was cancelled
+//        }
+//    }
 
 
     private void validateInputs() {
@@ -281,6 +334,133 @@ if(press_current_loc)
         } else
             Toast.makeText(AddCounter.this, "Please enter counter name", Toast.LENGTH_SHORT).show();
 
+    }
+
+
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddCounter.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result=Util.checkPermission(AddCounter.this);
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask ="Take Photo";
+                    if(result)
+                        cameraIntent();
+
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask ="Choose from Library";
+                    if(result)
+                        galleryIntent();
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void galleryIntent()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+    }
+
+    private void cameraIntent()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        img_pic.setImageBitmap(thumbnail);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm=null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        img_pic.setImageBitmap(bm);
+    }
+
+
+    public void executeMultipartPost() throws Exception {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 75, bos);
+            byte[] data = bos.toByteArray();
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost postRequest = new HttpPost(
+                    "http://10.0.2.2/cfc/iphoneWebservice.cfc?returnformat=json&amp;method=testUpload");
+            ByteArrayBody bab = new ByteArrayBody(data, "forest.jpg");
+            // File file= new File("/mnt/sdcard/forest.png");
+            // FileBody bin = new FileBody(file);
+            MultipartEntity reqEntity = new MultipartEntity(
+                    HttpMultipartMode.BROWSER_COMPATIBLE);
+            reqEntity.addPart("uploaded", bab);
+            reqEntity.addPart("photoCaption", new StringBody("sfsdfsdf"));
+            postRequest.setEntity(reqEntity);
+            HttpResponse response = httpClient.execute(postRequest);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    response.getEntity().getContent(), "UTF-8"));
+            String sResponse;
+            StringBuilder s = new StringBuilder();
+
+            while ((sResponse = reader.readLine()) != null) {
+                s = s.append(sResponse);
+            }
+            System.out.println("Response: " + s);
+        } catch (Exception e) {
+            // handle exception here
+            Log.e(e.getClass().getName(), e.getMessage());
+        }
     }
 
 
