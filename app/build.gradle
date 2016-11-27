@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.nordusk"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -22,6 +22,8 @@ android {
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/anim'] } }
 }
 
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -30,6 +32,7 @@ dependencies {
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.google.android.gms:play-services-location:9.4.0'
-    compile "org.apache.httpcomponents:httpmime:4.2.3"
+//    compile "org.apache.httpcomponents:httpmime:4.2.3"
+
 
 }

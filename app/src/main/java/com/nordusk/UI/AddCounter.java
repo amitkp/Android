@@ -36,10 +36,8 @@ import com.nordusk.webservices.AddCounterAsync;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.StringBody;
+
+
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
@@ -51,6 +49,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,6 +68,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     private ImageView img_pic;
     private TextView txt_select;
+    private Bitmap bm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +162,11 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             public void onClick(View v) {
 
                 selectImage();
+//                try {
+//                    executeMultipartPost();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
             }
         });
@@ -413,6 +418,7 @@ if(press_current_loc)
         }
 
         img_pic.setImageBitmap(thumbnail);
+        bm=thumbnail;
     }
 
     @SuppressWarnings("deprecation")
@@ -431,37 +437,38 @@ if(press_current_loc)
     }
 
 
-    public void executeMultipartPost() throws Exception {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG, 75, bos);
-            byte[] data = bos.toByteArray();
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost postRequest = new HttpPost(
-                    "http://10.0.2.2/cfc/iphoneWebservice.cfc?returnformat=json&amp;method=testUpload");
-            ByteArrayBody bab = new ByteArrayBody(data, "forest.jpg");
-            // File file= new File("/mnt/sdcard/forest.png");
-            // FileBody bin = new FileBody(file);
-            MultipartEntity reqEntity = new MultipartEntity(
-                    HttpMultipartMode.BROWSER_COMPATIBLE);
-            reqEntity.addPart("uploaded", bab);
-            reqEntity.addPart("photoCaption", new StringBody("sfsdfsdf"));
-            postRequest.setEntity(reqEntity);
-            HttpResponse response = httpClient.execute(postRequest);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent(), "UTF-8"));
-            String sResponse;
-            StringBuilder s = new StringBuilder();
-
-            while ((sResponse = reader.readLine()) != null) {
-                s = s.append(sResponse);
-            }
-            System.out.println("Response: " + s);
-        } catch (Exception e) {
-            // handle exception here
-            Log.e(e.getClass().getName(), e.getMessage());
-        }
-    }
+//    public void executeMultipartPost() throws Exception {
+//        try {
+//            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            bm.compress(Bitmap.CompressFormat.JPEG, 75, bos);
+//            byte[] data = bos.toByteArray();
+//            HttpClient httpClient = new DefaultHttpClient();
+//            HttpPost postRequest = new HttpPost(
+//                    "http://10.0.2.2/cfc/iphoneWebservice.cfc?returnformat=json&amp;method=testUpload");
+//            String fileName = String.format("File_%d.png",new Date().getTime());
+//            ByteArrayBody bab = new ByteArrayBody(data, fileName);
+//            // File file= new File("/mnt/sdcard/forest.png");
+//            // FileBody bin = new FileBody(file);
+//            MultipartEntity reqEntity = new MultipartEntity(
+//                    HttpMultipartMode.BROWSER_COMPATIBLE);
+//            reqEntity.addPart("uploaded", bab);
+//            reqEntity.addPart("photoCaption", new StringBody("sfsdfsdf"));
+//            postRequest.setEntity(reqEntity);
+//            HttpResponse response = httpClient.execute(postRequest);
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(
+//                    response.getEntity().getContent(), "UTF-8"));
+//            String sResponse;
+//            StringBuilder s = new StringBuilder();
+//
+//            while ((sResponse = reader.readLine()) != null) {
+//                s = s.append(sResponse);
+//            }
+//            System.out.println("Response: " + s);
+//        } catch (Exception e) {
+//            // handle exception here
+//            Log.e(e.getClass().getName(), e.getMessage());
+//        }
+//    }
 
 
 }
