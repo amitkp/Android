@@ -93,7 +93,7 @@
                     android:gravity="center_horizontal|center_vertical"
                     android:textColor="@color/colorWhite"
                     android:id="@+id/textView_imgselect"
-                    android:layout_alignBottom="@+id/imageView6"
+                    android:layout_alignParentBottom="true"
                      />
 
 
@@ -182,6 +182,60 @@
 
                 android:hint="Email ID"
                 android:inputType="textEmailAddress"></EditText>
+
+
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_bankname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM "
+                android:hint="Bank Name"
+                android:inputType="text"></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_bankaccno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+
+                android:hint="Account No."
+                android:inputType="number"></EditText>
+
+
+            <EditText
+                android:id="@+id/counterdtls_edtxt_ifsccode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+
+                android:hint="Ifsc code"
+               android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890"></EditText>
+
+            <EditText
+                android:id="@+id/counterdtls_countersize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+
+                android:hint="Counter Size"
+                android:inputType="number"></EditText>
+
+            <AutoCompleteTextView
+                android:id="@+id/auto_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+
+                android:hint="Parent Id*"
+                android:width="250dip" />
+
+
+
+
+
 
             <Button
                 android:id="@+id/counterprofile_btn_submit"

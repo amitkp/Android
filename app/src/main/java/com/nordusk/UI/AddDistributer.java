@@ -31,7 +31,8 @@ import java.util.Locale;
 
 public class AddDistributer extends AppCompatActivity implements LocationListener {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary;
+    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary,
+            edt_bankname,edt_accno,edt_ifsccode,edt_countersize;
     private Button submit;
     private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
@@ -147,6 +148,11 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit = (Button) findViewById(R.id.counterprofile_btn_submit);
+
+        edt_bankname=(EditText)findViewById(R.id.distributor_edtxt_bankname);
+        edt_accno=(EditText)findViewById(R.id.distributor_edtxt_bankaccno);
+        edt_ifsccode=(EditText)findViewById(R.id.distributor_edtxt_ifsccode);
+        edt_countersize=(EditText)findViewById(R.id.distributor_countersize);
     }
 
 
@@ -253,7 +259,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, "2", edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), null);
+                    AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, "2", edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(),edt_bankname.getText().toString().trim(),edt_accno.getText().toString().trim(),edt_ifsccode.getText().toString().trim(),edt_countersize.getText().toString().trim(),"", null);
                     addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                         @Override
                         public void OnSuccess(String responsecode) {

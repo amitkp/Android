@@ -23,6 +23,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,8 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordusk.R;
+import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
+import com.nordusk.webservices.ParentId;
+import com.nordusk.webservices.ParentIdAsync;
+import com.nordusk.webservices.UserTrace;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -55,28 +61,32 @@ import java.util.Locale;
 
 public class AddCounter extends AppCompatActivity implements LocationListener {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid,edt_territory,edt_aniversary;
+    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_territory, edt_aniversary,
+    edt_bankname,edt_accno,edt_ifsccode,edt_countersize;
     private Button submit;
     private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
-    private String lat="",longitude = "";
-    String complete_address="";
+    private String lat = "", longitude = "";
+    String complete_address = "";
     private SimpleDateFormat dateFormatter;
     private String userChoosenTask;
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     private ImageView img_pic;
     private TextView txt_select;
     private Bitmap bm;
+    private AutoCompleteTextView auto_text;
+    private ArrayList<ParentId> tempParentIds=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addcounterprofile);
-
+ParentIdfetch();
         initView();
         setListener();
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -99,7 +109,42 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
     }
 
+    private void setAutoTextAdapter() {
+
+
+        CustomAutoCompleteAdapter customerAdapter = new CustomAutoCompleteAdapter(this, R.layout.custom_auto, tempParentIds);
+        auto_text.setAdapter(customerAdapter);
+    }
+
+    private void ParentIdfetch() {
+
+        ParentIdAsync parentIdAsync=new ParentIdAsync(AddCounter.this);
+        parentIdAsync.setOnContentListParserListner(new ParentIdAsync.OnContentListSchedules() {
+            @Override
+            public void OnSuccess(ArrayList<ParentId> arrayList) {
+
+                tempParentIds=arrayList;
+                Toast.makeText(AddCounter.this,"success",Toast.LENGTH_SHORT).show();
+                setAutoTextAdapter();
+            }
+
+            @Override
+            public void OnError(String str_err) {
+
+            }
+
+            @Override
+            public void OnConnectTimeout() {
+
+            }
+        });
+        parentIdAsync.execute();
+
+    }
+
     private void setListener() {
+
+
 
         txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +160,6 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 validateInputs();
             }
         });
-
 
 
         edt_dob.setOnTouchListener(new View.OnTouchListener() {
@@ -181,15 +225,29 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
         edt_mobileno = (EditText) findViewById(R.id.counterdtls_edtxt_mobilenumber);
         edt_emailid = (EditText) findViewById(R.id.counterdtls_edtxt_emailid);
-        edt_territory=(EditText)findViewById(R.id.counterdtls_edtxt_territory);
+        edt_territory = (EditText) findViewById(R.id.counterdtls_edtxt_territory);
 
-        edt_aniversary=(EditText)findViewById(R.id.counterdtls_edtxt_anniversary);
+        edt_aniversary = (EditText) findViewById(R.id.counterdtls_edtxt_anniversary);
 
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
-        submit=(Button)findViewById(R.id.counterprofile_btn_submit);
-        img_pic=(ImageView)findViewById(R.id.image_counter);
-        txt_select=(TextView)findViewById(R.id.textView_imgselect);
+        submit = (Button) findViewById(R.id.counterprofile_btn_submit);
+        img_pic = (ImageView) findViewById(R.id.image_counter);
+        txt_select = (TextView) findViewById(R.id.textView_imgselect);
+
+        edt_bankname=(EditText)findViewById(R.id.counterdtls_edtxt_bankname);
+        edt_accno=(EditText)findViewById(R.id.counterdtls_edtxt_bankaccno);
+        edt_ifsccode=(EditText)findViewById(R.id.counterdtls_edtxt_ifsccode);
+        edt_countersize=(EditText)findViewById(R.id.counterdtls_countersize);
+        auto_text=(AutoCompleteTextView)findViewById(R.id.auto_text);
+
+
+        // Initialize AutoCompleteTextView values
+
+
+
+
+
     }
 
     @Override
@@ -197,9 +255,9 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         switch (requestCode) {
             case Util.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(userChoosenTask.equals("Take Photo"))
+                    if (userChoosenTask.equals("Take Photo"))
                         cameraIntent();
-                    else if(userChoosenTask.equals("Choose from Library"))
+                    else if (userChoosenTask.equals("Choose from Library"))
                         galleryIntent();
                 } else {
                     //code for deny
@@ -255,8 +313,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             postalcode = (addresses.get(0).getPostalCode() == null ? "" : "" + addresses.get(0).getPostalCode());
             knownname = (addresses.get(0).getFeatureName() == null ? "" : "" + addresses.get(0).getFeatureName());
 
-            address_details =addressone+addresstwo+ city + state + country + postalcode + knownname;
-           // Toast.makeText(AddCounter.this, address_details, Toast.LENGTH_SHORT).show();
+            address_details = addressone + addresstwo + city + state + country + postalcode + knownname;
+            // Toast.makeText(AddCounter.this, address_details, Toast.LENGTH_SHORT).show();
 
 
 //            procedure two
@@ -267,10 +325,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                     addressFragments.add(address.getAddressLine(i));
                 }
                 complete_address = TextUtils.join(System.getProperty("line.separator"),
-                        addressFragments).replaceAll("\\s+","");
+                        addressFragments).replaceAll("\\s+", "");
 
-if(press_current_loc)
-                txt_current_loc.setText(complete_address);
+                if (press_current_loc)
+                    txt_current_loc.setText(complete_address);
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -311,28 +369,34 @@ if(press_current_loc)
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    AddCounterAsync addCounterAsync=new AddCounterAsync(AddCounter.this,"1",edt_countername.getText().toString().trim(),edt_mobileno.getText().toString().trim(),lat,longitude,complete_address,edt_emailid.getText().toString().trim(),null);
-                    addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
-                        @Override
-                        public void OnSuccess(String responsecode) {
-                            Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
 
-                        @Override
-                        public void OnError(String str_err) {
-                            Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-                        }
+                    if(!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1", edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),auto_text.getText().toString().trim(), null);
+                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+                            @Override
+                            public void OnSuccess(String responsecode) {
+                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
 
-                        @Override
-                        public void OnConnectTimeout() {
+                            @Override
+                            public void OnError(String str_err) {
+                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void OnConnectTimeout() {
 
-                    addCounterAsync.execute();
-                }
-                else
+                            }
+                        });
+
+                        addCounterAsync.execute();
+                    }
+                    else
+                    {
+                        Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
+                    }
+                } else
                     Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(AddCounter.this, "Please press on current location", Toast.LENGTH_SHORT).show();
@@ -343,24 +407,24 @@ if(press_current_loc)
 
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(AddCounter.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result=Util.checkPermission(AddCounter.this);
+                boolean result = Util.checkPermission(AddCounter.this);
 
                 if (items[item].equals("Take Photo")) {
-                    userChoosenTask ="Take Photo";
-                    if(result)
+                    userChoosenTask = "Take Photo";
+                    if (result)
                         cameraIntent();
 
                 } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask ="Choose from Library";
-                    if(result)
+                    userChoosenTask = "Choose from Library";
+                    if (result)
                         galleryIntent();
 
                 } else if (items[item].equals("Cancel")) {
@@ -371,16 +435,14 @@ if(press_current_loc)
         builder.show();
     }
 
-    private void galleryIntent()
-    {
+    private void galleryIntent() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);//
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
 
-    private void cameraIntent()
-    {
+    private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
@@ -418,13 +480,13 @@ if(press_current_loc)
         }
 
         img_pic.setImageBitmap(thumbnail);
-        bm=thumbnail;
+        bm = thumbnail;
     }
 
     @SuppressWarnings("deprecation")
     private void onSelectFromGalleryResult(Intent data) {
 
-        Bitmap bm=null;
+        Bitmap bm = null;
         if (data != null) {
             try {
                 bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
@@ -435,6 +497,8 @@ if(press_current_loc)
 
         img_pic.setImageBitmap(bm);
     }
+
+
 
 
 //    public void executeMultipartPost() throws Exception {
