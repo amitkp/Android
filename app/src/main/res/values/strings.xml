@@ -46,4 +46,10 @@
         <item>@string/txt_viewdistributor</item>
         <item>@string/txt_track</item>
     </array>
+
+    <array name="options_dashboard_manager">
+        <item>@string/txt_viewcounter</item>
+        <item>@string/txt_viewdistributor</item>
+        <item>@string/txt_track</item>
+    </array>
 </resources>

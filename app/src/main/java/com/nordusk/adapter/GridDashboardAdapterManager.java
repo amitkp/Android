@@ -2,7 +2,6 @@ package com.nordusk.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -29,8 +28,6 @@ import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
-import com.nordusk.webservices.ChangepasswordAsync;
-import com.nordusk.webservices.HttpConnectionUrl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,22 +36,22 @@ import java.util.Locale;
 /**
  * Created by DELL on 17-11-2016.
  */
-public class GridDashboardAdapter extends BaseAdapter {
+public class GridDashboardAdapterManager extends BaseAdapter {
 
-    private int[] img_ids = {R.drawable.store, R.drawable.distributor, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
+    private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
     private Activity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
-    ArrayList<String>name_list=new ArrayList<String>();
+    ArrayList<String> name_list=new ArrayList<String>();
 
 
-    public GridDashboardAdapter(Activity context) {
+    public GridDashboardAdapterManager(Activity context) {
         this.mContext = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        options_dashboard = context.getResources().getStringArray(R.array.options_dashboard);
+        options_dashboard = context.getResources().getStringArray(R.array.options_dashboard_manager);
         mPrefs = new Prefs(context);
     }
 
@@ -95,28 +92,15 @@ public class GridDashboardAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 if (position == 0) {
-                    Intent intent = new Intent(mContext, AddCounter.class);
-                    mContext.startActivity(intent);
-                } else if (position == 1) {
-                    Intent intent = new Intent(mContext, AddDistributer.class);
-                    mContext.startActivity(intent);
-                } else if (position == 2) {
                     Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                     intent.putExtra("type", "1");
                     mContext.startActivity(intent);
-
-                } else if (position == 3) {
+                } else if (position == 1) {
                     Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                     intent.putExtra("type", "2");
                     mContext.startActivity(intent);
-
-                } else if (position == 4) {
-                    if (mPrefs.getString("designation", "").equalsIgnoreCase("1")) {
-                        showTrackDialog("sales");
-
-                    } else {
+                } else if (position == 2) {
                         showTrackDialog("all");
-                    }
 
                 }
             }
@@ -129,6 +113,7 @@ public class GridDashboardAdapter extends BaseAdapter {
         private ImageView img_icon;
         private TextView txt_option;
     }
+
     private String userName="";
     public void showTrackDialog(final String tag) {
 
@@ -239,6 +224,7 @@ public class GridDashboardAdapter extends BaseAdapter {
 
         mDialog_SelectSelectAccount.show();
     }
+
 
 
 }

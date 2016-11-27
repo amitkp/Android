@@ -30,8 +30,10 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.nordusk.webservices.UserTrace;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -40,7 +42,18 @@ import java.util.Date;
  */
 public class Util {
     public static  boolean isServiceRunning=false;
+
+    public static ArrayList<UserTrace> getUserList() {
+        return UserList;
+    }
+
+    public static void setUserList(ArrayList<UserTrace> userList) {
+        UserList = userList;
+    }
+
+    public  static  ArrayList<UserTrace> UserList=new ArrayList<UserTrace>();
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
 
     /**
      * get the device IMEI no and save it into shared preference
