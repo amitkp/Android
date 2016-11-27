@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
+import com.nordusk.adapter.GridDashboardAdapterManager;
 import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.ChangepasswordAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
@@ -105,8 +106,13 @@ public class Dashboard extends AppCompatActivity {
     private void initView() {
         
         grid_dashboard_item=(GridView)findViewById(R.id.dashboard_grid);
+        if (mPrefs.getString("designation", "").equalsIgnoreCase("4")||mPrefs.getString("designation", "").equalsIgnoreCase("3")){
+            grid_dashboard_item.setAdapter(new GridDashboardAdapterManager(Dashboard.this));
+        }else{
+            grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
+        }
 
-        grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
+
 
     }
 

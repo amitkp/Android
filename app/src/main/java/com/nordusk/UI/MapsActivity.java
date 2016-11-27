@@ -7,16 +7,21 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -28,24 +33,43 @@ import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.ListTraceAsync;
 import com.nordusk.webservices.PointsTraceList;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private PolylineOptions lineOptions = new PolylineOptions();
     private Prefs mPrefs;
+    private double start_lat,start_long,end_lat,end_long=0;
+    private TextView tv_km;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.nordusk.R.layout.activity_maps);
+        setContentView(R.layout.activity_maps_track);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        tv_km=(TextView)findViewById(R.id.tv_km);
+        progressBar=(ProgressBar)findViewById(R.id.progressBar);
         mapFragment.getMapAsync(this);
 
 
@@ -123,11 +147,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 longi = Double.parseDouble(arrayList.get(i).getLongitude());
                                 LatLng latLng = new LatLng(lat, longi);
                                 if (i == 0) {
+                                    start_lat=lat;
+                                    start_long=longi;
                                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                                    mMap.addMarker(new MarkerOptions().position(latLng));
-                                }
+                                    mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                                }else
                                 if(i==arrayList.size()-1){
-                                    mMap.addMarker(new MarkerOptions().position(latLng));
+                                    end_lat=lat;
+                                    end_long=longi;
+                                    mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                }else{
+                                    mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                                 }
                                 lineOptions.add(latLng);
                             }
@@ -141,6 +171,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
 
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                        Distance distance=new Distance();
+                        distance.execute();
+
 
                     } else {
                         Toast.makeText(MapsActivity.this, "No activity found today", Toast.LENGTH_SHORT).show();
@@ -165,6 +198,68 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
+
+    private class Distance extends AsyncTask<Void,Void,Void>{
+        private String KM="";
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            KM=getDistanceOnRoad(start_lat,start_long,end_lat,end_long);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressBar.setVisibility(View.GONE);
+            tv_km.setText(KM);
+
+        }
+    }
+
+    private String getDistanceOnRoad(double latitude, double longitude,
+                                     double prelatitute, double prelongitude) {
+        String result_in_kms = "";
+        String url = "http://maps.google.com/maps/api/directions/xml?origin="
+                + latitude + "," + longitude + "&destination=" + prelatitute
+                + "," + prelongitude + "&sensor=false&units=metric";
+        String tag[] = { "text" };
+        HttpResponse response = null;
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpContext localContext = new BasicHttpContext();
+            HttpPost httpPost = new HttpPost(url);
+            response = httpClient.execute(httpPost, localContext);
+            InputStream is = response.getEntity().getContent();
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder();
+            Document doc = builder.parse(is);
+            if (doc != null) {
+                NodeList nl;
+                ArrayList args = new ArrayList();
+                for (String s : tag) {
+                    nl = doc.getElementsByTagName(s);
+                    if (nl.getLength() > 0) {
+                        Node node = nl.item(nl.getLength() - 1);
+                        args.add(node.getTextContent());
+                    } else {
+                        args.add(" - ");
+                    }
+                }
+                result_in_kms = String.format("%s", args.get(0));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result_in_kms;
+    }
+
 
 
 }
