@@ -31,13 +31,16 @@ import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.ChangepasswordAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.utility.Util;
+import com.nordusk.webservices.ListUserTraceName;
 import com.nordusk.webservices.LogoutAsync;
+import com.nordusk.webservices.UserTrace;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Dashboard extends AppCompatActivity {
-    
+
     private GridView grid_dashboard_item;
     private static int REQUEST_LOCATION = 2;
     private Prefs mPrefs;
@@ -49,14 +52,14 @@ public class Dashboard extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         locationEnable();
-        
-        mPrefs=new Prefs(Dashboard.this);
-        initView();
 
-        
+        mPrefs = new Prefs(Dashboard.this);
+        initView();
+        populateAutocompleteUserData();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         startService(new Intent(this, LocationUpdateService.class));
@@ -76,9 +79,9 @@ public class Dashboard extends AppCompatActivity {
 //        drawer.setDrawerListener(toggle);
 //        toggle.syncState();
 
-       // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-       // navigationView.setNavigationItemSelectedListener(this);
-        
+        // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        // navigationView.setNavigationItemSelectedListener(this);
+
 
     }
 
@@ -101,17 +104,14 @@ public class Dashboard extends AppCompatActivity {
     }
 
 
-
-
     private void initView() {
-        
-        grid_dashboard_item=(GridView)findViewById(R.id.dashboard_grid);
-        if (mPrefs.getString("designation", "").equalsIgnoreCase("4")||mPrefs.getString("designation", "").equalsIgnoreCase("3")){
+
+        grid_dashboard_item = (GridView) findViewById(R.id.dashboard_grid);
+        if (mPrefs.getString("designation", "").equalsIgnoreCase("4") || mPrefs.getString("designation", "").equalsIgnoreCase("3")) {
             grid_dashboard_item.setAdapter(new GridDashboardAdapterManager(Dashboard.this));
-        }else{
+        } else {
             grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
         }
-
 
 
     }
@@ -122,7 +122,7 @@ public class Dashboard extends AppCompatActivity {
 //        if (drawer.isDrawerOpen(GravityCompat.START)) {
 //            drawer.closeDrawer(GravityCompat.START);
 //        } else {
-            super.onBackPressed();
+        super.onBackPressed();
         //}
     }
 
@@ -142,7 +142,7 @@ public class Dashboard extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            LogoutAsync logoutAsync=new LogoutAsync(Dashboard.this,null);
+            LogoutAsync logoutAsync = new LogoutAsync(Dashboard.this, null);
             logoutAsync.setOnContentListParserListner(new LogoutAsync.OnContentListSchedules() {
                 @Override
                 public void OnSuccess(String responsecode) {
@@ -165,7 +165,7 @@ public class Dashboard extends AppCompatActivity {
 
             logoutAsync.execute();
 
-        }else if(id==R.id.action_chnge){
+        } else if (id == R.id.action_chnge) {
 
             //Toast.makeText(Dashboard.this, "Under Development", Toast.LENGTH_SHORT).show();
             showValidateUserDialog();
@@ -202,7 +202,7 @@ public class Dashboard extends AppCompatActivity {
 
     public void showValidateUserDialog() {
 
-        final EditText old_password,new_password,cnfrm_password;
+        final EditText old_password, new_password, cnfrm_password;
         final Dialog mDialog_SelectSelectAccount = new Dialog(Dashboard.this,
                 android.R.style.Theme_DeviceDefault_Light_Dialog);
         mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -220,10 +220,6 @@ public class Dashboard extends AppCompatActivity {
         cnfrm_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_cnf_pswrd);
 
 
-
-
-
-
         Button login_btn_login = (Button) mDialog_SelectSelectAccount.findViewById(R.id.login_btn_login);
 
         login_btn_login.setOnClickListener(new View.OnClickListener() {
@@ -231,13 +227,13 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 // validate
-                if(old_password.getText().toString().trim()!=null &&
-                        new_password.getText().toString().trim()!=null &&cnfrm_password.getText().toString().trim()!=null  ){
-                    if(new_password.getText().toString().trim().equalsIgnoreCase(cnfrm_password.getText().toString().trim())){
+                if (old_password.getText().toString().trim() != null &&
+                        new_password.getText().toString().trim() != null && cnfrm_password.getText().toString().trim() != null) {
+                    if (new_password.getText().toString().trim().equalsIgnoreCase(cnfrm_password.getText().toString().trim())) {
 
-                        if(HttpConnectionUrl.isNetworkAvailable(Dashboard.this)){
-                            ChangepasswordAsync changepasswordAsync=new ChangepasswordAsync
-                                    (Dashboard.this,mPrefs.getString("userid",""),old_password.getText().toString().trim(),cnfrm_password.getText().toString().trim());
+                        if (HttpConnectionUrl.isNetworkAvailable(Dashboard.this)) {
+                            ChangepasswordAsync changepasswordAsync = new ChangepasswordAsync
+                                    (Dashboard.this, mPrefs.getString("userid", ""), old_password.getText().toString().trim(), cnfrm_password.getText().toString().trim());
                             changepasswordAsync.setOnContentListParserListner(new ChangepasswordAsync.OnContentListSchedules() {
                                 @Override
                                 public void OnSuccess(String message) {
@@ -256,21 +252,54 @@ public class Dashboard extends AppCompatActivity {
                                 }
                             });
                             changepasswordAsync.execute();
-                        }else{
+                        } else {
                             Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
                         }
 
-                    }else{
+                    } else {
                         Toast.makeText(Dashboard.this, "New password and confirm password must be same", Toast.LENGTH_SHORT).show();
                     }
 
-                }else{
+                } else {
                     Toast.makeText(Dashboard.this, "Please provide all fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         mDialog_SelectSelectAccount.show();
+    }
+
+    private void populateAutocompleteUserData() {
+        if (HttpConnectionUrl.isNetworkAvailable(Dashboard.this)) {
+            ListUserTraceName listUserTraceName = new ListUserTraceName(Dashboard.this, mPrefs.getString("userid", ""));
+            listUserTraceName.setOnContentListParserListner(new ListUserTraceName.OnContentListSchedules() {
+                @Override
+                public void OnSuccess(ArrayList<UserTrace> arrayList) {
+                    if (Util.getUserList() != null && Util.getUserList().size() > 0 && arrayList!=null && arrayList.size()>0) {
+                        Util.getUserList().clear();
+                        Util.setUserList(arrayList);
+                    }else{
+                        if(arrayList!=null && arrayList.size()>0){
+                            Util.setUserList(arrayList);
+                        }
+                    }
+                }
+
+                @Override
+                public void OnError(String str_err) {
+
+                }
+
+                @Override
+                public void OnConnectTimeout() {
+
+                }
+            });
+            listUserTraceName.execute();
+        } else {
+            Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

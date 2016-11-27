@@ -11,6 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +33,7 @@ import com.nordusk.webservices.ChangepasswordAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -44,6 +48,7 @@ public class GridDashboardAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
+    ArrayList<String>name_list=new ArrayList<String>();
 
 
     public GridDashboardAdapter(Activity context) {
@@ -124,10 +129,12 @@ public class GridDashboardAdapter extends BaseAdapter {
         private ImageView img_icon;
         private TextView txt_option;
     }
-
+    private String userName="";
     public void showTrackDialog(final String tag) {
 
-        final EditText old_password, new_password;
+        final EditText new_password;
+        final AutoCompleteTextView old_password;
+
         final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
                 android.R.style.Theme_DeviceDefault_Light_Dialog);
         mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -140,7 +147,34 @@ public class GridDashboardAdapter extends BaseAdapter {
         mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
-        old_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        old_password = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        if(name_list.size()<1){
+            for(int i=0;i<Util.getUserList().size();i++){
+                name_list.add(Util.getUserList().get(i).getName());
+            }
+        }
+
+        if(name_list!=null && name_list.size()>0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
+            old_password.setAdapter(adapter);
+        }
+
+        old_password.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name="";
+                name = parent.getItemAtPosition(position).toString();
+                for(int i=0;i<Util.getUserList().size();i++){
+                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
+                        userName=Util.getUserList().get(i).getUsername();
+                    }
+                }
+
+            }
+        });
+
+
         new_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_pswrd);
 
         if(tag.equalsIgnoreCase("sales")){
@@ -159,11 +193,11 @@ public class GridDashboardAdapter extends BaseAdapter {
                 if (tag.equalsIgnoreCase("all")) {
 
 
-                    if (old_password.getText().toString().trim() != null && old_password.getText().toString().trim().length() > 0
+                    if (userName!=null && userName.length()>0
                             &&
                             new_password.getText().toString().trim() != null && new_password.getText().toString().trim().length() > 0) {
                         Intent intent = new Intent(mContext, MapsActivity.class);
-                        intent.putExtra("mobile", old_password.getText().toString().trim().replaceAll("\\s+", ""));
+                        intent.putExtra("mobile", userName);
                         intent.putExtra("date", new_password.getText().toString().trim());
                         intent.putExtra("tag", tag);
                         mContext.startActivity(intent);
