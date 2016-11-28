@@ -1,13 +1,20 @@
 package com.nordusk.UI;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +24,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +32,11 @@ import com.nordusk.R;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +47,17 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary,
             edt_bankname,edt_accno,edt_ifsccode,edt_countersize;
     private Button submit;
-    private TextView txt_counterlocation_press, txt_current_loc;
+    private TextView txt_counterlocation_press, txt_current_loc,textView_imgselect;
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
     private String lat = "", longitude = "";
     String complete_address = "";
     private SimpleDateFormat dateFormatter;
+    private String userChoosenTask;
+    private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    private ImageView img_pic;
+    private Bitmap bm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +149,14 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
             }
         });
+
+
+        textView_imgselect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
     }
 
 
@@ -142,8 +167,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
         edt_dob = (EditText) findViewById(R.id.counterdtls_edtxt_dob);
         edt_aniversary = (EditText) findViewById(R.id.distridtls_edtxt_anniversary);
-        edt_mobileno = (EditText) findViewById(R.id.counterdtls_edtxt_mobilenumber);
-        edt_emailid = (EditText) findViewById(R.id.counterdtls_edtxt_emailid);
+        edt_mobileno = (EditText) findViewById(R.id.dis_edtxt_mobilenumber);
+        edt_emailid = (EditText) findViewById(R.id.distributor_edtxt_emailid);
 
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
@@ -153,6 +178,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         edt_accno=(EditText)findViewById(R.id.distributor_edtxt_bankaccno);
         edt_ifsccode=(EditText)findViewById(R.id.distributor_edtxt_ifsccode);
         edt_countersize=(EditText)findViewById(R.id.distributor_countersize);
+
+        img_pic=(ImageView)findViewById(R.id.image_distributor);
+        textView_imgselect=(TextView)findViewById(R.id.textView_imgselect);
     }
 
 
@@ -286,5 +314,98 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         } else
             Toast.makeText(AddDistributer.this, "Please enter distributor name", Toast.LENGTH_SHORT).show();
 
+    }
+
+
+    private void selectImage() {
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddDistributer.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result = Util.checkPermission(AddDistributer.this);
+
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask = "Take Photo";
+                    if (result)
+                        cameraIntent();
+
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask = "Choose from Library";
+                    if (result)
+                        galleryIntent();
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+    }
+
+    private void cameraIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_FILE)
+                onSelectFromGalleryResult(data);
+            else if (requestCode == REQUEST_CAMERA)
+                onCaptureImageResult(data);
+        }
+    }
+
+    private void onCaptureImageResult(Intent data) {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        img_pic.setImageBitmap(thumbnail);
+        bm = thumbnail;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void onSelectFromGalleryResult(Intent data) {
+
+        Bitmap bm = null;
+        if (data != null) {
+            try {
+                bm = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        img_pic.setImageBitmap(bm);
     }
 }
