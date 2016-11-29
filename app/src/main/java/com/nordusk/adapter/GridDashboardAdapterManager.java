@@ -1,7 +1,9 @@
 package com.nordusk.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -100,13 +102,44 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     intent.putExtra("type", "2");
                     mContext.startActivity(intent);
                 } else if (position == 2) {
-                        showTrackDialog("all");
+//                        showTrackDialog("all");
+                    selectDialog();
 
                 }
             }
         });
 
         return convertView;
+    }
+
+
+    private void selectDialog() {
+
+        final CharSequence[] items = {"Track Self", "Track Others"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Select Tracking");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result = Util.checkPermission(mContext);
+
+                if (items[item].equals("Track Self")) {
+
+                    if (result)
+                        showTrackDialog("sales");
+
+                } else if (items[item].equals("Track Others")) {
+
+                    if (result)
+                        showTrackDialog("all");
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
     }
 
     public class Holder {

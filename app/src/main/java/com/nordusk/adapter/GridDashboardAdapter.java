@@ -1,8 +1,10 @@
 package com.nordusk.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -49,6 +51,7 @@ public class GridDashboardAdapter extends BaseAdapter {
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
     ArrayList<String>name_list=new ArrayList<String>();
+    private String userChoosenTask;
 
 
     public GridDashboardAdapter(Activity context) {
@@ -113,9 +116,11 @@ public class GridDashboardAdapter extends BaseAdapter {
                 } else if (position == 4) {
                     if (mPrefs.getString("designation", "").equalsIgnoreCase("1")) {
                         showTrackDialog("sales");
+//                        selectDialog();
 
                     } else {
-                        showTrackDialog("all");
+//                        showTrackDialog("all");
+                        selectDialog();
                     }
 
                 }
@@ -124,6 +129,36 @@ public class GridDashboardAdapter extends BaseAdapter {
 
         return convertView;
     }
+
+    private void selectDialog() {
+
+        final CharSequence[] items = {"Track Self", "Track Others"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Select Tracking");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result = Util.checkPermission(mContext);
+
+                if (items[item].equals("Track Self")) {
+
+                    if (result)
+                        showTrackDialog("sales");
+
+                } else if (items[item].equals("Track Others")) {
+
+                    if (result)
+                        showTrackDialog("all");
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
 
     public class Holder {
         private ImageView img_icon;

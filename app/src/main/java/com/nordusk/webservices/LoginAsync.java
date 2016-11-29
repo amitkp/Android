@@ -102,6 +102,7 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
                 my_prefs.setString("name", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "name"));
                 my_prefs.setString("mobile_no", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "mobile_no"));
                 my_prefs.setString("designation", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "designation"));
+                my_prefs.setString("username", HttpConnectionUrl.getJSONKeyvalue(jsonObject, "username"));
 
 
 

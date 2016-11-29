@@ -123,7 +123,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         } else {
             date = getIntent().getStringExtra("date");
-            mobile = mPrefs.getString("mobile_no", "");
+            mobile = mPrefs.getString("username", "");
         }
 
         populateData(mobile, date);
