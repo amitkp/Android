@@ -124,7 +124,7 @@ ParentIdfetch();
             public void OnSuccess(ArrayList<ParentId> arrayList) {
 
                 tempParentIds=arrayList;
-                Toast.makeText(AddCounter.this,"success",Toast.LENGTH_SHORT).show();
+
                 setAutoTextAdapter();
             }
 
@@ -369,9 +369,17 @@ ParentIdfetch();
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-
                     if(!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
-                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1", edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),auto_text.getText().toString().trim(), null);
+
+
+                        String[] separated = auto_text.getText().toString().trim().split("-");
+
+
+                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
+                                edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(),
+                                lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
+                                separated[1].toString(), null);
                         addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                             @Override
                             public void OnSuccess(String responsecode) {

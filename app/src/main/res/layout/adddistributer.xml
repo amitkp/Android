@@ -231,6 +231,16 @@
                 android:hint="Counter Size"
                 android:inputType="number"></EditText>
 
+            <AutoCompleteTextView
+                android:id="@+id/auto_text"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+
+                android:hint="Prime partner*"
+                android:width="250dip" />
+
             <Button
                 android:id="@+id/counterprofile_btn_submit"
                 android:layout_width="match_parent"

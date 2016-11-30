@@ -12,6 +12,7 @@
         android:layout_height="match_parent"></fragment>
 
     <RelativeLayout
+        android:id="@+id/rltv_totaldistance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -51,6 +52,34 @@
             android:textSize="13sp"
             android:textAllCaps="false"
             />
+
+
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rltv_shortestpath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:layout_above="@+id/rltv_totaldistance">
+
+
+        <TextView
+            android:id="@+id/tv_text_shrtest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:textSize="14sp"
+            android:layout_centerVertical="true"
+            android:textAllCaps="false"
+            android:text="SHORTEST PATH"/>
+
+
 
 
 

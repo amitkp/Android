@@ -58,7 +58,7 @@ public class CustomAutoCompleteAdapter extends ArrayAdapter<ParentId> {
     Filter nameFilter = new Filter() {
         @Override
         public String convertResultToString(Object resultValue) {
-            String str = ((ParentId)(resultValue)).getId();
+            String str = ((ParentId)(resultValue)).getName()+"-"+((ParentId)(resultValue)).getId();
             return str;
         }
         @Override

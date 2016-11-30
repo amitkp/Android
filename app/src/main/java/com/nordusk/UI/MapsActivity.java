@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double start_lat,start_long,end_lat,end_long=0;
     private TextView tv_km;
     private ProgressBar progressBar;
+    private RelativeLayout rltv_shortestpath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +72,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         tv_km=(TextView)findViewById(R.id.tv_km);
         progressBar=(ProgressBar)findViewById(R.id.progressBar);
+        rltv_shortestpath=(RelativeLayout)findViewById(R.id.rltv_shortestpath);
         mapFragment.getMapAsync(this);
 
+        setListener();
 
+
+    }
+
+    private void setListener() {
+
+        rltv_shortestpath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MapsActivity.this,"Working Progress",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
