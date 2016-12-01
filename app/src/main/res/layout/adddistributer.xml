@@ -238,7 +238,7 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
 
-                android:hint="Prime partner*"
+                android:hint="Prime partner"
                 android:width="250dip" />
 
             <Button

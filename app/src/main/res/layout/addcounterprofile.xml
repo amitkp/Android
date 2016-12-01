@@ -230,7 +230,7 @@ android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM "
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
 
-                android:hint="Parent Id*"
+                android:hint="Parent Id"
                 android:width="250dip" />
 
 

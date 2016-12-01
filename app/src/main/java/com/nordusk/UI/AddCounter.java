@@ -62,7 +62,7 @@ import java.util.Locale;
 public class AddCounter extends AppCompatActivity implements LocationListener {
 
     private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_territory, edt_aniversary,
-    edt_bankname,edt_accno,edt_ifsccode,edt_countersize;
+            edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
     private Button submit;
     private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
@@ -77,13 +77,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private TextView txt_select;
     private Bitmap bm;
     private AutoCompleteTextView auto_text;
-    private ArrayList<ParentId> tempParentIds=new ArrayList<>();
+    private ArrayList<ParentId> tempParentIds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addcounterprofile);
-ParentIdfetch();
+        ParentIdfetch();
         initView();
         setListener();
 
@@ -118,12 +118,12 @@ ParentIdfetch();
 
     private void ParentIdfetch() {
 
-        ParentIdAsync parentIdAsync=new ParentIdAsync(AddCounter.this);
+        ParentIdAsync parentIdAsync = new ParentIdAsync(AddCounter.this);
         parentIdAsync.setOnContentListParserListner(new ParentIdAsync.OnContentListSchedules() {
             @Override
             public void OnSuccess(ArrayList<ParentId> arrayList) {
 
-                tempParentIds=arrayList;
+                tempParentIds = arrayList;
 
                 setAutoTextAdapter();
             }
@@ -143,7 +143,6 @@ ParentIdfetch();
     }
 
     private void setListener() {
-
 
 
         txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
@@ -235,17 +234,14 @@ ParentIdfetch();
         img_pic = (ImageView) findViewById(R.id.image_counter);
         txt_select = (TextView) findViewById(R.id.textView_imgselect);
 
-        edt_bankname=(EditText)findViewById(R.id.counterdtls_edtxt_bankname);
-        edt_accno=(EditText)findViewById(R.id.counterdtls_edtxt_bankaccno);
-        edt_ifsccode=(EditText)findViewById(R.id.counterdtls_edtxt_ifsccode);
-        edt_countersize=(EditText)findViewById(R.id.counterdtls_countersize);
-        auto_text=(AutoCompleteTextView)findViewById(R.id.auto_text);
+        edt_bankname = (EditText) findViewById(R.id.counterdtls_edtxt_bankname);
+        edt_accno = (EditText) findViewById(R.id.counterdtls_edtxt_bankaccno);
+        edt_ifsccode = (EditText) findViewById(R.id.counterdtls_edtxt_ifsccode);
+        edt_countersize = (EditText) findViewById(R.id.counterdtls_countersize);
+        auto_text = (AutoCompleteTextView) findViewById(R.id.auto_text);
 
 
         // Initialize AutoCompleteTextView values
-
-
-
 
 
     }
@@ -369,41 +365,44 @@ ParentIdfetch();
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    if(!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                    // if(!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
-
+                    String parentId = "";
+                    if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                         String[] separated = auto_text.getText().toString().trim().split("-");
-
-
-                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
-                                edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(),
-                                lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                                separated[1].toString(), null);
-                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
-                            @Override
-                            public void OnSuccess(String responsecode) {
-                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-
-                            @Override
-                            public void OnError(String str_err) {
-                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void OnConnectTimeout() {
-
-                            }
-                        });
-
-                        addCounterAsync.execute();
+                        parentId = separated[1].toString();
                     }
-                    else
-                    {
-                        Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
-                    }
+
+
+                    AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
+                            edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(),
+                            lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                            edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
+                            parentId, null);
+                    addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+                        @Override
+                        public void OnSuccess(String responsecode) {
+                            Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void OnError(String str_err) {
+                            Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void OnConnectTimeout() {
+
+                        }
+                    });
+
+                    addCounterAsync.execute();
+                    //  }
+//                    else
+//                    {
+//                        Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
+//                    }
                 } else
                     Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
             } else
@@ -505,8 +504,6 @@ ParentIdfetch();
 
         img_pic.setImageBitmap(bm);
     }
-
-
 
 
 //    public void executeMultipartPost() throws Exception {

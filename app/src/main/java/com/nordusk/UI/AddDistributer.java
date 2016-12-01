@@ -330,12 +330,18 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
 
-                    if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                  //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
+                    String parentId = "1";
+                    if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                         String[] separated = auto_text.getText().toString().trim().split("-");
+                        parentId = separated[1].toString();
+                    }
 
 
-                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, "2", edt_countername.getText().toString().trim(), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(), separated[1].toString(), null);
+
+                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, "2", edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                edt_countersize.getText().toString().trim(), parentId, null);
                         addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                             @Override
                             public void OnSuccess(String responsecode) {
@@ -355,9 +361,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                         });
 
                         addCounterAsync.execute();
-                    } else {
-                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
-                    }
+//                    } else {
+//                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
+//                    }
                 }
                 else
                     Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
