@@ -25,7 +25,7 @@ public class ListTraceAsync extends AsyncTask<Void, Void, Void> {
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
     private String userId="",type="";
-    private ArrayList<PointsTraceList>arrayList=new ArrayList<PointsTraceList>();
+    TrackDetails lcl_trackDetails=new TrackDetails();
 
 
     public ListTraceAsync(Activity context, String userId, String type) {
@@ -73,7 +73,7 @@ public class ListTraceAsync extends AsyncTask<Void, Void, Void> {
             }
         }
             if (onContentListParserListner != null && responsecode.equalsIgnoreCase("200")) {
-                onContentListParserListner.OnSuccess(arrayList);
+                onContentListParserListner.OnSuccess(lcl_trackDetails);
 
         } else {
                 if(responseMessage!=null && responseMessage.length()>0){
@@ -91,8 +91,10 @@ public class ListTraceAsync extends AsyncTask<Void, Void, Void> {
             responsecode = jsonObject.getString("response_code");
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
 
+                TrackDetails trackDetails=new TrackDetails();
 
                 JSONArray jsonArray=jsonObject.getJSONArray("list");
+                ArrayList<PointsTraceList> al_pointsTraceList=new ArrayList<PointsTraceList>();
                 if(jsonArray!=null && jsonArray.length()>0){
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject object=jsonArray.getJSONObject(i);
@@ -100,14 +102,31 @@ public class ListTraceAsync extends AsyncTask<Void, Void, Void> {
                         list.setId(HttpConnectionUrl.getJSONKeyvalue(object, "id"));
                         list.setLatitude(HttpConnectionUrl.getJSONKeyvalue(object, "latitude"));
                         list.setLongitude(HttpConnectionUrl.getJSONKeyvalue(object, "longitude"));
-                        arrayList.add(list);
+                        al_pointsTraceList.add(list);
 
                     }
+                    trackDetails.setArr_pointsTraceLists(al_pointsTraceList);
+                }
+
+                JSONArray jsonArray_counter=jsonObject.getJSONArray("counter");
+                ArrayList<CounterSet> al_counterSets=new ArrayList<CounterSet>();
+                if(jsonArray_counter!=null && jsonArray_counter.length()>0){
+                    for(int i=0;i<jsonArray_counter.length();i++){
+                        JSONObject object=jsonArray_counter.getJSONObject(i);
+                        CounterSet list_counter=new CounterSet();
+                        list_counter.setId(HttpConnectionUrl.getJSONKeyvalue(object, "id"));
+                        list_counter.setLatitude(HttpConnectionUrl.getJSONKeyvalue(object, "latitude"));
+                        list_counter.setLongitude(HttpConnectionUrl.getJSONKeyvalue(object, "longitude"));
+                        al_counterSets.add(list_counter);
+
+                    }
+                    trackDetails.setArr_counterset(al_counterSets);
                 }
 
 
 
 
+                lcl_trackDetails=trackDetails;
             }
             else
             {
@@ -132,7 +151,7 @@ public class ListTraceAsync extends AsyncTask<Void, Void, Void> {
     }
 
     public interface OnContentListSchedules {
-        public void OnSuccess(ArrayList<PointsTraceList> arrayList);
+        public void OnSuccess(TrackDetails trackDetails);
 
         public void OnError(String str_err);
 

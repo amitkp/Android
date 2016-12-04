@@ -15,6 +15,7 @@
         android:id="@+id/rltv_totaldistance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="@android:color/white"
         android:layout_alignParentBottom="true">
 
@@ -63,6 +64,7 @@
         android:id="@+id/rltv_shortestpath"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="@android:color/darker_gray"
         android:layout_above="@+id/rltv_totaldistance">
 
@@ -85,6 +87,15 @@
 
 
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_task"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_launcher"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
 
 

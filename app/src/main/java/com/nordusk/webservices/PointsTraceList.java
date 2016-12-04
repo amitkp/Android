@@ -1,5 +1,7 @@
 package com.nordusk.webservices;
 
+import java.util.ArrayList;
+
 /**
  * Created by NeeloyG on 11/20/2016.
  */
@@ -13,6 +15,8 @@ public class PointsTraceList {
     private String latitude;
 
     private String date_time;
+
+
 
     public String getId() {
         return id;
