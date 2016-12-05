@@ -164,6 +164,8 @@ public class HttpConnectionUrl {
 		HttpPost httpPost = null;
 		try {
 
+
+
 			httpPost = new HttpPost(Url);
 //			if (header_list != null && header_list.size() > 0) {
 //				for (int i = 0; i < header_list.size(); i++) {
