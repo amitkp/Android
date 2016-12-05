@@ -117,6 +117,8 @@ public class ListTraceAsync extends AsyncTask<Void, Void, Void> {
                         list_counter.setId(HttpConnectionUrl.getJSONKeyvalue(object, "id"));
                         list_counter.setLatitude(HttpConnectionUrl.getJSONKeyvalue(object, "latitude"));
                         list_counter.setLongitude(HttpConnectionUrl.getJSONKeyvalue(object, "longitude"));
+                        list_counter.setAddress(HttpConnectionUrl.getJSONKeyvalue(object, "address"));
+                        list_counter.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
                         al_counterSets.add(list_counter);
 
                     }
