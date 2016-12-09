@@ -103,7 +103,8 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     mContext.startActivity(intent);
                 } else if (position == 2) {
 //                        showTrackDialog("all");
-                    selectDialog();
+//                    selectDialog();
+                    showTrackDialog("all");
 
                 }
             }

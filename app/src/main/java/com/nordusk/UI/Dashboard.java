@@ -109,6 +109,7 @@ public class Dashboard extends AppCompatActivity {
         grid_dashboard_item = (GridView) findViewById(R.id.dashboard_grid);
         if (mPrefs.getString("designation", "").equalsIgnoreCase("4") || mPrefs.getString("designation", "").equalsIgnoreCase("3")) {
             grid_dashboard_item.setAdapter(new GridDashboardAdapterManager(Dashboard.this));
+
         } else {
             grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
         }

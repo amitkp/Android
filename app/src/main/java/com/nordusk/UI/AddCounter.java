@@ -68,6 +68,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
+    private boolean adress_set=false;
     private String lat = "", longitude = "";
     String complete_address = "";
     private SimpleDateFormat dateFormatter;
@@ -323,8 +324,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 complete_address = TextUtils.join(System.getProperty("line.separator"),
                         addressFragments).replaceAll("\\s+", "");
 
-                if (press_current_loc)
+                if (press_current_loc) {
+
+                    if(!adress_set)
                     txt_current_loc.setText(complete_address);
+                    if(!TextUtils.isEmpty(complete_address) && complete_address.length()>0)
+                        adress_set=true;
+                }
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {

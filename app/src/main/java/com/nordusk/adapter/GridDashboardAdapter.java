@@ -113,17 +113,18 @@ public class GridDashboardAdapter extends BaseAdapter {
                     intent.putExtra("type", "2");
                     mContext.startActivity(intent);
 
-                } else if (position == 4) {
-                    if (mPrefs.getString("designation", "").equalsIgnoreCase("1")) {
-                        showTrackDialog("sales");
-//                        selectDialog();
-
-                    } else {
-//                        showTrackDialog("all");
-                        selectDialog();
-                    }
-
                 }
+//                else if (position == 4) {
+//                    if (mPrefs.getString("designation", "").equalsIgnoreCase("1")) {
+//                        showTrackDialog("sales");
+////                        selectDialog();
+//
+//                    } else {
+////                        showTrackDialog("all");
+//                        selectDialog();
+//                    }
+//
+//                }
             }
         });
 

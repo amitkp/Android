@@ -7,6 +7,8 @@
     android:layout_margin="@dimen/dp_10"
     >
 
+
+
     <TextView
         android:id="@+id/txt_counterprofile"
         android:layout_width="match_parent"
@@ -47,6 +49,37 @@
                 android:layout_height="@dimen/dp_1"
                 android:background="@color/colorPrimary">
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/txt_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:text="Add as">
+                </TextView>
+
+            <RadioGroup
+                android:id="@+id/radioSex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distributor"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:text="Prime partner" />
+
+            </RadioGroup>
 
             <EditText
                 android:id="@+id/counterdtls_edtxt_name"

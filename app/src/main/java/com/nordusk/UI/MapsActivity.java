@@ -369,15 +369,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressBar.setVisibility(View.GONE);
-            if (KM.contains("km")) {
-                String[] km = KM.split(" ");
-                if (km[0] != null && km[0].length() > 0) {
-                    KM = km[0];
-                }
-                short_distance_km = short_distance_km + Float.parseFloat(KM);
-            }
+//            if (KM.contains("km")) {
+//                String[] km = KM.split(" ");
+//                if (km[0] != null && km[0].length() > 0) {
+//                    KM = km[0];
+//                }
+//                short_distance_km = short_distance_km + Float.parseFloat(KM);
+//            }
             calculateShortPath();
 //            tv_km.setText(KM);
+            Toast.makeText(MapsActivity.this,KM,Toast.LENGTH_SHORT).show();
 
 
             // point 2 :returning 4.0 km
@@ -434,7 +435,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String result_in_kms = "";
         String url = "http://maps.google.com/maps/api/directions/xml?origin="
                 + latitude + "," + longitude + "&destination=" + prelatitute
-                + "," + prelongitude + "&sensor=false&units=metric";
+                + "," + prelongitude + "&sensor=false&units=metric&mode=driving";
         String tag[] = {"text"};
         HttpResponse response = null;
         try {
@@ -465,6 +466,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 }
                 result_in_kms = String.format("%s", args.get(0));
+//                Toast.makeText(MapsActivity.this,result_in_kms,Toast.LENGTH_SHORT).show();
+
             }
         } catch (Exception e) {
             e.printStackTrace();

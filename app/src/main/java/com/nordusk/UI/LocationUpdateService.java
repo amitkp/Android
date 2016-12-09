@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * Created by NeeloyG on 16-11-2016.
  */
 public class LocationUpdateService extends Service {
-    public static final int TWO_MINUTES = 300000; // 120 seconds
+    public static final int TWO_MINUTES = 600000;
     public static Boolean isRunning = false;
 
     public LocationManager mLocationManager;
