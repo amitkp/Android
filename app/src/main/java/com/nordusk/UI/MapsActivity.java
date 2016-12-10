@@ -33,9 +33,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.nordusk.*;
 import com.nordusk.R;
+import com.nordusk.utility.GMapV2Direction;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
@@ -78,6 +80,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<PointsTraceList> total_path_list = new ArrayList<PointsTraceList>();
     private boolean isLoaded=false;
     private int total_counters=0;
+    GMapV2Direction md = new GMapV2Direction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,16 +211,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 pointsTraceList.setLongitude(Double.toString(longi));
                                 total_path_list.add(pointsTraceList);
 
+
+
                             }
 
                         }
-                        lineOptions.width(5);
-                        lineOptions.color(Color.RED);
-                        if (lineOptions != null) {
-                            mMap.addPolyline(lineOptions);
-                        }
+//                        lineOptions.width(5);
+//                        lineOptions.color(Color.RED);
+//                        if (lineOptions != null) {
+//                            mMap.addPolyline(lineOptions);
+//                        }
 
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
                     }
 
 
@@ -297,13 +302,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Distance distance = new Distance(chng_lat_start, chng_lat_end, chng_long_start, chng_long_end);
             distance.execute();
 
+
+
+
         }else{
             isLoaded=true;
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         }
 
     }
 
-
+    PolylineOptions rectLine = new PolylineOptions().width(3).color(
+            Color.RED);
 
     private class Distance extends AsyncTask<Void, Void, Void> {
         private String Total_KM = "";
@@ -325,7 +335,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected Void doInBackground(Void... params) {
-            Total_KM = getDistanceOnRoad(start_lat, start_long, end_lat, end_long);
+           // Total_KM = getDistanceOnRoad(start_lat, start_long, end_lat, end_long);
+            LatLng latLngstart = new LatLng(start_lat
+                    , start_long);
+            LatLng latLngend = new LatLng(end_lat, end_long);
+            Document doc = md.getDocument(latLngstart, latLngend,
+                    GMapV2Direction.MODE_DRIVING);
+
+            ArrayList<LatLng> directionPoint = md.getDirection(doc);
+
+
+            for (int i = 0; i < directionPoint.size(); i++) {
+                rectLine.add(directionPoint.get(i));
+            }
+
             return null;
         }
 
@@ -333,13 +356,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressBar.setVisibility(View.GONE);
-            if (Total_KM.contains("km")) {
-                String[] km = Total_KM.split(" ");
-                if (km[0] != null && km[0].length() > 0) {
-                    Total_KM = km[0];
-                }
-                visited_km = visited_km + Float.parseFloat(Total_KM);
-            }
+            Polyline polylin = mMap.addPolyline(rectLine);
+//            if (Total_KM.contains("km")) {
+//                String[] km = Total_KM.split(" ");
+//                if (km[0] != null && km[0].length() > 0) {
+//                    Total_KM = km[0];
+//                }
+//                visited_km = visited_km + Float.parseFloat(Total_KM);
+//            }
             calculateTotalPath();
 
         }
