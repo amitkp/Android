@@ -4,6 +4,7 @@ import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -254,8 +256,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         }
 
-
-                        calculateTotalPath();
+                        if(total_path_list!=null && total_path_list.size()>0) {
+                            mpProgressDialog = new ProgressDialog(MapsActivity.this);
+                            mpProgressDialog.setMessage("Loading data.Please wait..");
+                            mpProgressDialog.setCancelable(false);
+                            mpProgressDialog.show();
+                            calculateTotalPath();
+                        }else{
+                            Toast.makeText(MapsActivity.this, "No data found", Toast.LENGTH_SHORT).show();
+                        }
                         // Distance distance=new Distance();
                         // distance.execute();
 
@@ -308,16 +317,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }else{
             isLoaded=true;
             mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            visited_km=visited_km/1000;
+            if(mpProgressDialog!=null && mpProgressDialog.isShowing())
+                mpProgressDialog.dismiss();
         }
 
     }
 
     PolylineOptions rectLine = new PolylineOptions().width(3).color(
             Color.RED);
-
+    private ProgressDialog mpProgressDialog;
     private class Distance extends AsyncTask<Void, Void, Void> {
         private String Total_KM = "";
         double start_lat = 0, end_lat = 0, start_long = 0, end_long = 0;
+
 
         public Distance(double start_lat, double end_lat, double start_long, double end_long) {
 
@@ -325,12 +338,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             this.end_lat = end_lat;
             this.start_long = start_long;
             this.end_long = end_long;
+
+
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -341,6 +355,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             LatLng latLngend = new LatLng(end_lat, end_long);
             Document doc = md.getDocument(latLngstart, latLngend,
                     GMapV2Direction.MODE_DRIVING);
+            Log.e("distance",md.getDistanceText(doc));
+            if(md.getDistanceText(doc)!=null && md.getDistanceText(doc).length()>0)
+            visited_km=visited_km+Integer.parseInt(md.getDistanceText(doc));
 
             ArrayList<LatLng> directionPoint = md.getDirection(doc);
 
@@ -355,15 +372,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressBar.setVisibility(View.GONE);
+
             Polyline polylin = mMap.addPolyline(rectLine);
-//            if (Total_KM.contains("km")) {
-//                String[] km = Total_KM.split(" ");
-//                if (km[0] != null && km[0].length() > 0) {
-//                    Total_KM = km[0];
-//                }
-//                visited_km = visited_km + Float.parseFloat(Total_KM);
-//            }
             calculateTotalPath();
 
         }
@@ -435,6 +445,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tv_total = (TextView) mDialog_SelectSelectAccount.findViewById(R.id.tv_total);
         tv_short = (TextView) mDialog_SelectSelectAccount.findViewById(R.id.tv_short);
         tv_counter = (TextView) mDialog_SelectSelectAccount.findViewById(R.id.tv_counter);
+
 
         tv_total.setText("" + visited_km + " KM");
         tv_short.setText("" + total_counters);
