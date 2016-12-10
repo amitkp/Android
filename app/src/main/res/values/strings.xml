@@ -37,6 +37,7 @@
     <string name="txt_passwordLength">Password should be at least 6 characters long</string>
     <string name="ValidateEmptyPwd">Enter a valid Password</string>
     <string name="ValidateEmptyUid">Enter valid User ID</string>
+    <string name="call">Call</string>
 
 
     <array name="options_dashboard">

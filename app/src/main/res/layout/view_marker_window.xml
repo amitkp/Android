@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/lnr_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="@dimen/pinViewWidth"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_map_white"
+                android:minHeight="60dp"
+                android:paddingLeft="@dimen/m_normal"
+                android:paddingRight="@dimen/m_normal">
+
+                <ImageView
+                    android:id="@+id/iv"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/iv"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/p_small"
+                    android:paddingLeft="@dimen/p_small"
+                    android:paddingRight="@dimen/p_small"
+                    android:paddingStart="@dimen/p_small">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_xnormal"/>
+                    <TextView
+                        android:id="@+id/tv_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_normal"/>
+                    <TextView
+                        android:id="@+id/tv_ph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_normal"/>
+
+                    <TextView
+                        android:id="@+id/tv_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/sp_normal"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_call"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_map_black">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/p_small"
+                    android:paddingRight="@dimen/p_small"
+                    android:textColor="@color/colorWhite"
+                    app:srcCompat="@drawable/ic_call"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="-22dp"
+            android:src="@drawable/ic_white_bg_arrow"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="-3dip">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="@dimen/map_arrow_width"
+            android:layout_height="@dimen/map_arrow_height"
+            app:srcCompat="@drawable/ic_map_info_arrow"/>
+
+        <View
+            android:layout_width="@dimen/map_arrow_width"
+            android:layout_height="1.5dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorWhite"/>
+    </RelativeLayout>
+
+</LinearLayout>
