@@ -73,12 +73,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ProgressBar progressBar;
     private RelativeLayout rltv_shortestpath;
     private ImageView task_icon;
-    float short_distance_km = 0;
     float visited_km=0;
     int counter_visited = 0;
-    private ArrayList<PointsTraceList> shortest_path_list = new ArrayList<PointsTraceList>();
     private ArrayList<PointsTraceList> total_path_list = new ArrayList<PointsTraceList>();
     private boolean isLoaded=false;
+    private int total_counters=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,15 +224,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if (arrayList != null && arrayList.getArr_counterset() != null && arrayList.getArr_counterset().size() > 0)
 
                     {
-                        double Filter_start_lat = 0;
+                        total_counters=arrayList.getArr_counterset().size();
                         double Filter_end_lat = 0;
-
-                        Filter_start_lat = Double.parseDouble(arrayList.getArr_pointsTraceLists().get(0).getLatitude());
                         Filter_end_lat = Double.parseDouble(arrayList.getArr_pointsTraceLists().get(arrayList.getArr_pointsTraceLists().size() - 1).getLatitude());
 
                         for (int j = 0; j < arrayList.getArr_counterset().size(); j++) {
-                            short_distance_km = 0;
-                            double chng_lat_start = 0, chng_lat_end = 0, chng_long = 0, chng_long_end = 0;
                             if (arrayList.getArr_counterset().get(j).getLatitude() != null && arrayList.getArr_counterset().get(j).getLongitude() != null) {
                                 if (Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude()) < Filter_end_lat) {
                                     Double lat = Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude());
@@ -246,22 +241,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     }
                                     mMap.addMarker(new MarkerOptions().position(latLngchk).title(title).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                                     counter_visited = counter_visited + 1;
-                                    chng_lat_start = Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude());
-                                    if (j + 1 <= arrayList.getArr_counterset().size() - 1) {
-                                        chng_lat_end = Double.parseDouble(arrayList.getArr_counterset().get(j + 1).getLatitude());
-                                        chng_long = Double.parseDouble(arrayList.getArr_counterset().get(j).getLongitude());
-                                        chng_long_end = Double.parseDouble(arrayList.getArr_counterset().get(j + 1).getLongitude());
-                                        PointsTraceList pointsTraceList = new PointsTraceList();
-                                        PointsTraceList pointsTraceListNext = new PointsTraceList();
-                                        pointsTraceList.setLatitude(Double.toString(chng_lat_start));
-                                        pointsTraceList.setLongitude(Double.toString(chng_long));
-                                        pointsTraceListNext.setLatitude(Double.toString(chng_lat_end));
-                                        pointsTraceListNext.setLongitude(Double.toString(chng_long_end));
-                                        shortest_path_list.add(pointsTraceList);
-                                        shortest_path_list.add(pointsTraceListNext);
 
-
-                                    }
 
                                 }
 
@@ -270,7 +250,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
 
 
-                        calculateShortPath();
+                        calculateTotalPath();
                         // Distance distance=new Distance();
                         // distance.execute();
 
@@ -303,25 +283,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-    private int short_path_point = 0;
     private int long_path_point = 0;
-    private boolean isShortestPathLoaded=false;
 
-    private void calculateShortPath() {
-        if (short_path_point < shortest_path_list.size() - 1) {
-            double chng_lat_start = Double.parseDouble(shortest_path_list.get(short_path_point).getLatitude());
-            double chng_lat_end = Double.parseDouble(shortest_path_list.get(short_path_point + 1).getLatitude());
-            double chng_long_start = Double.parseDouble(shortest_path_list.get(short_path_point).getLongitude());
-            double chng_long_end = Double.parseDouble(shortest_path_list.get(short_path_point + 1).getLongitude());
-            short_path_point = short_path_point + 1;
-            TotalDistanceCover distance = new TotalDistanceCover(chng_lat_start, chng_lat_end, chng_long_start, chng_long_end);
-            distance.execute();
 
-        }else{
-            calculateTotalPath();
-        }
-
-    }
 
     private void calculateTotalPath() {
         if (long_path_point < total_path_list.size() - 1) {
@@ -339,54 +303,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private class TotalDistanceCover extends AsyncTask<Void, Void, Void> {
-        private String KM = "";
-        double start_lat = 0, end_lat = 0, start_long = 0, end_long = 0;
 
-        public TotalDistanceCover(double start_lat, double end_lat, double start_long, double end_long) {
-
-            this.start_lat = start_lat;
-            this.end_lat = end_lat;
-            this.start_long = start_long;
-            this.end_long = end_long;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            KM = getDistanceOnRoad(start_lat, start_long, end_lat, end_long);
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressBar.setVisibility(View.GONE);
-//            if (KM.contains("km")) {
-//                String[] km = KM.split(" ");
-//                if (km[0] != null && km[0].length() > 0) {
-//                    KM = km[0];
-//                }
-//                short_distance_km = short_distance_km + Float.parseFloat(KM);
-//            }
-            calculateShortPath();
-//            tv_km.setText(KM);
-            Toast.makeText(MapsActivity.this,KM,Toast.LENGTH_SHORT).show();
-
-
-            // point 2 :returning 4.0 km
-
-
-        }
-
-    }
 
     private class Distance extends AsyncTask<Void, Void, Void> {
         private String Total_KM = "";
@@ -496,7 +413,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tv_counter = (TextView) mDialog_SelectSelectAccount.findViewById(R.id.tv_counter);
 
         tv_total.setText("" + visited_km + " KM");
-        tv_short.setText("" + short_distance_km + " KM");
+        tv_short.setText("" + total_counters);
         tv_counter.setText("" + counter_visited);
 
         mDialog_SelectSelectAccount.show();

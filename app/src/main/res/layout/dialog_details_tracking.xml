@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:textSize="16sp"
-                android:text="Shortest Distance :"
+                android:text="Total Counters :"
                 android:textColor="@android:color/black"/>
 
             <TextView
