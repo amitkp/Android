@@ -29,7 +29,8 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
 
 
 
-        public AddCounterAsync(Activity context,String type,String countername,String mobile,String lattitude,String longitude,String address,String email,String Bankname,String Accno,String ifsc,String countersize,String parntid, JSONObject jsonObject) {
+        public AddCounterAsync(Activity context,String type,String countername,String mobile,String lattitude,
+                               String longitude,String address,String email,String Bankname,String Accno,String ifsc,String countersize,String parntid, JSONObject jsonObject) {
         this.context = context;
             this.type=type;
             this.countername=countername;
