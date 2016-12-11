@@ -30,6 +30,7 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
     private String desgination="";
     private ArrayList<List>arrayList=new ArrayList<List>();
 
+    private String dataTobeParsed= "";
 
     public ListContractorDistributorAsync(Activity context, String userId, String type,String desgination) {
         this.context = context;
@@ -54,9 +55,11 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
 
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "counter_distributer_list.php?"+ "userId="+userId+"&type="+type+"&designation="+ desgination+"", jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "counter_distributer_list.php?"+
+                    "userId="+userId+"&type="+type+"&designation="+ desgination+"", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
+                dataTobeParsed = responsedata[1];
                 parseResponseData(responsedata[1]);
             }
 
@@ -77,6 +80,7 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
             }
         }
             if (onContentListParserListner != null && responsecode.equalsIgnoreCase("200")) {
+                onContentListParserListner.onResponseData(dataTobeParsed);
                 onContentListParserListner.OnSuccess(arrayList);
 
         } else {
@@ -140,10 +144,12 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
     }
 
     public interface OnContentListSchedules {
-        public void OnSuccess(ArrayList<List>arrayList);
+        void OnSuccess(ArrayList<List>arrayList);
 
-        public void OnError(String str_err);
+        void OnError(String str_err);
 
-        public void OnConnectTimeout();
+        void OnConnectTimeout();
+
+        void onResponseData(String response);
     }
 }
