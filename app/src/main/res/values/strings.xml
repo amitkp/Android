@@ -61,4 +61,9 @@
     </array>
 
     <string name="parseError">Parseing Error</string>
+    <string name="create">Create</string>
+    <string name="order_created">Order Created</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="please_add_location">Please add location first.</string>
+    <string name="territory_success">Territory added successfully.</string>
 </resources>

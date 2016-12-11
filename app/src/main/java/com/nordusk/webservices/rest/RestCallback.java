@@ -19,5 +19,15 @@ public interface RestCallback {
         Call<ResponseBody> onOrderListReceive(@Url String url);
     }
 
+    interface OrderCreateCallback{
+        @GET
+        Call<ResponseBody> onCreateOrder(@Url String url);
+    }
+
+    interface AddTerritoryCallback{
+        @GET
+        Call<ResponseBody> onAddTerritory(@Url String url);
+    }
+
 }
 

@@ -28,6 +28,7 @@ import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.orderCreate.ActivityOrderCreate;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
@@ -108,7 +109,8 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 //                    selectDialog();
                     showTrackDialog("all");
                 } else if (position == 3) {
-
+                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
+                    mContext.startActivity(mIntent);
                 } else if (position == 4) {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
