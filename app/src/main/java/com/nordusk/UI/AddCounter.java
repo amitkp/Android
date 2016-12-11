@@ -390,7 +390,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                             edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(),
                             lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                             edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                            parentId, path,null);
+                            parentId, path.trim().replaceAll(" ",""),null);
                     addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                         @Override
                         public void OnSuccess(String responsecode) {
