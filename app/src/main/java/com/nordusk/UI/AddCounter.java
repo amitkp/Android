@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -79,6 +81,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private Bitmap bm;
     private AutoCompleteTextView auto_text;
     private ArrayList<ParentId> tempParentIds = new ArrayList<>();
+    private Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -378,13 +381,16 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                         String[] separated = auto_text.getText().toString().trim().split("-");
                         parentId = separated[1].toString();
                     }
-
+                    String path="";
+                    if(filePath!=null) {
+                        path = getPath(filePath);
+                    }
 
                     AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
                             edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(),
                             lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                             edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                            parentId, null);
+                            parentId, path,null);
                     addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                         @Override
                         public void OnSuccess(String responsecode) {
@@ -491,7 +497,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        filePath=data.getData();
         img_pic.setImageBitmap(thumbnail);
         bm = thumbnail;
     }
@@ -507,7 +513,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 e.printStackTrace();
             }
         }
-
+        filePath=data.getData();
         img_pic.setImageBitmap(bm);
     }
 
@@ -545,5 +551,22 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 //        }
 //    }
 
+    //method to get the file path from uri
+    public String getPath(Uri uri) {
+        Cursor cursor = getApplicationContext().getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getApplicationContext().getContentResolver().query(
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
 
 }
