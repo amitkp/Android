@@ -26,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
+import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.ParentId;
 import com.nordusk.webservices.ParentIdAsync;
 import com.nordusk.webservices.PrimePatnerAsync;
@@ -66,6 +68,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private Bitmap bm;
     private ArrayList<ParentId> tempParentIds=new ArrayList<>();
     private AutoCompleteTextView auto_text;
+    private RadioGroup rd_type;
+    private String type="2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +130,21 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
     private void setListener() {
 
+        rd_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch(checkedId){
+                    case R.id.radioDistributor:
+                        type="2";
+                        break;
+                    case R.id.radioPrimepartner:
+                        type="3";
+                        break;
+
+                }
+            }
+        });
+
         txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +156,13 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+           if (HttpConnectionUrl.isNetworkAvailable(AddDistributer.this)) {
                 validateInputs();
+                               }
+            else {
+                    Toast.makeText(AddDistributer.this, getResources().getString(R.string.txt_CheckNetwork), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -217,6 +242,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         img_pic=(ImageView)findViewById(R.id.image_distributor);
         textView_imgselect=(TextView)findViewById(R.id.textView_imgselect);
         auto_text=(AutoCompleteTextView)findViewById(R.id.auto_text);
+
+        rd_type=(RadioGroup)findViewById(R.id.radiotype);
     }
 
     private void setAutoTextAdapter() {
@@ -346,7 +373,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
 
 
-                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, "2", edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this,type, edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
                                 edt_countersize.getText().toString().trim(), parentId, null);
                         addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                             @Override
