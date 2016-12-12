@@ -93,6 +93,8 @@ public class GridDashboardAdapter extends BaseAdapter {
         holder.txt_option.setText(options_dashboard[position]);
         holder.img_icon.setImageResource(img_ids[position]);
 
+
+
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,17 +116,14 @@ public class GridDashboardAdapter extends BaseAdapter {
                     mContext.startActivity(intent);
 
                 }
-//                else if (position == 4) {
-//                    if (mPrefs.getString("designation", "").equalsIgnoreCase("1")) {
-//                        showTrackDialog("sales");
-////                        selectDialog();
+                else if (position == 4) {
+                    if (mPrefs.getString("designation", "").equalsIgnoreCase("2")) {
+                        showTrackDialog("all");
+                    }else{
+                        Toast.makeText(mContext,"Tracking not available for sales persons",Toast.LENGTH_SHORT).show();
+                    }
 //
-//                    } else {
-////                        showTrackDialog("all");
-//                        selectDialog();
-//                    }
-//
-//                }
+                }
             }
         });
 

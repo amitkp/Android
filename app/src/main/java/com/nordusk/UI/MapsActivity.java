@@ -4,6 +4,7 @@ import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -33,9 +35,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.nordusk.*;
 import com.nordusk.R;
+import com.nordusk.utility.GMapV2Direction;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
@@ -73,12 +77,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ProgressBar progressBar;
     private RelativeLayout rltv_shortestpath;
     private ImageView task_icon;
-    float short_distance_km = 0;
     float visited_km=0;
     int counter_visited = 0;
-    private ArrayList<PointsTraceList> shortest_path_list = new ArrayList<PointsTraceList>();
     private ArrayList<PointsTraceList> total_path_list = new ArrayList<PointsTraceList>();
     private boolean isLoaded=false;
+    private int total_counters=0;
+    GMapV2Direction md = new GMapV2Direction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,31 +213,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 pointsTraceList.setLongitude(Double.toString(longi));
                                 total_path_list.add(pointsTraceList);
 
+
+
                             }
 
                         }
-                        lineOptions.width(5);
-                        lineOptions.color(Color.RED);
-                        if (lineOptions != null) {
-                            mMap.addPolyline(lineOptions);
-                        }
+//                        lineOptions.width(5);
+//                        lineOptions.color(Color.RED);
+//                        if (lineOptions != null) {
+//                            mMap.addPolyline(lineOptions);
+//                        }
 
-                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
                     }
 
 
                     if (arrayList != null && arrayList.getArr_counterset() != null && arrayList.getArr_counterset().size() > 0)
 
                     {
-                        double Filter_start_lat = 0;
+                        total_counters=arrayList.getArr_counterset().size();
                         double Filter_end_lat = 0;
-
-                        Filter_start_lat = Double.parseDouble(arrayList.getArr_pointsTraceLists().get(0).getLatitude());
                         Filter_end_lat = Double.parseDouble(arrayList.getArr_pointsTraceLists().get(arrayList.getArr_pointsTraceLists().size() - 1).getLatitude());
 
                         for (int j = 0; j < arrayList.getArr_counterset().size(); j++) {
-                            short_distance_km = 0;
-                            double chng_lat_start = 0, chng_lat_end = 0, chng_long = 0, chng_long_end = 0;
                             if (arrayList.getArr_counterset().get(j).getLatitude() != null && arrayList.getArr_counterset().get(j).getLongitude() != null) {
                                 if (Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude()) < Filter_end_lat) {
                                     Double lat = Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude());
@@ -246,22 +248,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     }
                                     mMap.addMarker(new MarkerOptions().position(latLngchk).title(title).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                                     counter_visited = counter_visited + 1;
-                                    chng_lat_start = Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude());
-                                    if (j + 1 <= arrayList.getArr_counterset().size() - 1) {
-                                        chng_lat_end = Double.parseDouble(arrayList.getArr_counterset().get(j + 1).getLatitude());
-                                        chng_long = Double.parseDouble(arrayList.getArr_counterset().get(j).getLongitude());
-                                        chng_long_end = Double.parseDouble(arrayList.getArr_counterset().get(j + 1).getLongitude());
-                                        PointsTraceList pointsTraceList = new PointsTraceList();
-                                        PointsTraceList pointsTraceListNext = new PointsTraceList();
-                                        pointsTraceList.setLatitude(Double.toString(chng_lat_start));
-                                        pointsTraceList.setLongitude(Double.toString(chng_long));
-                                        pointsTraceListNext.setLatitude(Double.toString(chng_lat_end));
-                                        pointsTraceListNext.setLongitude(Double.toString(chng_long_end));
-                                        shortest_path_list.add(pointsTraceList);
-                                        shortest_path_list.add(pointsTraceListNext);
 
-
-                                    }
 
                                 }
 
@@ -269,8 +256,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         }
 
-
-                        calculateShortPath();
+                        if(total_path_list!=null && total_path_list.size()>0) {
+                            mpProgressDialog = new ProgressDialog(MapsActivity.this);
+                            mpProgressDialog.setMessage("Loading data.Please wait..");
+                            mpProgressDialog.setCancelable(false);
+                            mpProgressDialog.show();
+                            calculateTotalPath();
+                        }else{
+                            Toast.makeText(MapsActivity.this, "No data found", Toast.LENGTH_SHORT).show();
+                        }
                         // Distance distance=new Distance();
                         // distance.execute();
 
@@ -303,25 +297,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-    private int short_path_point = 0;
     private int long_path_point = 0;
-    private boolean isShortestPathLoaded=false;
 
-    private void calculateShortPath() {
-        if (short_path_point < shortest_path_list.size() - 1) {
-            double chng_lat_start = Double.parseDouble(shortest_path_list.get(short_path_point).getLatitude());
-            double chng_lat_end = Double.parseDouble(shortest_path_list.get(short_path_point + 1).getLatitude());
-            double chng_long_start = Double.parseDouble(shortest_path_list.get(short_path_point).getLongitude());
-            double chng_long_end = Double.parseDouble(shortest_path_list.get(short_path_point + 1).getLongitude());
-            short_path_point = short_path_point + 1;
-            TotalDistanceCover distance = new TotalDistanceCover(chng_lat_start, chng_lat_end, chng_long_start, chng_long_end);
-            distance.execute();
 
-        }else{
-            calculateTotalPath();
-        }
-
-    }
 
     private void calculateTotalPath() {
         if (long_path_point < total_path_list.size() - 1) {
@@ -333,64 +311,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Distance distance = new Distance(chng_lat_start, chng_lat_end, chng_long_start, chng_long_end);
             distance.execute();
 
+
+
+
         }else{
             isLoaded=true;
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            visited_km=visited_km/1000;
+            if(mpProgressDialog!=null && mpProgressDialog.isShowing())
+                mpProgressDialog.dismiss();
         }
 
     }
 
-    private class TotalDistanceCover extends AsyncTask<Void, Void, Void> {
-        private String KM = "";
-        double start_lat = 0, end_lat = 0, start_long = 0, end_long = 0;
-
-        public TotalDistanceCover(double start_lat, double end_lat, double start_long, double end_long) {
-
-            this.start_lat = start_lat;
-            this.end_lat = end_lat;
-            this.start_long = start_long;
-            this.end_long = end_long;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            KM = getDistanceOnRoad(start_lat, start_long, end_lat, end_long);
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressBar.setVisibility(View.GONE);
-//            if (KM.contains("km")) {
-//                String[] km = KM.split(" ");
-//                if (km[0] != null && km[0].length() > 0) {
-//                    KM = km[0];
-//                }
-//                short_distance_km = short_distance_km + Float.parseFloat(KM);
-//            }
-            calculateShortPath();
-//            tv_km.setText(KM);
-            Toast.makeText(MapsActivity.this,KM,Toast.LENGTH_SHORT).show();
-
-
-            // point 2 :returning 4.0 km
-
-
-        }
-
-    }
-
+    PolylineOptions rectLine = new PolylineOptions().width(3).color(
+            Color.RED);
+    private ProgressDialog mpProgressDialog;
     private class Distance extends AsyncTask<Void, Void, Void> {
         private String Total_KM = "";
         double start_lat = 0, end_lat = 0, start_long = 0, end_long = 0;
+
 
         public Distance(double start_lat, double end_lat, double start_long, double end_long) {
 
@@ -398,31 +338,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             this.end_lat = end_lat;
             this.start_long = start_long;
             this.end_long = end_long;
+
+
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            Total_KM = getDistanceOnRoad(start_lat, start_long, end_lat, end_long);
+           // Total_KM = getDistanceOnRoad(start_lat, start_long, end_lat, end_long);
+            LatLng latLngstart = new LatLng(start_lat
+                    , start_long);
+            LatLng latLngend = new LatLng(end_lat, end_long);
+            Document doc = md.getDocument(latLngstart, latLngend,
+                    GMapV2Direction.MODE_DRIVING);
+            Log.e("distance",md.getDistanceText(doc));
+            if(md.getDistanceText(doc)!=null && md.getDistanceText(doc).length()>0)
+            visited_km=visited_km+Integer.parseInt(md.getDistanceText(doc));
+
+            ArrayList<LatLng> directionPoint = md.getDirection(doc);
+
+
+            for (int i = 0; i < directionPoint.size(); i++) {
+                rectLine.add(directionPoint.get(i));
+            }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            progressBar.setVisibility(View.GONE);
-            if (Total_KM.contains("km")) {
-                String[] km = Total_KM.split(" ");
-                if (km[0] != null && km[0].length() > 0) {
-                    Total_KM = km[0];
-                }
-                visited_km = visited_km + Float.parseFloat(Total_KM);
-            }
+
+            Polyline polylin = mMap.addPolyline(rectLine);
             calculateTotalPath();
 
         }
@@ -495,8 +446,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         tv_short = (TextView) mDialog_SelectSelectAccount.findViewById(R.id.tv_short);
         tv_counter = (TextView) mDialog_SelectSelectAccount.findViewById(R.id.tv_counter);
 
+
         tv_total.setText("" + visited_km + " KM");
-        tv_short.setText("" + short_distance_km + " KM");
+        tv_short.setText("" + total_counters);
         tv_counter.setText("" + counter_visited);
 
         mDialog_SelectSelectAccount.show();

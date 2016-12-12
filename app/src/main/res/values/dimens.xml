@@ -20,5 +20,19 @@
     <dimen name="medium_textSize">16sp</dimen>
     <dimen name="bigger_textSize">25sp</dimen>
 
+    <dimen name="pinViewWidth">200dp</dimen>
+    <dimen name="m_normal">10dp</dimen>
+    <dimen name="map_arrow_width">30dp</dimen>
+    <dimen name="map_arrow_height">15dp</dimen>
+    <dimen name = "p_small">6dp</dimen>
+    <dimen name = "p_normal">9dp</dimen>
+    <dimen name = "p_large">12dp</dimen>
+    <dimen name = "p_xlarge">15dp</dimen>
+    <dimen name = "sp_small">8sp</dimen>
+    <dimen name = "sp_normal">12sp</dimen>
+    <dimen name = "sp_xnormal">15sp</dimen>
+    <dimen name= "sp_xlarge">18sp</dimen>
+    <dimen name = "sp_xxlarge">23sp</dimen>
+    <dimen name = "sp_xxxlarge">28sp</dimen>
 
 </resources>

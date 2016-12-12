@@ -15,34 +15,35 @@ import org.json.JSONObject;
  */
 public class AddCounterAsync extends AsyncTask<Void, Void, Void>
 
-    {
+{
 
-        private Activity context;
-        private boolean isTimeOut = false;
+    private Activity context;
+    private boolean isTimeOut = false;
 
-        private String responsecode = "";
-        private String responseMessage = "";
-        private ProgressDialog mpProgressDialog;
-        private JSONObject jsonObject = null;
+    private String responsecode = "";
+    private String responseMessage = "";
+    private ProgressDialog mpProgressDialog;
+    private JSONObject jsonObject = null;
 
-        private String type="",countername="",mobile="",lattitude="",longitude="",address="",email="",Bankname="",Accno="",ifsc="",countersize="",parntid="";
+    private String type = "", countername = "", mobile = "", lattitude = "", longitude = "", address = "", email = "", Bankname = "", Accno = "", ifsc = "", countersize = "", parntid = "";
+    private String path;
 
 
-
-        public AddCounterAsync(Activity context,String type,String countername,String mobile,String lattitude,String longitude,String address,String email,String Bankname,String Accno,String ifsc,String countersize,String parntid, JSONObject jsonObject) {
+    public AddCounterAsync(Activity context, String type, String countername, String mobile, String lattitude, String longitude, String address, String email, String Bankname, String Accno, String ifsc, String countersize, String parntid, String path, JSONObject jsonObject) {
         this.context = context;
-            this.type=type;
-            this.countername=countername;
-            this.mobile=mobile;
-            this.lattitude=lattitude;
-            this.longitude=longitude;
-            this.address=address;
+        this.type = type;
+        this.countername = countername;
+        this.mobile = mobile;
+        this.lattitude = lattitude;
+        this.longitude = longitude;
+        this.address = address;
 
-            this.Bankname=Bankname;
-            this.Accno=Accno;
-            this.ifsc=ifsc;
-            this.countersize=countersize;
-            this.parntid=parntid;
+        this.Bankname = Bankname;
+        this.Accno = Accno;
+        this.ifsc = ifsc;
+        this.countersize = countersize;
+        this.parntid = parntid;
+        this.path = path;
 
         this.jsonObject = jsonObject;
         mpProgressDialog = new ProgressDialog(context);
@@ -51,25 +52,24 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
         mpProgressDialog.setCancelable(false);
     }
 
-        @Override
-        protected void onPreExecute() {
+    @Override
+    protected void onPreExecute() {
         super.onPreExecute();
     }
 
-        @Override
-        protected Void doInBackground(Void... params) {
+    @Override
+    protected Void doInBackground(Void... params) {
         try {
-
-
-
 
 
 //            http://dynamicsglobal.net/app/counter_distributer_add.php?"type="+1+"&name="+Counter1+"&address="+saltlake+"&territory="+kolkata+"&anniversary="+2015-11-21+"&dob="+1989-05-08+"&mobile="+9674970045+"&alternative_mobile="+9674970046+"&email="+samotosh@gmail.com+"&latitude="+100+"&longitude="+101+"&userId="+10
 
+            String[] responsedata = {};
 
-
-
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url)+ "type="+type+"&name="+countername+"&address="+address+"&territory="+address+"&anniversary="+"2015-11-21"+"&dob="+"1989-05-08"+"&mobile="+mobile+"&alternative_mobile="+mobile+"&email="+email+"&latitude="+lattitude+"&longitude="+longitude+"&userId="+new Prefs(context).getString("userid","")+"&parrent_id="+parntid+"&bank_name="+Bankname+"&account_no="+Accno+"&ifsc_code"+ifsc+"&counter_size="+countersize+"", jsonObject);
+            if (path != null && path.length() > 0)
+                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "&image="+path+"", jsonObject);
+            else
+                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "", jsonObject);
             //String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.logoutasync_url)+ "userId="+"", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
@@ -82,8 +82,8 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
         return null;
     }
 
-        @Override
-        protected void onPostExecute(Void aVoid) {
+    @Override
+    protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         if (mpProgressDialog != null && mpProgressDialog.isShowing())
             mpProgressDialog.dismiss();
@@ -96,9 +96,9 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
             onContentListParserListner.OnSuccess(responseMessage);
 
         } else {
-            if(responseMessage!=null && responseMessage.length()>0){
+            if (responseMessage != null && responseMessage.length() > 0) {
                 onContentListParserListner.OnError(responseMessage);
-            }else {
+            } else {
                 HttpConnectionUrl.serverErrorMessage(context, responsecode);
             }
         }
@@ -116,11 +116,7 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
                 responseMessage = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "response_msg");
 
 
-
-
-            }
-            else
-            {
+            } else {
                 responseMessage = HttpConnectionUrl.getJSONKeyvalue(jsonObject, "response_msg");
             }
 
