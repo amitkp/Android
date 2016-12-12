@@ -26,6 +26,7 @@
     <string name="txt_track">Tracking Details</string>
     <string name="txt_order">Order</string>
     <string name="txt_order_list">Order List</string>
+    <string name="teritorry">Teritorry</string>
 
     <!-- Url-->
     <string name="base_url">http://dynamicsglobal.net/app/</string>
@@ -56,6 +57,7 @@
         <item>@string/txt_viewcounter</item>
         <item>@string/txt_viewdistributor</item>
         <item>@string/txt_track</item>
+        <item>@string/teritorry</item>
         <item>@string/txt_order</item>
         <item>@string/txt_order_list</item>
     </array>

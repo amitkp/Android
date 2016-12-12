@@ -115,7 +115,6 @@ public class GridDashboardAdapter extends BaseAdapter {
                     Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                     intent.putExtra("type", "1");
                     mContext.startActivity(intent);
-
                 } else if (position == 3) {
                     Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                     intent.putExtra("type", "2");
@@ -131,11 +130,8 @@ public class GridDashboardAdapter extends BaseAdapter {
                     Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
                     mContext.startActivity(mIntent);
                 } else if (position == 6) {
-//                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
-//                    mContext.startActivity(mIntent);
-                    DialogAddTracker mDialog = DialogAddTracker.newInstance();
-                    mDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(),
-                            DialogAddTracker.class.getSimpleName());
+                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
+                    mContext.startActivity(mIntent);
                 }
             }
         });
