@@ -121,6 +121,8 @@ public class Splash extends AppCompatActivity {
             permissionsNeeded.add("Access network state");
         if (!addPermission(permissionsList, Manifest.permission.READ_PHONE_STATE))
             permissionsNeeded.add("Access phone state");
+        if (!addPermission(permissionsList, Manifest.permission.CALL_PHONE))
+            permissionsNeeded.add("Access phone state");
 
 
         if (permissionsList.size() > 0) {
@@ -189,6 +191,7 @@ public class Splash extends AppCompatActivity {
                 perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.ACCESS_COARSE_LOCATION, PackageManager.PERMISSION_GRANTED);
                 perms.put(Manifest.permission.ACCESS_NETWORK_STATE, PackageManager.PERMISSION_GRANTED);
+                perms.put(Manifest.permission.CALL_PHONE, PackageManager.PERMISSION_GRANTED);
                 // Fill with results
                 for (int i = 0; i < permissions.length; i++)
                     perms.put(permissions[i], grantResults[i]);
@@ -197,6 +200,7 @@ public class Splash extends AppCompatActivity {
                         && perms.get(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
                         && perms.get(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
+                        && perms.get(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
                         ) {
                     // All Permissions Granted
                     isGranted=true;

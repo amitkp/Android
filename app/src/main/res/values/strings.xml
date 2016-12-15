@@ -30,6 +30,7 @@
     <string name="loginasync_url">login.php?</string>
     <string name="logoutasync_url">logout.php?</string>
     <string name="addcounter_url">counter_distributer_add.php?</string>
+    <string name="editcounter_url">counter_distributer_edit.php?</string>
 
 
     <!--Utility String-->
