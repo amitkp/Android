@@ -31,6 +31,7 @@ import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.createTarget.DialogTargetCreate;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
@@ -50,10 +51,11 @@ public class GridDashboardAdapter extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.store, R.drawable.distributor,
             R.drawable.placeholder, R.drawable.placeholders,
+            R.drawable.placeholder, R.drawable.placeholders,
             R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
-    private Activity mContext;
+    private AppCompatActivity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
@@ -61,7 +63,7 @@ public class GridDashboardAdapter extends BaseAdapter {
     private String userChoosenTask;
 
 
-    public GridDashboardAdapter(Activity context) {
+    public GridDashboardAdapter(AppCompatActivity context) {
         this.mContext = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         options_dashboard = context.getResources().getStringArray(R.array.options_dashboard);
@@ -132,6 +134,11 @@ public class GridDashboardAdapter extends BaseAdapter {
                 } else if (position == 6) {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
+                } else if (position == 7) {
+                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
+                    mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
+                } else if (position == 8) {
+                    //TODO show Target list
                 }
             }
         });

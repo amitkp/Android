@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.nordusk.R;
+import com.nordusk.UI.helper.VerticalSpaceItemDecoration;
 
 import java.lang.ref.WeakReference;
 
@@ -42,6 +43,8 @@ public class ActivityOrderList extends AppCompatActivity implements  OrderListPr
 
         rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(contextWeakReference.get(), LinearLayoutManager.VERTICAL, false));
+
+        rv.addItemDecoration(new VerticalSpaceItemDecoration(5));
 
         mAdapter = new AdapterOrderList(mPresenter);
         rv.setAdapter(mAdapter);

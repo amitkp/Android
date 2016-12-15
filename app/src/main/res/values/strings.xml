@@ -27,6 +27,8 @@
     <string name="txt_order">Order</string>
     <string name="txt_order_list">Order List</string>
     <string name="teritorry">Teritorry</string>
+    <string name="create_target">Create Target</string>
+    <string name="target_list">Target List</string>
 
     <!-- Url-->
     <string name="base_url">http://dynamicsglobal.net/app/</string>
@@ -51,6 +53,8 @@
         <item>@string/txt_track</item>
         <item>@string/txt_order</item>
         <item>@string/txt_order_list</item>
+        <item>@string/create_target</item>
+        <item>@string/target_list</item>
     </array>
 
     <array name="options_dashboard_manager">
@@ -60,6 +64,8 @@
         <item>@string/teritorry</item>
         <item>@string/txt_order</item>
         <item>@string/txt_order_list</item>
+        <item>@string/create_target</item>
+        <item>@string/target_list</item>
     </array>
 
     <string name="parseError">Parseing Error</string>
@@ -68,4 +74,12 @@
     <string name="please_wait">Please wait...</string>
     <string name="please_add_location">Please add location first.</string>
     <string name="territory_success">Territory added successfully.</string>
+    <string name="qty">Quantity</string>
+    <string name="date">Data</string>
+    <string name="rs">\u20B9</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="add_target">Add Target</string>
+
+    <string name="please_enter_amount">Please enter amount</string>
+    <string name="please_enter_validdate">Please enter valid date</string>
 </resources>

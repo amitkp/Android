@@ -29,5 +29,10 @@ public interface RestCallback {
         Call<ResponseBody> onAddTerritory(@Url String url);
     }
 
+    interface TargetCreateCallback{
+        @GET
+        Call<ResponseBody> onCreateTarget(@Url String url);
+    }
+
 }
 

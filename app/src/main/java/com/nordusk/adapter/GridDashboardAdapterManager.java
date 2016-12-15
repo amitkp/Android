@@ -29,6 +29,7 @@ import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.createTarget.DialogTargetCreate;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
@@ -45,17 +46,18 @@ import java.util.Locale;
 public class GridDashboardAdapterManager extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder,
-            R.drawable.placeholders, R.drawable.placeholders, R.drawable.placeholder};
+            R.drawable.placeholders, R.drawable.placeholders, R.drawable.placeholder
+            , R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
-    private Activity mContext;
+    private AppCompatActivity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
     ArrayList<String> name_list=new ArrayList<String>();
 
 
-    public GridDashboardAdapterManager(Activity context) {
+    public GridDashboardAdapterManager(AppCompatActivity context) {
         this.mContext = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         options_dashboard = context.getResources().getStringArray(R.array.options_dashboard_manager);
@@ -120,6 +122,12 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                 } else if (position == 5) {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
+                } else if (position == 6) {
+                    //TODO Show Create Target Dialog
+                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
+                    mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
+                } else if (position == 7) {
+                    //TODO show Target list
                 }
             }
         });
