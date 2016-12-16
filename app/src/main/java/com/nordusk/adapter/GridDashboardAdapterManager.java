@@ -33,6 +33,7 @@ import com.nordusk.UI.createTarget.DialogTargetCreate;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
+import com.nordusk.UI.targetList.ActivityTargetList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 
@@ -123,11 +124,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
                 } else if (position == 6) {
-                    //TODO Show Create Target Dialog
                     DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
                     mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
                 } else if (position == 7) {
-                    //TODO show Target list
+                    Intent mIntent = new Intent(mContext, ActivityTargetList.class);
+                    mContext.startActivity(mIntent);
                 }
             }
         });

@@ -35,6 +35,7 @@ import com.nordusk.UI.createTarget.DialogTargetCreate;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
+import com.nordusk.UI.targetList.ActivityTargetList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.ChangepasswordAsync;
@@ -139,6 +140,8 @@ public class GridDashboardAdapter extends BaseAdapter {
                     mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
                 } else if (position == 8) {
                     //TODO show Target list
+                    Intent mIntent = new Intent(mContext, ActivityTargetList.class);
+                    mContext.startActivity(mIntent);
                 }
             }
         });

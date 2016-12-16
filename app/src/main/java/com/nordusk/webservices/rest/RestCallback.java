@@ -34,5 +34,10 @@ public interface RestCallback {
         Call<ResponseBody> onCreateTarget(@Url String url);
     }
 
+    interface TargetListCallback{
+        @GET
+        Call<ResponseBody> onTargetListFetch(@Url String url);
+    }
+
 }
 
