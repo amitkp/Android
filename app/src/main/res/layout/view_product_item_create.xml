@@ -14,21 +14,26 @@
         android:orientation="vertical"
         android:padding="@dimen/p_normal">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/til_productName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/et_productName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Product Name"
-                android:imeOptions="actionNext"
-                android:inputType="text"
-                android:maxLines="@integer/singleLine"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"/>
-        </android.support.design.widget.TextInputLayout>
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="This is an AutoCompleteTextView"/>
+        <!--<android.support.design.widget.TextInputLayout-->
+            <!--android:id="@+id/til_productName"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<android.support.v7.widget.AppCompatEditText-->
+                <!--android:id="@+id/et_productName"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:hint="Product Name"-->
+                <!--android:imeOptions="actionNext"-->
+                <!--android:inputType="text"-->
+                <!--android:maxLines="@integer/singleLine"-->
+                <!--android:textColor="@android:color/black"-->
+                <!--android:textColorHint="@android:color/darker_gray"/>-->
+        <!--</android.support.design.widget.TextInputLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"

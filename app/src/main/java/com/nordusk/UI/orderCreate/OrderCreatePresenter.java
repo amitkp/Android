@@ -2,6 +2,10 @@ package com.nordusk.UI.orderCreate;
 
 import android.support.annotation.StringRes;
 
+import com.nordusk.pojo.DataProducts;
+
+import java.util.ArrayList;
+
 /**
  * Created by gouravkundu on 11/12/16.
  */
@@ -9,11 +13,12 @@ import android.support.annotation.StringRes;
 public interface OrderCreatePresenter {
     interface OnUserInteractionListener{
         void onActivityDestroyed();
+        void fetchProductList();
         void onAddProductClick();
         void createOrder(int childCount);
     }
     interface OnNotifyUiListener{
-        void onAddProductItem();
+        void onAddProductItem(ArrayList<DataProducts> mListProducts);
         String getProductName(int childPos);
         String getProductId(int childPos);
         String getProductPrice(int childPos);

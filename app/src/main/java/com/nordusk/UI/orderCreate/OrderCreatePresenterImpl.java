@@ -3,13 +3,24 @@ package com.nordusk.UI.orderCreate;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.nordusk.R;
+import com.nordusk.pojo.DataOrder;
+import com.nordusk.pojo.DataProducts;
 import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.rest.RestCallback;
 import com.nordusk.webservices.rest.WebApiClient;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -29,6 +40,8 @@ public class OrderCreatePresenterImpl implements OrderCreatePresenter.OnUserInte
     private String userId = "";
     private String TAG = OrderCreatePresenterImpl.class.getSimpleName();
 
+    ArrayList<DataProducts> mListOrder = new ArrayList<DataProducts>();
+
     public OrderCreatePresenterImpl(OrderCreatePresenter.OnNotifyUiListener mInteractor, WeakReference<Context> contextWeakReference) {
         this.mInteractor = mInteractor;
         this.contextWeakReference = contextWeakReference;
@@ -42,8 +55,43 @@ public class OrderCreatePresenterImpl implements OrderCreatePresenter.OnUserInte
     }
 
     @Override
+    public void fetchProductList() {
+        mInteractor.onShowLoader();
+        Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(contextWeakReference.get()));
+        RestCallback.ProductListCallback mLoginCallback = mRetrofit.create(RestCallback.ProductListCallback.class);
+        Call<ResponseBody> mCall = mLoginCallback.getProductList();
+        mCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (mInteractor != null) {
+                    mInteractor.onHideLoader();
+                    if (response.code() == 200) {
+                        try {
+                            JsonElement jelement = new JsonParser().parse(response.body().string());
+                            JsonObject mJson = jelement.getAsJsonObject();
+                            JsonArray mNewArray = mJson.getAsJsonArray("list");
+                            Gson mGson = new Gson();
+                            Type listType = new TypeToken<List<DataProducts>>() {
+                            }.getType();
+                            mListOrder = mGson.fromJson(mNewArray.toString(), listType);
+                            onAddProductClick();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+mInteractor.onHideLoader();
+            }
+        });
+    }
+
+    @Override
     public void onAddProductClick() {
-        mInteractor.onAddProductItem();
+        mInteractor.onAddProductItem(mListOrder);
     }
 
     @Override

@@ -8,8 +8,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 
 import com.nordusk.R;
+import com.nordusk.UI.orderCreate.ArrayAdapterProduct;
+import com.nordusk.pojo.DataProducts;
+
+import java.util.ArrayList;
 
 /**
  * Created by gouravkundu on 11/12/16.
@@ -18,10 +23,14 @@ import com.nordusk.R;
 public class ViewProductItemCreate extends FrameLayout {
 
     private int pos;
-    private EditText et_productName, et_productQty, et_productPrice;
+    private EditText et_productQty, et_productPrice;
+    private Spinner spinner;
 
-    public ViewProductItemCreate(Context context) {
+    ArrayList<DataProducts> mListProducts = new ArrayList<DataProducts>();
+
+    public ViewProductItemCreate(Context context, ArrayList<DataProducts> mListProducts ) {
         super(context);
+        this.mListProducts = mListProducts;
         initView();
     }
 
@@ -44,9 +53,11 @@ public class ViewProductItemCreate extends FrameLayout {
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_product_item_create, this, true);
 
-        et_productName = (EditText) findViewById(R.id.et_productName);
+        spinner = (Spinner) findViewById(R.id.spinner);
         et_productQty = (EditText) findViewById(R.id.et_productQty);
         et_productPrice = (EditText) findViewById(R.id.et_productPrice);
+
+        spinner.setAdapter(new ArrayAdapterProduct(getContext(), R.layout.layout_spinner,  mListProducts));
     }
 
     public void setPosition(int pos) {
@@ -54,11 +65,7 @@ public class ViewProductItemCreate extends FrameLayout {
     }
 
     public String getProductName(){
-        if (TextUtils.isEmpty(et_productName.getText().toString())) {
-            return "0";
-        }else{
-            return et_productName.getText().toString().trim();
-        }
+        return mListProducts.get(spinner.getSelectedItemPosition()).getName();
     }
 
     public String getProductPrice(){
@@ -70,10 +77,6 @@ public class ViewProductItemCreate extends FrameLayout {
     }
 
     public String getProductQuantity(){
-        if (TextUtils.isEmpty(et_productQty.getText().toString())) {
-            return "0";
-        }else{
-            return et_productQty.getText().toString();
-        }
+        return mListProducts.get(spinner.getSelectedItemPosition()).getId();
     }
 }

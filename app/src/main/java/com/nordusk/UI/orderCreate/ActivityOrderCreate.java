@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,8 +16,10 @@ import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.UI.helper.ViewProductItemCreate;
+import com.nordusk.pojo.DataProducts;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 /**
  * Created by gouravkundu on 11/12/16.
@@ -39,7 +43,7 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         initPresenter();
         setContentView(R.layout.activity_create_order);
         initView();
-        mPresenter.onAddProductClick();
+        mPresenter.fetchProductList();
     }
 
     private void initPresenter() {
@@ -61,10 +65,10 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     }
 
     @Override
-    public void onAddProductItem() {
+    public void onAddProductItem(ArrayList<DataProducts> mListProducts) {
 
         int childCount = ll_container.getChildCount();
-        ViewProductItemCreate mView = new ViewProductItemCreate(contextWeakReference.get());
+        ViewProductItemCreate mView = new ViewProductItemCreate(contextWeakReference.get(), mListProducts);
         mView.setPosition(childCount);
         ll_container.addView(mView, childCount);
     }
@@ -103,6 +107,20 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     public void onClick(View view) {
         btn_save.setClickable(false);
         mPresenter.createOrder(ll_container.getChildCount());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_order_create, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.m_add) {
+            mPresenter.onAddProductClick();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
