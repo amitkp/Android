@@ -151,12 +151,12 @@ android:src="@drawable/ic_launcher"
                 android:focusableInTouchMode="false"
                 android:hint="Date of Birth(YYYY-MM-DD)"></EditText>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/counterdtls_edtxt_territory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_10"
-                android:hint="Territory"></EditText>
+                android:hint="Territory"></AutoCompleteTextView>
 
             <EditText
                 android:id="@+id/counterdtls_edtxt_mobilenumber"

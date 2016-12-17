@@ -35,6 +35,7 @@
     <string name="loginasync_url">login.php?</string>
     <string name="logoutasync_url">logout.php?</string>
     <string name="addcounter_url">counter_distributer_add.php?</string>
+    <string name="editcounter_url">counter_distributer_edit.php?</string>
 
 
     <!--Utility String-->
@@ -83,4 +84,8 @@
     <string name="please_enter_amount">Please enter amount</string>
     <string name="please_enter_validdate">Please enter valid date</string>
     <string name="target">Target:</string>
+        <item>@string/txt_order</item>
+        <item>@string/txt_order_list</item>
+
+    <string name="parseError">Parseing Error</string>
 </resources>

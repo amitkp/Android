@@ -184,33 +184,38 @@ public class MapsActivityContractorDistributor extends AppCompatActivity impleme
 
         this.mList = mListResponse;
         for (int i = 0; i < mList.size(); i++) {
-            LatLng mLatLng = new LatLng((Double.parseDouble(mList.get(i).getLatitude())),
-                    Double.parseDouble(mList.get(i).getLongitude()));
+            if(mList.get(i).getLatitude()!=null && mList.get(i).getLatitude().length()>0
+                    && mList.get(i).getLongitude()!=null && mList.get(i).getLongitude().length()>0) {
+                LatLng mLatLng = new LatLng((Double.parseDouble(mList.get(i).getLatitude())),
+                        Double.parseDouble(mList.get(i).getLongitude()));
 
-            Marker marker = mMap.addMarker(new MarkerOptions().position(mLatLng).
-                    icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_point)));
-            String json = mGson.toJson(mList.get(i));
-            marker.setTitle(json);
-            marker.showInfoWindow();
-            builder.include(marker.getPosition());
+                Marker marker = mMap.addMarker(new MarkerOptions().position(mLatLng).
+                        icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_point)));
+                String json = mGson.toJson(mList.get(i));
+                marker.setTitle(json);
+                marker.showInfoWindow();
+                builder.include(marker.getPosition());
+            }
         }
 
-        LatLngBounds bounds = builder.build();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
-        mMap.moveCamera(cu);
-        mMap.animateCamera(cu);
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        if(builder!=null) {
+            LatLngBounds bounds = builder.build();
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+            mMap.moveCamera(cu);
+            mMap.animateCamera(cu);
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
-            @Override
-            public boolean onMarkerClick(Marker arg0) {
-                if (arg0.isInfoWindowShown()) {
-                    arg0.hideInfoWindow();
-                } else {
-                    arg0.showInfoWindow();
+                @Override
+                public boolean onMarkerClick(Marker arg0) {
+                    if (arg0.isInfoWindowShown()) {
+                        arg0.hideInfoWindow();
+                    } else {
+                        arg0.showInfoWindow();
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
     }
 
 

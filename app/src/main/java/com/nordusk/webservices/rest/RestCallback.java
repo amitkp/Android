@@ -42,6 +42,10 @@ public interface RestCallback {
     interface ProductListCallback{
         @GET("http://dynamicsglobal.net/app/product_list.php")
         Call<ResponseBody> getProductList();
+
+    interface OrderListCallback{
+        @GET
+        Call<ResponseBody> onOrderListReceive(@Url String url);
     }
 
 }

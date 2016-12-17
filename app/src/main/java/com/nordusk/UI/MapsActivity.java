@@ -189,7 +189,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void OnSuccess(TrackDetails arrayList) {
                     if (arrayList != null && arrayList.getArr_pointsTraceLists() != null && arrayList.getArr_pointsTraceLists().size() > 0) {
                         for (int i = 0; i < arrayList.getArr_pointsTraceLists().size(); i++) {
-                            if (arrayList.getArr_pointsTraceLists().get(i).getLatitude() != null && arrayList.getArr_pointsTraceLists().get(i).getLongitude() != null) {
+                            if (arrayList.getArr_pointsTraceLists().get(i).getLatitude() != null
+                                    && arrayList.getArr_pointsTraceLists().get(i).getLongitude() != null
+                                     && arrayList.getArr_pointsTraceLists().get(i).getLatitude().length()>0
+                                    && arrayList.getArr_pointsTraceLists().get(i).getLongitude().length()>0) {
                                 double lat = 0;
                                 double longi = 0;
                                 int size = arrayList.getArr_pointsTraceLists().size();
@@ -236,7 +239,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Filter_end_lat = Double.parseDouble(arrayList.getArr_pointsTraceLists().get(arrayList.getArr_pointsTraceLists().size() - 1).getLatitude());
 
                         for (int j = 0; j < arrayList.getArr_counterset().size(); j++) {
-                            if (arrayList.getArr_counterset().get(j).getLatitude() != null && arrayList.getArr_counterset().get(j).getLongitude() != null) {
+                            if (arrayList.getArr_counterset().get(j).getLatitude() != null &&
+                                    arrayList.getArr_counterset().get(j).getLongitude() != null
+                                    && arrayList.getArr_counterset().get(j).getLatitude().length()>0
+                                    && arrayList.getArr_counterset().get(j).getLongitude().length()>0) {
                                 if (Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude()) < Filter_end_lat) {
                                     Double lat = Double.parseDouble(arrayList.getArr_counterset().get(j).getLatitude());
                                     Double longi = Double.parseDouble(arrayList.getArr_counterset().get(j).getLongitude());
