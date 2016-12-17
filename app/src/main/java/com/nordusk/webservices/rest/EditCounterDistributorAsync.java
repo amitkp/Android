@@ -1,4 +1,4 @@
-package com.nordusk.webservices;
+package com.nordusk.webservices.rest;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -7,13 +7,14 @@ import android.text.TextUtils;
 
 import com.nordusk.R;
 import com.nordusk.utility.Prefs;
+import com.nordusk.webservices.HttpConnectionUrl;
 
 import org.json.JSONObject;
 
 /**
- * Created by DELL on 20-11-2016.
+ * Created by DELL on 16-12-2016.
  */
-public class AddCounterAsync extends AsyncTask<Void, Void, Void>
+public class EditCounterDistributorAsync extends AsyncTask<Void, Void, Void>
 
 {
 
@@ -29,10 +30,7 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
     private String path;
 
 
-
-        public AddCounterAsync(Activity context,String type,String countername,String mobile,String lattitude,
-                               String longitude,String address,String email,String Bankname,String Accno,String ifsc,String countersize,String parntid, JSONObject jsonObject) {
-    public AddCounterAsync(Activity context, String type, String countername, String mobile, String lattitude, String longitude, String address, String email, String Bankname, String Accno, String ifsc, String countersize, String parntid, String path, JSONObject jsonObject) {
+    public EditCounterDistributorAsync(Activity context, String type, String countername, String mobile, String lattitude, String longitude, String address, String email, String Bankname, String Accno, String ifsc, String countersize, String parntid, String path, JSONObject jsonObject) {
         this.context = context;
         this.type = type;
         this.countername = countername;
@@ -70,7 +68,7 @@ public class AddCounterAsync extends AsyncTask<Void, Void, Void>
             String[] responsedata = {};
 
             if (path != null && path.length() > 0)
-                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "&image="+path+"", jsonObject);
+                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "&image=" + path + "", jsonObject);
             else
                 responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "", jsonObject);
             //String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.logoutasync_url)+ "userId="+"", jsonObject);

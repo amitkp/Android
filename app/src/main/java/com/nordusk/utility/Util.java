@@ -178,6 +178,8 @@ public class Util {
     }
 
 
+
+
     public static void setDateFromDatePicker(final EditText edt_date, Context context, final SimpleDateFormat dateFormatter) {
 
         Calendar newCalendar = Calendar.getInstance();

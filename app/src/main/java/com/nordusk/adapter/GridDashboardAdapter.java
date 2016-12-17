@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
+import com.nordusk.UI.ListCounterDistributor;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
@@ -104,19 +105,19 @@ public class GridDashboardAdapter extends BaseAdapter {
 
                 if (position == 0) {
                     Intent intent = new Intent(mContext, AddCounter.class);
+                    intent.putExtra("from","add");
                     mContext.startActivity(intent);
                 } else if (position == 1) {
                     Intent intent = new Intent(mContext, AddDistributer.class);
+                    intent.putExtra("from","add");
                     mContext.startActivity(intent);
                 } else if (position == 2) {
-                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                    intent.putExtra("type", "1");
-                    mContext.startActivity(intent);
+                    selectDialog("counter");
 
                 } else if (position == 3) {
-                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                    intent.putExtra("type", "2");
-                    mContext.startActivity(intent);
+
+                    selectDialog("distributor");
+
 
                 }
                 else if (position == 4) {
@@ -137,26 +138,48 @@ public class GridDashboardAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void selectDialog() {
+    private void selectDialog(final String call_tag) {
 
-        final CharSequence[] items = {"Track Self", "Track Others"};
+        final CharSequence[] items = {"Listview", "Mapview"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Select Tracking");
+        builder.setTitle("View Filter");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = Util.checkPermission(mContext);
+//                boolean result = Util.checkPermission(mContext);
 
-                if (items[item].equals("Track Self")) {
+                if (items[item].equals("Listview")) {
 
-                    if (result)
-                        showTrackDialog("sales");
+//                    if (result)
+                    if(call_tag.equalsIgnoreCase("distributor")) {
+                        Intent intent = new Intent(mContext, ListCounterDistributor.class);
+                        intent.putExtra("type", "2");
+                        mContext.startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent = new Intent(mContext, ListCounterDistributor.class);
+                        intent.putExtra("type", "1");
+                        mContext.startActivity(intent);
+                    }
 
-                } else if (items[item].equals("Track Others")) {
+                } else if (items[item].equals("Mapview")) {
 
-                    if (result)
-                        showTrackDialog("all");
+//                    if (result)
+                    if(call_tag.equalsIgnoreCase("distributor")) {
+                        Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                        intent.putExtra("type", "2");
+                        mContext.startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                        intent.putExtra("type", "1");
+                        mContext.startActivity(intent);
+                    }
+
+
 
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
