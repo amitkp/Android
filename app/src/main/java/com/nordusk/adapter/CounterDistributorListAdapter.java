@@ -72,6 +72,7 @@ public class CounterDistributorListAdapter extends BaseAdapter {
 
             holder.btn_edit = (Button) convertView.findViewById(R.id.btn_edit);
             holder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
+            holder.txt_address = (TextView) convertView.findViewById(R.id.txt_address);
 
 
             holder.btn_call = (Button) convertView.findViewById(R.id.btn_call);
@@ -84,6 +85,7 @@ public class CounterDistributorListAdapter extends BaseAdapter {
         DataDistributor dataDistributor = arr_datacounterdis.get(position);
         if (dataDistributor != null) {
             holder.txt_name.setText(dataDistributor.getName());
+            holder.txt_address.setText(dataDistributor.getAddress());
 
         }
 
@@ -139,7 +141,7 @@ public class CounterDistributorListAdapter extends BaseAdapter {
     public class Holder {
         public ImageView iv_collect, iv_tick;
         public Button btn_edit, btn_call;
-        private TextView txt_name, tv_address;
+        private TextView txt_name, txt_address;
         private RelativeLayout rlMain;
     }
 
