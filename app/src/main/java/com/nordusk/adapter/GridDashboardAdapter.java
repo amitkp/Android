@@ -54,7 +54,7 @@ public class GridDashboardAdapter extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.store, R.drawable.distributor,
             R.drawable.placeholder, R.drawable.placeholders,
-            R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
+            R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholders};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -118,9 +118,10 @@ public class GridDashboardAdapter extends BaseAdapter {
                     intent.putExtra("from","add");
                     mContext.startActivity(intent);
                 } else if (position == 2) {
-                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                    intent.putExtra("type", "1");
-                    mContext.startActivity(intent);
+                    //Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                    //.putExtra("type", "1");
+                   // mContext.startActivity(intent);
+                    selectDialog("distributor");
                 } else if (position == 3) {
 
                     selectDialog("distributor");
@@ -148,7 +149,7 @@ public class GridDashboardAdapter extends BaseAdapter {
 
                 } 
                 }
-            }
+
         });
 
         return convertView;

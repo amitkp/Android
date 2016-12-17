@@ -133,7 +133,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
                 } 
                 }
-            }
+
         });
 
         return convertView;

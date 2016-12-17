@@ -84,8 +84,5 @@
     <string name="please_enter_amount">Please enter amount</string>
     <string name="please_enter_validdate">Please enter valid date</string>
     <string name="target">Target:</string>
-        <item>@string/txt_order</item>
-        <item>@string/txt_order_list</item>
 
-    <string name="parseError">Parseing Error</string>
 </resources>

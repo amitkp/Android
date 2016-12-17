@@ -48,5 +48,5 @@ public interface RestCallback {
         Call<ResponseBody> onOrderListReceive(@Url String url);
     }
 
-}
+}}
 
