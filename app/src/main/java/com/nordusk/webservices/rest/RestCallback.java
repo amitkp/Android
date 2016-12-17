@@ -19,5 +19,34 @@ public interface RestCallback {
         Call<ResponseBody> onOrderListReceive(@Url String url);
     }
 
+    interface OrderCreateCallback{
+        @GET
+        Call<ResponseBody> onCreateOrder(@Url String url);
+    }
+
+    interface AddTerritoryCallback{
+        @GET
+        Call<ResponseBody> onAddTerritory(@Url String url);
+    }
+
+    interface TargetCreateCallback{
+        @GET
+        Call<ResponseBody> onCreateTarget(@Url String url);
+    }
+
+    interface TargetListCallback{
+        @GET
+        Call<ResponseBody> onTargetListFetch(@Url String url);
+    }
+
+    interface ProductListCallback{
+        @GET("http://dynamicsglobal.net/app/product_list.php")
+        Call<ResponseBody> getProductList();
+
+    interface OrderListCallback{
+        @GET
+        Call<ResponseBody> onOrderListReceive(@Url String url);
+    }
+
 }
 

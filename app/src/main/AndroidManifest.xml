@@ -55,7 +55,10 @@
              />
         <activity android:name=".UI.orderLIst.ActivityOrderList"
                   android:screenOrientation="portrait"/>
-            android:screenOrientation="portrait" />
+        <activity android:name=".UI.orderCreate.ActivityOrderCreate"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".UI.targetList.ActivityTargetList"
+                  android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
