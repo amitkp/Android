@@ -284,7 +284,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit = (Button) findViewById(R.id.counterprofile_btn_submit);
         if(call_from.equalsIgnoreCase("edit"))
-            submit.setText("Edit");
+            submit.setText("Update");
         else
             submit.setText("Add");
 

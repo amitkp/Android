@@ -302,7 +302,7 @@ edt_countername.setText(getIntent().getStringExtra("name"));
         edt_countersize = (EditText) findViewById(R.id.counterdtls_countersize);
         auto_text = (AutoCompleteTextView) findViewById(R.id.auto_text);
         if(call_from.equalsIgnoreCase("edit"))
-            submit.setText("Edit");
+            submit.setText("Update");
         else
             submit.setText("Add");
 
