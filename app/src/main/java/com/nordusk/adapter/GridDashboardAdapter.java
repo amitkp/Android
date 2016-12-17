@@ -30,6 +30,7 @@ import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.ListCounterDistributor;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.orderLIst.ActivityOrderList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.ChangepasswordAsync;
@@ -44,7 +45,9 @@ import java.util.Locale;
  */
 public class GridDashboardAdapter extends BaseAdapter {
 
-    private int[] img_ids = {R.drawable.store, R.drawable.distributor, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
+    private int[] img_ids = {R.drawable.store, R.drawable.distributor,
+            R.drawable.placeholder, R.drawable.placeholders,
+            R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
     private Activity mContext;
@@ -123,7 +126,11 @@ public class GridDashboardAdapter extends BaseAdapter {
                     }else{
                         Toast.makeText(mContext,"Tracking not available for sales persons",Toast.LENGTH_SHORT).show();
                     }
-//
+                } else if (position == 5) {
+
+                } else if (position == 6) {
+                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
+                    mContext.startActivity(mIntent);
                 }
             }
         });

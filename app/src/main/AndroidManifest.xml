@@ -51,6 +51,10 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.AddDistributer"
+            android:screenOrientation="portrait"
+             />
+        <activity android:name=".UI.orderLIst.ActivityOrderList"
+                  android:screenOrientation="portrait"/>
             android:screenOrientation="portrait" />
 
         <meta-data
