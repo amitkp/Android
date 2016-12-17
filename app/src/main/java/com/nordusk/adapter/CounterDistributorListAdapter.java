@@ -84,8 +84,8 @@ public class CounterDistributorListAdapter extends BaseAdapter {
 
         DataDistributor dataDistributor = arr_datacounterdis.get(position);
         if (dataDistributor != null) {
-            holder.txt_name.setText(dataDistributor.getName());
-            holder.txt_address.setText(dataDistributor.getAddress());
+            holder.txt_name.setText("Name : "+dataDistributor.getName());
+            holder.txt_address.setText("Address : "+dataDistributor.getAddress());
 
         }
 
