@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -30,6 +32,11 @@ import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.ListCounterDistributor;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.createTarget.DialogTargetCreate;
+import com.nordusk.UI.dialogTracker.DialogAddTracker;
+import com.nordusk.UI.orderCreate.ActivityOrderCreate;
+import com.nordusk.UI.orderLIst.ActivityOrderList;
+import com.nordusk.UI.targetList.ActivityTargetList;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
@@ -50,15 +57,15 @@ public class GridDashboardAdapter extends BaseAdapter {
             R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
-    private Activity mContext;
+    private AppCompatActivity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
-    ArrayList<String>name_list=new ArrayList<String>();
+    ArrayList<String> name_list = new ArrayList<String>();
     private String userChoosenTask;
 
 
-    public GridDashboardAdapter(Activity context) {
+    public GridDashboardAdapter(AppCompatActivity context) {
         this.mContext = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         options_dashboard = context.getResources().getStringArray(R.array.options_dashboard);
@@ -98,7 +105,6 @@ public class GridDashboardAdapter extends BaseAdapter {
         holder.img_icon.setImageResource(img_ids[position]);
 
 
-
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,25 +118,35 @@ public class GridDashboardAdapter extends BaseAdapter {
                     intent.putExtra("from","add");
                     mContext.startActivity(intent);
                 } else if (position == 2) {
-                    selectDialog("counter");
-
+                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                    intent.putExtra("type", "1");
+                    mContext.startActivity(intent);
                 } else if (position == 3) {
 
                     selectDialog("distributor");
 
 
-                }
-                else if (position == 4) {
+                } else if (position == 4) {
                     if (mPrefs.getString("designation", "").equalsIgnoreCase("2")) {
                         showTrackDialog("all");
-                    }else{
-                        Toast.makeText(mContext,"Tracking not available for sales persons",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Tracking not available for sales persons", Toast.LENGTH_SHORT).show();
                     }
                 } else if (position == 5) {
-
+                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
+                    mContext.startActivity(mIntent);
                 } else if (position == 6) {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
+                } else if (position == 7) {
+                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
+                    mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
+                } else if (position == 8) {
+                    //TODO show Target list
+                    Intent mIntent = new Intent(mContext, ActivityTargetList.class);
+                    mContext.startActivity(mIntent);
+
+                } 
                 }
             }
         });
@@ -194,7 +210,9 @@ public class GridDashboardAdapter extends BaseAdapter {
         private ImageView img_icon;
         private TextView txt_option;
     }
-    private String userName="";
+
+    private String userName = "";
+
     public void showTrackDialog(final String tag) {
 
         final EditText new_password;
@@ -213,13 +231,13 @@ public class GridDashboardAdapter extends BaseAdapter {
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         old_password = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
-        if(name_list.size()<1){
-            for(int i=0;i<Util.getUserList().size();i++){
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
                 name_list.add(Util.getUserList().get(i).getName());
             }
         }
 
-        if(name_list!=null && name_list.size()>0) {
+        if (name_list != null && name_list.size() > 0) {
             ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
             old_password.setAdapter(adapter);
         }
@@ -228,11 +246,11 @@ public class GridDashboardAdapter extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String name="";
+                String name = "";
                 name = parent.getItemAtPosition(position).toString();
-                for(int i=0;i<Util.getUserList().size();i++){
-                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
-                        userName=Util.getUserList().get(i).getUsername();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        userName = Util.getUserList().get(i).getUsername();
                     }
                 }
 
@@ -242,7 +260,7 @@ public class GridDashboardAdapter extends BaseAdapter {
 
         new_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_pswrd);
 
-        if(tag.equalsIgnoreCase("sales")){
+        if (tag.equalsIgnoreCase("sales")) {
             old_password.setVisibility(View.GONE);
         }
 
@@ -258,7 +276,7 @@ public class GridDashboardAdapter extends BaseAdapter {
                 if (tag.equalsIgnoreCase("all")) {
 
 
-                    if (userName!=null && userName.length()>0
+                    if (userName != null && userName.length() > 0
                             &&
                             new_password.getText().toString().trim() != null && new_password.getText().toString().trim().length() > 0) {
                         Intent intent = new Intent(mContext, MapsActivity.class);

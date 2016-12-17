@@ -3,6 +3,7 @@ package com.nordusk.UI.helper;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,8 +58,8 @@ public class ViewOrderitem extends FrameLayout {
 
     public void setupView(DataOrder mDataOrder) {
         tv_name.setText(mDataOrder.getName());
-        tv_date.setText(mDataOrder.getDateTime());
-        tv_amount.setText(mDataOrder.getTotalPrice());
+        tv_date.setText(getStringFromResource(R.string.date) + ":" + mDataOrder.getDateTime());
+        tv_amount.setText(getStringFromResource(R.string.rs) + mDataOrder.getTotalPrice());
 
         ll.removeAllViews();
 
@@ -67,10 +68,16 @@ public class ViewOrderitem extends FrameLayout {
 
             View mView = LayoutInflater.from(getContext()).inflate(R.layout.view_item, ll, false);
             ((TextView) mView.findViewById(R.id.tv_prodName)).setText(mItem.getItemName());
-            ((TextView) mView.findViewById(R.id.tv_prodQty)).setText(mItem.getItemQuantity());
-            ((TextView) mView.findViewById(R.id.tv_prodPrice)).setText(mItem.getItemPrice());
+            ((TextView) mView.findViewById(R.id.tv_prodQty)).setText(getStringFromResource(R.string.qty) + ":" +
+                    mItem.getItemQuantity());
+            ((TextView) mView.findViewById(R.id.tv_prodPrice)).setText(getStringFromResource(R.string.rs) +
+                    mItem.getItemPrice());
 
             ll.addView(mView, i);
         }
+    }
+
+    private String getStringFromResource(@StringRes int resId) {
+        return getContext().getResources().getString(resId);
     }
 }

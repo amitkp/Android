@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,6 +29,11 @@ import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.createTarget.DialogTargetCreate;
+import com.nordusk.UI.dialogTracker.DialogAddTracker;
+import com.nordusk.UI.orderCreate.ActivityOrderCreate;
+import com.nordusk.UI.orderLIst.ActivityOrderList;
+import com.nordusk.UI.targetList.ActivityTargetList;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
@@ -42,17 +48,18 @@ import java.util.Locale;
 public class GridDashboardAdapterManager extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder,
-            R.drawable.placeholders, R.drawable.placeholder};
+            R.drawable.placeholders, R.drawable.placeholders, R.drawable.placeholder
+            , R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
-    private Activity mContext;
+    private AppCompatActivity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
     ArrayList<String> name_list=new ArrayList<String>();
 
 
-    public GridDashboardAdapterManager(Activity context) {
+    public GridDashboardAdapterManager(AppCompatActivity context) {
         this.mContext = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         options_dashboard = context.getResources().getStringArray(R.array.options_dashboard_manager);
@@ -108,10 +115,23 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 //                    selectDialog();
                     showTrackDialog("all");
                 } else if (position == 3) {
-
+                    DialogAddTracker mDialog = DialogAddTracker.newInstance();
+                    mDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(),
+                            DialogAddTracker.class.getSimpleName());
                 } else if (position == 4) {
+                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
+                    mContext.startActivity(mIntent);
+                } else if (position == 5) {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
+                } else if (position == 6) {
+                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
+                    mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
+                } else if (position == 7) {
+                    Intent mIntent = new Intent(mContext, ActivityTargetList.class);
+                    mContext.startActivity(mIntent);
+
+                } 
                 }
             }
         });
