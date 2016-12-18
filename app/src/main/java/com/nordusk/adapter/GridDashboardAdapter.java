@@ -111,16 +111,16 @@ public class GridDashboardAdapter extends BaseAdapter {
 
                 if (position == 0) {
                     Intent intent = new Intent(mContext, AddCounter.class);
-                    intent.putExtra("from","add");
+                    intent.putExtra("from", "add");
                     mContext.startActivity(intent);
                 } else if (position == 1) {
                     Intent intent = new Intent(mContext, AddDistributer.class);
-                    intent.putExtra("from","add");
+                    intent.putExtra("from", "add");
                     mContext.startActivity(intent);
                 } else if (position == 2) {
                     //Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                     //.putExtra("type", "1");
-                   // mContext.startActivity(intent);
+                    // mContext.startActivity(intent);
                     selectDialog("distributor");
                 } else if (position == 3) {
 
@@ -134,11 +134,12 @@ public class GridDashboardAdapter extends BaseAdapter {
                         Toast.makeText(mContext, "Tracking not available for sales persons", Toast.LENGTH_SHORT).show();
                     }
                 } else if (position == 5) {
-                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
-                    mContext.startActivity(mIntent);
+
+                    selectDialogForOrderCreate();
+
                 } else if (position == 6) {
-                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
-                    mContext.startActivity(mIntent);
+                    selectDialogForOrderList();
+
                 } else if (position == 7) {
                     DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
                     mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
@@ -147,8 +148,8 @@ public class GridDashboardAdapter extends BaseAdapter {
                     Intent mIntent = new Intent(mContext, ActivityTargetList.class);
                     mContext.startActivity(mIntent);
 
-                } 
                 }
+            }
 
         });
 
@@ -169,13 +170,11 @@ public class GridDashboardAdapter extends BaseAdapter {
                 if (items[item].equals("Listview")) {
 
 //                    if (result)
-                    if(call_tag.equalsIgnoreCase("distributor")) {
+                    if (call_tag.equalsIgnoreCase("distributor")) {
                         Intent intent = new Intent(mContext, ListCounterDistributor.class);
                         intent.putExtra("type", "2");
                         mContext.startActivity(intent);
-                    }
-                    else
-                    {
+                    } else {
                         Intent intent = new Intent(mContext, ListCounterDistributor.class);
                         intent.putExtra("type", "1");
                         mContext.startActivity(intent);
@@ -184,22 +183,96 @@ public class GridDashboardAdapter extends BaseAdapter {
                 } else if (items[item].equals("Mapview")) {
 
 //                    if (result)
-                    if(call_tag.equalsIgnoreCase("distributor")) {
+                    if (call_tag.equalsIgnoreCase("distributor")) {
                         Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                         intent.putExtra("type", "2");
                         mContext.startActivity(intent);
-                    }
-                    else
-                    {
+                    } else {
                         Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                         intent.putExtra("type", "1");
                         mContext.startActivity(intent);
                     }
 
 
-
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void selectDialogForOrderCreate() {
+
+        final CharSequence[] items = {"Counter", "Distributor", "Prime Partner"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("View Filter");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+//                boolean result = Util.checkPermission(mContext);
+
+                if (items[item].equals("Counter")) {
+
+//                    if (result)
+                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
+                    Util.ORDER_FOR_TYPE = "1";
+                    Util.ORDER_FOR = "";
+                    mContext.startActivity(mIntent);
+
+
+                } else if (items[item].equals("Distributor")) {
+
+//                    if (result)
+                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
+                    Util.ORDER_FOR_TYPE = "2";
+                    Util.ORDER_FOR = "";
+                    mContext.startActivity(mIntent);
+
+
+                } else if (items[item].equals("Prime Partner")) {
+                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
+                    Util.ORDER_FOR_TYPE = "3";
+                    Util.ORDER_FOR = "";
+                    mContext.startActivity(mIntent);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void selectDialogForOrderList() {
+
+        final CharSequence[] items = {"Counter", "Distributor", "Prime Partner"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("View Filter");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+//                boolean result = Util.checkPermission(mContext);
+
+                if (items[item].equals("Counter")) {
+
+//                    if (result)
+                    Util.ORDER_FOR_TYPE = "1";
+                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
+                    mContext.startActivity(mIntent);
+
+
+                } else if (items[item].equals("Distributor")) {
+
+//                    if (result)
+                    Util.ORDER_FOR_TYPE = "2";
+                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
+                    mContext.startActivity(mIntent);
+
+
+                } else if (items[item].equals("Prime Partner")) {
+                    Util.ORDER_FOR_TYPE = "3";
+                    Intent mIntent = new Intent(mContext, ActivityOrderList.class);
+                    mContext.startActivity(mIntent);
                 }
             }
         });

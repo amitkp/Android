@@ -54,6 +54,9 @@ public class Util {
     public  static  ArrayList<UserTrace> UserList=new ArrayList<UserTrace>();
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
+    public static String ORDER_FOR="";
+    public static String ORDER_FOR_TYPE="";
+
 
     /**
      * get the device IMEI no and save it into shared preference

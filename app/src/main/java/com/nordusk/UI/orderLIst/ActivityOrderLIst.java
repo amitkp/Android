@@ -46,7 +46,7 @@ public class ActivityOrderList extends AppCompatActivity implements  OrderListPr
 
         rv.addItemDecoration(new VerticalSpaceItemDecoration(5));
 
-        mAdapter = new AdapterOrderList(mPresenter);
+        mAdapter = new AdapterOrderList(mPresenter,this);
         rv.setAdapter(mAdapter);
     }
 

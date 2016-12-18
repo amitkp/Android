@@ -13,6 +13,7 @@ import com.nordusk.R;
 import com.nordusk.pojo.DataOrder;
 import com.nordusk.pojo.DataProducts;
 import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.rest.RestCallback;
 import com.nordusk.webservices.rest.WebApiClient;
 
@@ -101,10 +102,12 @@ mInteractor.onHideLoader();
         RestCallback.OrderCreateCallback mLoginCallback = mRetrofit.create(RestCallback.OrderCreateCallback.class);
 
         try {
-            String url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId +
+            String url = "http://dynamicsglobal.net/app/order_create.php?created_by=" + userId +
                     "&product_name=" + getProductNames(childCount) + "&product_id=" +
                     getProductId(childCount) + "&price=" + getProductPrice(childCount) + "&quantity=" +
-                    getProductQty(childCount) + "&order_for=" + mInteractor.getOrderFor() + "&order_for_type=" + mInteractor.getOrderType();
+                    getProductQty(childCount) + "&order_for=" + Util.ORDER_FOR + "&order_for_type=" + Util.ORDER_FOR_TYPE;
+
+            Log.e("url",url);
 
             Call<ResponseBody> mCall = mLoginCallback.onCreateOrder(url);
             mCall.enqueue(this);

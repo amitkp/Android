@@ -13,6 +13,7 @@ import com.nordusk.R;
 import com.nordusk.pojo.DataDistributor;
 import com.nordusk.pojo.DataOrder;
 import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
 import com.nordusk.webservices.rest.RestCallback;
 import com.nordusk.webservices.rest.WebApiClient;
 
@@ -62,7 +63,7 @@ public class OrderListPresenterImpl implements
         Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(contextWeakReference.get()));
         RestCallback.OrderListCallback mLoginCallback = mRetrofit.create(RestCallback.OrderListCallback.class);
 
-        String url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId + "&order_for_type=2";
+        String url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId + "&order_for_type="+Util.ORDER_FOR_TYPE;
         Call<ResponseBody> mCall = mLoginCallback.onOrderListReceive(url);
         mCall.enqueue(this);
     }
