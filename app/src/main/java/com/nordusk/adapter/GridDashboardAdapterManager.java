@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -37,6 +38,7 @@ import com.nordusk.UI.targetList.ActivityTargetList;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
+import com.nordusk.webservices.AddManagerTargetAsync;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -119,19 +121,20 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     mDialog.show(((AppCompatActivity) mContext).getSupportFragmentManager(),
                             DialogAddTracker.class.getSimpleName());
                 } else if (position == 4) {
-                    Intent mIntent = new Intent(mContext, ActivityOrderCreate.class);
-                    mContext.startActivity(mIntent);
+                    addTarget();
                 } else if (position == 5) {
                     Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     mContext.startActivity(mIntent);
-                } else if (position == 6) {
-                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
-                    mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
-                } else if (position == 7) {
-                    Intent mIntent = new Intent(mContext, ActivityTargetList.class);
-                    mContext.startActivity(mIntent);
+                }
 
-                } 
+//                else if (position == 6) {
+//                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
+//                    mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
+//                } else if (position == 7) {
+//                    Intent mIntent = new Intent(mContext, ActivityTargetList.class);
+//                    mContext.startActivity(mIntent);
+//
+//                }
                 }
 
         });
@@ -175,6 +178,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
     }
 
     private String userName="";
+    private String sp_id="";
     public void showTrackDialog(final String tag) {
 
         final EditText new_password;
@@ -283,6 +287,115 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         });
 
         mDialog_SelectSelectAccount.show();
+    }
+
+    private void addTarget(){
+
+        final EditText et_date,et_amount;
+        final AutoCompleteTextView login_edtxt_emailmobile;
+        final Button btn_save;
+
+        final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
+                android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount
+                .setContentView(R.layout.dialog_target_create_manager);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        login_edtxt_emailmobile = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        et_date = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.et_date);
+        et_amount = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.et_amount);
+        btn_save = (Button) mDialog_SelectSelectAccount.findViewById(R.id.btn_save);
+
+
+        if(name_list.size()<1){
+            for(int i=0;i<Util.getUserList().size();i++){
+                name_list.add(Util.getUserList().get(i).getName());
+            }
+        }
+
+        if(name_list!=null && name_list.size()>0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
+            login_edtxt_emailmobile.setAdapter(adapter);
+        }
+
+        login_edtxt_emailmobile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name="";
+                name = parent.getItemAtPosition(position).toString();
+                for(int i=0;i<Util.getUserList().size();i++){
+                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
+                        sp_id=Util.getUserList().get(i).getId();
+                    }
+                }
+
+            }
+        });
+
+        et_date.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                        Util.setDateFromDatePicker(et_date, mContext, dateFormatter);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+
+                }
+
+                return true;
+            }
+        });
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(sp_id!=null && sp_id.length()>0
+                        && et_amount.getText().toString()!=null && et_amount.getText().toString().length()>0
+                        && et_date.getText().toString()!=null && et_date.getText().toString().length()>0){
+
+                    String date="";
+                    date=et_date.getText().toString().substring(0,7);
+                    Log.e("date",date);
+
+                    AddManagerTargetAsync addManagerTargetAsync=new AddManagerTargetAsync(mContext,date,sp_id,et_amount.getText().toString().trim());
+                    addManagerTargetAsync.setOnContentListParserListner(new AddManagerTargetAsync.OnContentListSchedules() {
+                        @Override
+                        public void OnSuccess(String arrayList) {
+                            mDialog_SelectSelectAccount.dismiss();
+                            Toast.makeText(mContext,arrayList,Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void OnError(String str_err) {
+                            mDialog_SelectSelectAccount.dismiss();
+                            Toast.makeText(mContext,str_err,Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void OnConnectTimeout() {
+                            Toast.makeText(mContext,"Check your network connection",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    addManagerTargetAsync.execute();
+
+                }else{
+                    Toast.makeText(mContext,"Please provide all fields",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        mDialog_SelectSelectAccount.show();
+
     }
 
 
