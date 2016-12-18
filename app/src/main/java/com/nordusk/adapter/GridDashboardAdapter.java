@@ -121,7 +121,7 @@ public class GridDashboardAdapter extends BaseAdapter {
                     //Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
                     //.putExtra("type", "1");
                     // mContext.startActivity(intent);
-                    selectDialog("distributor");
+                    selectDialog("counter");
                 } else if (position == 3) {
 
                     selectDialog("distributor");
