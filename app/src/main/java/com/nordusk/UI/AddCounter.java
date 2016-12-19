@@ -91,6 +91,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private String call_from="";
     private Bundle bundle = null;
     private DataDistributor dataDistributor = new DataDistributor();
+    private String id="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +160,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         edt_accno.setText(dataDistributor.getAccountNo());
         edt_ifsccode.setText(dataDistributor.getIfscCode());
         edt_countersize.setText(dataDistributor.getCounterSize());
+        id=dataDistributor.getId();
 
 
         if(call_from.equalsIgnoreCase("edit"))
@@ -479,7 +481,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
                     {
                         EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(), null);
+                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),id, null);
                         editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                             @Override
                             public void OnSuccess(String responsecode) {
