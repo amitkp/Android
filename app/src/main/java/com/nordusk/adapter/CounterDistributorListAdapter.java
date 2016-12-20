@@ -113,10 +113,11 @@ public class CounterDistributorListAdapter extends BaseAdapter {
                 if(type.equalsIgnoreCase("2")) {
                     Intent intent = new Intent(context, AddDistributer.class);
                     intent.putExtra("from", "edit");
-                    intent.putExtra("name",arr_datacounterdis.get(position).getName());
-                    intent.putExtra("address",arr_datacounterdis.get(position).getAddress());
-                    intent.putExtra("mobile",arr_datacounterdis.get(position).getMobile());
-                    intent.putExtra("territory",arr_datacounterdis.get(position).getTerritory());
+                    Bundle bundle = new Bundle();
+                    HashMap<String, DataDistributor> hashMap = new HashMap<String, DataDistributor>();
+                    hashMap.put("value", arr_datacounterdis.get(position));
+                    bundle.putSerializable("value", hashMap);
+                    intent.putExtras(bundle);
                     context.startActivity(intent);
                 } else
                 {
@@ -125,10 +126,11 @@ public class CounterDistributorListAdapter extends BaseAdapter {
 
                     Intent intent = new Intent(context, AddCounter.class);
                     intent.putExtra("from", "edit");
-                    intent.putExtra("name",arr_datacounterdis.get(position).getName());
-                    intent.putExtra("address",arr_datacounterdis.get(position).getAddress());
-                    intent.putExtra("mobile",arr_datacounterdis.get(position).getMobile());
-                    intent.putExtra("territory",arr_datacounterdis.get(position).getTerritory());
+                    Bundle bundle = new Bundle();
+                    HashMap<String, DataDistributor> hashMap = new HashMap<String, DataDistributor>();
+                    hashMap.put("value", arr_datacounterdis.get(position));
+                    bundle.putSerializable("value", hashMap);
+                    intent.putExtras(bundle);
                     context.startActivity(intent);
                 }
 

@@ -3,11 +3,13 @@ package com.nordusk.pojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by gouravkundu on 11/12/16.
  */
 
-public class DataDistributor {
+public class DataDistributor implements Serializable{
 
     @SerializedName("id")
     @Expose

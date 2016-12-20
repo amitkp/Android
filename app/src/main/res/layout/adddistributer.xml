@@ -41,7 +41,7 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:textColor="@color/colorPrimary"
                 android:layout_height="wrap_content"
-                android:text="Distributor Details"
+                android:text="Distributor details"
                 android:textSize="@dimen/medium_textSize"></TextView>
             <RelativeLayout
                 android:id="@+id/rltv_devider"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_10"
                 android:text="Add as">
-                </TextView>
+            </TextView>
 
             <RadioGroup
                 android:id="@+id/radiotype"
@@ -85,7 +85,7 @@
                 android:id="@+id/counterdtls_edtxt_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Distributor Name*"
+                android:hint="Distributor name*"
                 android:layout_margin="@dimen/dp_10"
 
                 ></EditText>
@@ -94,7 +94,7 @@
                 android:id="@+id/counterdtls_edtxt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Distributor Address"
+                android:hint="Distributor address"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
 
@@ -105,7 +105,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/TabTextColor"
                 android:textSize="@dimen/medium_textSize"
-                android:text="Distributor Photo"></TextView>
+                android:text="Distributor photo"></TextView>
 
             <RelativeLayout
                 android:id="@+id/rltv_pic_contain"
@@ -124,7 +124,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="Take Photo"
+                    android:text="Take photo"
                     android:background="@color/colorPrimary"
                     android:gravity="center_horizontal|center_vertical"
                     android:textColor="@color/colorWhite"
@@ -144,7 +144,7 @@
                 android:layout_marginTop="@dimen/dp_10"
                 android:textColor="@color/TabTextColor"
                 android:textSize="@dimen/medium_textSize"
-                android:text="Distributor Location : Tap to locate*"></TextView>
+                android:text="Distributor location : Tap to locate*"></TextView>
 
             <RelativeLayout
                 android:id="@+id/rltv_devider3"
@@ -164,7 +164,7 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/medium_textSize"
-                android:text="Distributor Location"></TextView>
+                android:text="Distributor location"></TextView>
 
             <RelativeLayout
                 android:id="@+id/rltv_devider2"
@@ -177,7 +177,7 @@
                 android:id="@+id/counterdtls_edtxt_ownername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Distributor Owner Name"
+                android:hint="Distributor owner name"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
 
@@ -185,7 +185,7 @@
                 android:id="@+id/counterdtls_edtxt_dob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Date of Birth(YYYY-MM-DD)"
+                android:hint="Date of birth(YYYY-MM-DD)"
                 android:focusableInTouchMode="false"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
@@ -202,7 +202,7 @@
                 android:id="@+id/dis_edtxt_mobilenumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Mobile Number*"
+                android:hint="Mobile number*"
                 android:inputType="number"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
@@ -233,7 +233,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_10"
                 android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM "
-                android:hint="Bank Name"
+                android:hint="Bank name"
                 android:inputType="text"></EditText>
 
             <EditText

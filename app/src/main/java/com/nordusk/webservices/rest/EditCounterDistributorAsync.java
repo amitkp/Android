@@ -26,11 +26,12 @@ public class EditCounterDistributorAsync extends AsyncTask<Void, Void, Void>
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
 
-    private String type = "", countername = "", mobile = "", lattitude = "", longitude = "", address = "", email = "", Bankname = "", Accno = "", ifsc = "", countersize = "", parntid = "";
+    private String type = "", countername = "", mobile = "", lattitude = "", longitude = "", address = "", email = "", Bankname = "", Accno = "", ifsc = "", countersize = "", parntid = "",territory="",aniversery="",dob="";
     private String path;
+    private String id="";
 
 
-    public EditCounterDistributorAsync(Activity context, String type, String countername, String mobile, String lattitude, String longitude, String address, String email, String Bankname, String Accno, String ifsc, String countersize, String parntid, String path, JSONObject jsonObject) {
+    public EditCounterDistributorAsync(Activity context, String type, String countername, String mobile, String lattitude, String longitude, String address, String email, String Bankname, String Accno, String ifsc, String countersize, String parntid, String path, String territory,String aniversery,String dob,String id,JSONObject jsonObject) {
         this.context = context;
         this.type = type;
         this.countername = countername;
@@ -38,13 +39,16 @@ public class EditCounterDistributorAsync extends AsyncTask<Void, Void, Void>
         this.lattitude = lattitude;
         this.longitude = longitude;
         this.address = address;
-
+        this.territory=territory;
+        this.aniversery=aniversery;
+        this.dob=dob;
         this.Bankname = Bankname;
         this.Accno = Accno;
         this.ifsc = ifsc;
         this.countersize = countersize;
         this.parntid = parntid;
         this.path = path;
+        this.id=id;
 
         this.jsonObject = jsonObject;
         mpProgressDialog = new ProgressDialog(context);
@@ -68,9 +72,9 @@ public class EditCounterDistributorAsync extends AsyncTask<Void, Void, Void>
             String[] responsedata = {};
 
             if (path != null && path.length() > 0)
-                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "&image=" + path + "", jsonObject);
+                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.editcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + territory + "&anniversary=" +aniversery + "&dob=" +dob + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code=" + ifsc + "&counter_size=" + countersize + "&image=" + path +"&id="+id+"", jsonObject);
             else
-                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.addcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + address + "&anniversary=" + "2015-11-21" + "&dob=" + "1989-05-08" + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + "", jsonObject);
+                responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.editcounter_url) + "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + territory + "&anniversary=" +aniversery+ "&dob=" + dob + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code=" + ifsc + "&counter_size=" + countersize +"&id="+id+"", jsonObject);
             //String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.logoutasync_url)+ "userId="+"", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {

@@ -107,7 +107,8 @@ public class Dashboard extends AppCompatActivity {
     private void initView() {
 
         grid_dashboard_item = (GridView) findViewById(R.id.dashboard_grid);
-        if (mPrefs.getString("designation", "").equalsIgnoreCase("4") || mPrefs.getString("designation", "").equalsIgnoreCase("3")) {
+        if (mPrefs.getString("designation", "").equalsIgnoreCase("4") || mPrefs.getString("designation", "").equalsIgnoreCase("3")
+                || mPrefs.getString("designation", "").equalsIgnoreCase("2")) {
             grid_dashboard_item.setAdapter(new GridDashboardAdapterManager(Dashboard.this));
 
         } else {

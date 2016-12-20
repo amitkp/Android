@@ -26,12 +26,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
+import com.nordusk.pojo.DataDistributor;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
@@ -48,19 +50,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class AddDistributer extends AppCompatActivity implements LocationListener {
 
     private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary,
-            edt_bankname,edt_accno,edt_ifsccode,edt_countersize;
+            edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
     private Button submit;
-    private TextView txt_counterlocation_press, txt_current_loc,textView_imgselect;
+    private TextView txt_counterlocation_press, txt_current_loc, textView_imgselect;
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
-    private boolean adress_set=false;
+    private boolean adress_set = false;
     private String lat = "", longitude = "";
     String complete_address = "";
     private SimpleDateFormat dateFormatter;
@@ -68,19 +71,39 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     private ImageView img_pic;
     private Bitmap bm;
-    private ArrayList<ParentId> tempParentIds=new ArrayList<>();
-    private ArrayList<ParentId> auto_territory=new ArrayList<>();
-    private AutoCompleteTextView auto_text,auto_text_territory;
+    private ArrayList<ParentId> tempParentIds = new ArrayList<>();
+    private ArrayList<ParentId> auto_territory = new ArrayList<>();
+    private AutoCompleteTextView auto_text, auto_text_territory;
     private RadioGroup rd_type;
-    private String type="2";
-    private String call_from="";
+    private String type = "2";
+    private String call_from = "";
+    private Bundle bundle = null;
+    private DataDistributor dataDistributor = new DataDistributor();
+    private String id="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.adddistributer);
 
-        call_from=getIntent().getStringExtra("from");
+
+//        if (bundle != null) {
+//            HashMap<String, PayItemDetails> hashmap = (HashMap<String, PayItemDetails>) bundle.getSerializable("value");
+//            if (hashmap != null && hashmap.size() > 0) {
+//                payItemDetails = hashmap.get("value");
+//
+//            }
+//        }
+
+        bundle = getIntent().getExtras();
+        if (bundle != null) {
+            HashMap<String, DataDistributor> hashmap = (HashMap<String, DataDistributor>) bundle.getSerializable("value");
+            if (hashmap != null && hashmap.size() > 0) {
+                dataDistributor = hashmap.get("value");
+
+            }
+        }
+        call_from = getIntent().getStringExtra("from");
 
 
         ParentPatnerfetch();
@@ -104,29 +127,53 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             }
         }
 
-        //To setup location manager
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!call_from.equalsIgnoreCase("edit")) {
+            //To setup location manager
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        LocationManager.requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
+        }
     }
 
     private void setData() {
 
-        if(getIntent().getStringExtra("name")!=null)
-            edt_countername.setText(getIntent().getStringExtra("name"));
-        if(getIntent().getStringExtra("address")!=null)
-            txt_current_loc.setText(getIntent().getStringExtra("address"));
 
-        if(getIntent().getStringExtra("mobile")!=null)
-            edt_mobileno.setText(getIntent().getStringExtra("mobile"));
+        edt_countername.setText(dataDistributor.getName());
 
-        if(getIntent().getStringExtra("territory")!=null)
-            auto_text_territory.setText(getIntent().getStringExtra("territory"));
+        edt_counteraddress.setText(dataDistributor.getAddress());
+
+
+        edt_mobileno.setText(dataDistributor.getMobile());
+
+
+        auto_text_territory.setText(dataDistributor.getTerritory());
+
+//        edt_counterownername.setText(dataDistributor.);
+
+        edt_dob.setText(dataDistributor.getDob());
+        edt_mobileno.setText(dataDistributor.getMobile());
+        edt_emailid.setText(dataDistributor.getEmail());
+        edt_aniversary.setText(dataDistributor.getAnniversary());
+        edt_bankname.setText(dataDistributor.getBankName());
+        edt_accno.setText(dataDistributor.getAccountNo());
+        edt_ifsccode.setText(dataDistributor.getIfscCode());
+        edt_countersize.setText(dataDistributor.getCounterSize());
+        id=dataDistributor.getId();
+
+
+
+
+        if (call_from.equalsIgnoreCase("edit")) {
+            press_current_loc = true;
+            txt_counterlocation_press.setVisibility(View.GONE);
+            rd_type.setVisibility(View.GONE);
+
+        }
     }
 
     private void TerritoryListFetch() {
 
-        TerritoryAsync territoryAsync=new TerritoryAsync(AddDistributer.this);
+        TerritoryAsync territoryAsync = new TerritoryAsync(AddDistributer.this);
         territoryAsync.setOnContentListParserListner(new TerritoryAsync.OnContentListSchedules() {
             @Override
             public void OnSuccess(ArrayList<ParentId> arrayList) {
@@ -151,7 +198,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
     private void ParentPatnerfetch() {
 
-        PrimePatnerAsync primePatnerAsync=new PrimePatnerAsync(AddDistributer.this);
+        PrimePatnerAsync primePatnerAsync = new PrimePatnerAsync(AddDistributer.this);
         primePatnerAsync.setOnContentListParserListner(new PrimePatnerAsync.OnContentListSchedules() {
             @Override
             public void OnSuccess(ArrayList<ParentId> arrayList) {
@@ -175,20 +222,35 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     }
 
 
-
     private void setListener() {
 
         rd_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
+                switch (checkedId) {
                     case R.id.radioDistributor:
                         auto_text.setVisibility(View.VISIBLE);
-                        type="2";
+                        type = "2";
+
+                        edt_countername.setHint("Distributor name");
+                        edt_counteraddress.setHint("Distributor address");
+                        ((TextView) findViewById(R.id.txt_hdr_counterphoto)).setText("Distributor photo");
+                        txt_counterlocation_press.setText("Distributor location : Tap to locate*");
+                        txt_current_loc.setText("Distributor location");
+                        edt_counterownername.setHint("Distributor owner name");
+
                         break;
                     case R.id.radioPrimepartner:
                         auto_text.setVisibility(View.GONE);
-                        type="3";
+                        type = "3";
+
+                        edt_countername.setHint("Prime partner name");
+                        edt_counteraddress.setHint("Prime partner address");
+                        ((TextView) findViewById(R.id.txt_hdr_counterphoto)).setText("Prime partner photo");
+                        txt_counterlocation_press.setText("Prime partner location : Tap to locate*");
+                        txt_current_loc.setText("Prime partner location");
+                        edt_counterownername.setHint("Prime partner owner name");
+
                         break;
 
                 }
@@ -207,10 +269,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
 
-           if (HttpConnectionUrl.isNetworkAvailable(AddDistributer.this)) {
-                validateInputs();
-                               }
-            else {
+                if (HttpConnectionUrl.isNetworkAvailable(AddDistributer.this)) {
+                    validateInputs();
+                } else {
                     Toast.makeText(AddDistributer.this, getResources().getString(R.string.txt_CheckNetwork), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -271,7 +332,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
 
     private void initView() {
-        auto_text_territory=(AutoCompleteTextView)findViewById(R.id.distridtls_edtxt_territory);
+        auto_text_territory = (AutoCompleteTextView) findViewById(R.id.distridtls_edtxt_territory);
         edt_countername = (EditText) findViewById(R.id.counterdtls_edtxt_name);
         edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
@@ -283,21 +344,21 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit = (Button) findViewById(R.id.counterprofile_btn_submit);
-        if(call_from.equalsIgnoreCase("edit"))
+        if (call_from.equalsIgnoreCase("edit"))
             submit.setText("Update");
         else
             submit.setText("Add");
 
-        edt_bankname=(EditText)findViewById(R.id.distributor_edtxt_bankname);
-        edt_accno=(EditText)findViewById(R.id.distributor_edtxt_bankaccno);
-        edt_ifsccode=(EditText)findViewById(R.id.distributor_edtxt_ifsccode);
-        edt_countersize=(EditText)findViewById(R.id.distributor_countersize);
+        edt_bankname = (EditText) findViewById(R.id.distributor_edtxt_bankname);
+        edt_accno = (EditText) findViewById(R.id.distributor_edtxt_bankaccno);
+        edt_ifsccode = (EditText) findViewById(R.id.distributor_edtxt_ifsccode);
+        edt_countersize = (EditText) findViewById(R.id.distributor_countersize);
 
-        img_pic=(ImageView)findViewById(R.id.image_distributor);
-        textView_imgselect=(TextView)findViewById(R.id.textView_imgselect);
-        auto_text=(AutoCompleteTextView)findViewById(R.id.auto_text);
+        img_pic = (ImageView) findViewById(R.id.image_distributor);
+        textView_imgselect = (TextView) findViewById(R.id.textView_imgselect);
+        auto_text = (AutoCompleteTextView) findViewById(R.id.auto_text);
 
-        rd_type=(RadioGroup)findViewById(R.id.radiotype);
+        rd_type = (RadioGroup) findViewById(R.id.radiotype);
     }
 
     private void setAutoTextAdapter() {
@@ -375,11 +436,11 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                         addressFragments).replaceAll("\\s+", "");
 
                 if (press_current_loc) {
-                    Toast.makeText(AddDistributer.this,complete_address,Toast.LENGTH_SHORT).show();
-                    if(!adress_set)
+                    Toast.makeText(AddDistributer.this, complete_address, Toast.LENGTH_SHORT).show();
+                    if (!adress_set)
                         txt_current_loc.setText(complete_address);
-                    if(!TextUtils.isEmpty(complete_address) && complete_address.length()>0)
-                        adress_set=true;
+                    if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
+                        adress_set = true;
                 }
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
@@ -422,73 +483,84 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
 
-                  //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                    //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
                     String parentId = "1";
                     if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                         String[] separated = auto_text.getText().toString().trim().split("-");
                         parentId = separated[1].toString();
                     }
-if(call_from.equalsIgnoreCase("edit"))
+                    if (call_from.equalsIgnoreCase("edit"))
 
-{
-    EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,type, edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-            edt_countersize.getText().toString().trim(), parentId,"", null);
-    editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
-        @Override
-        public void OnSuccess(String responsecode) {
-            Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
-            finish();
-        }
+                    {
 
-        @Override
-        public void OnError(String str_err) {
-            Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
-        }
 
-        @Override
-        public void OnConnectTimeout() {
 
-        }
-    });
 
-    editCounterAsync.execute();
+
+
+
+                        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,
+                                type, edt_countername.getText().toString().trim().replaceAll(" ", ""),
+                                edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString(),
+                                edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),id, null);
+                        editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
+                            @Override
+                            public void OnSuccess(String responsecode) {
+                                Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+
+                            @Override
+                            public void OnError(String str_err) {
+                                Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void OnConnectTimeout() {
+
+                            }
+                        });
+
+                        editCounterAsync.execute();
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
-}
+                    } else {
 
-                    else
-{
+                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
+                                edt_countername.getText().toString().trim().replaceAll(" ", ""),
+                                edt_mobileno.getText().toString().trim(), lat, longitude, complete_address,
+                                edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(), null);
+                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+                            @Override
+                            public void OnSuccess(String responsecode) {
+                                Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
 
-    AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this,type, edt_countername.getText().toString().trim().replaceAll(" ",""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-            edt_countersize.getText().toString().trim(), parentId,"", null);
-    addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
-        @Override
-        public void OnSuccess(String responsecode) {
-            Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
-            finish();
-        }
+                            @Override
+                            public void OnError(String str_err) {
+                                Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
+                            }
 
-        @Override
-        public void OnError(String str_err) {
-            Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
-        }
+                            @Override
+                            public void OnConnectTimeout() {
 
-        @Override
-        public void OnConnectTimeout() {
+                            }
+                        });
 
-        }
-    });
-
-    addCounterAsync.execute();
+                        addCounterAsync.execute();
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
-}
+                    }
 
-                }
-                else
+                } else
                     Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(AddDistributer.this, "Please press on current location", Toast.LENGTH_SHORT).show();

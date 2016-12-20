@@ -90,13 +90,23 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private Uri filePath;
     private String call_from="";
     private Bundle bundle = null;
+    private DataDistributor dataDistributor = new DataDistributor();
+    private String id="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.addcounterprofile);
-        call_from=getIntent().getStringExtra("from");
         bundle = getIntent().getExtras();
+        if (bundle != null) {
+            HashMap<String, DataDistributor> hashmap = (HashMap<String, DataDistributor>) bundle.getSerializable("value");
+            if (hashmap != null && hashmap.size() > 0) {
+                dataDistributor = hashmap.get("value");
+
+            }
+        }
+        call_from = getIntent().getStringExtra("from");
+
 
         ParentIdfetch();
         TerritoryListFetch();
@@ -121,23 +131,43 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             }
         }
 
-        //To setup location manager
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if(!call_from.equalsIgnoreCase("edit")) {
+            //To setup location manager
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        LocationManager.requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
+        }
     }
 
     private void fetchData() {
-if(getIntent().getStringExtra("name")!=null)
-edt_countername.setText(getIntent().getStringExtra("name"));
-    if(getIntent().getStringExtra("address")!=null)
-        txt_current_loc.setText(getIntent().getStringExtra("address"));
+        edt_countername.setText(dataDistributor.getName());
 
-        if(getIntent().getStringExtra("mobile")!=null)
-            edt_mobileno.setText(getIntent().getStringExtra("mobile"));
+        edt_counteraddress.setText(dataDistributor.getAddress());
 
-            if(getIntent().getStringExtra("territory")!=null)
-                auto_text_territory.setText(getIntent().getStringExtra("territory"));
+
+        edt_mobileno.setText(dataDistributor.getMobile());
+
+
+        auto_text_territory.setText(dataDistributor.getTerritory());
+
+//        edt_counterownername.setText(dataDistributor.);
+
+        edt_dob.setText(dataDistributor.getDob());
+        edt_mobileno.setText(dataDistributor.getMobile());
+        edt_emailid.setText(dataDistributor.getEmail());
+        edt_aniversary.setText(dataDistributor.getAnniversary());
+        edt_bankname.setText(dataDistributor.getBankName());
+        edt_accno.setText(dataDistributor.getAccountNo());
+        edt_ifsccode.setText(dataDistributor.getIfscCode());
+        edt_countersize.setText(dataDistributor.getCounterSize());
+        id=dataDistributor.getId();
+
+
+        if(call_from.equalsIgnoreCase("edit"))
+        {
+            press_current_loc=true;
+            txt_counterlocation_press.setVisibility(View.GONE);
+        }
 
 
     }
@@ -391,7 +421,7 @@ edt_countername.setText(getIntent().getStringExtra("name"));
                 if (press_current_loc) {
 
                     if(!adress_set)
-                    txt_current_loc.setText(complete_address);
+                        txt_current_loc.setText(complete_address);
                     if(!TextUtils.isEmpty(complete_address) && complete_address.length()>0)
                         adress_set=true;
                 }
@@ -451,7 +481,7 @@ edt_countername.setText(getIntent().getStringExtra("name"));
 
                     {
                         EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                edt_countersize.getText().toString().trim(), parentId, "", null);
+                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),id, null);
                         editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                             @Override
                             public void OnSuccess(String responsecode) {
@@ -480,7 +510,7 @@ edt_countername.setText(getIntent().getStringExtra("name"));
                                 edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
                                 lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                 edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                                parentId, path.trim().replaceAll(" ", ""), null);
+                                parentId, path.trim().replaceAll(" ", ""), auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),null);
                         addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                             @Override
                             public void OnSuccess(String responsecode) {

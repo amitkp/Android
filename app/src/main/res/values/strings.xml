@@ -63,8 +63,6 @@
         <item>@string/txt_viewdistributor</item>
         <item>@string/txt_track</item>
         <item>@string/teritorry</item>
-        <item>@string/txt_order</item>
-        <item>@string/txt_order_list</item>
         <item>@string/create_target</item>
         <item>@string/target_list</item>
     </array>
