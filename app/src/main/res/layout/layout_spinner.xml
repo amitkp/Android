@@ -8,7 +8,9 @@
 
     <TextView
         android:id="@+id/tv_productName"
+        android:layout_margin="@dimen/dp_5"
+        android:textSize="16sp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="@dimen/dp_50"/>
 
 </LinearLayout>
