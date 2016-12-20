@@ -2,6 +2,7 @@ package com.nordusk.webservices.rest;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
  */
 public class ProductListAsync extends AsyncTask<Void, Void, Void> {
 
-    private Activity context;
+    private Context context;
     private boolean isTimeOut = false;
 
     private String responsecode = "";
@@ -31,7 +32,7 @@ public class ProductListAsync extends AsyncTask<Void, Void, Void> {
     private ArrayList<DataProduct> arrayList = new ArrayList<>();
 
 
-    public ProductListAsync(Activity context,String cat) {
+    public ProductListAsync(Context context,String cat) {
         this.context = context;
         this.str_cat=cat;
         mpProgressDialog = new ProgressDialog(context);

@@ -96,8 +96,11 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         categoryListAsync.setOnContentListParserListner(new CategoryListAsync.OnContentListSchedules() {
             @Override
             public void OnSuccess(ArrayList<String> arrayList) {
-                spnr_category.setAdapter(new ArrayAdapterCategory(ActivityOrderCreate.this, R.layout.layout_spinner, arrayList));
+//                spnr_category.setAdapter(new ArrayAdapterCategory(ActivityOrderCreate.this, R.layout.layout_spinner, arrayList));
                 category_list = arrayList;
+                childViewSet(category_list,dataProduct);
+
+
             }
 
             @Override
@@ -113,10 +116,10 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         categoryListAsync.execute();
     }
 
-    private void childViewSet(ArrayList<String> arrayList) {
+    private void childViewSet(ArrayList<String> arrayList, ArrayList<DataProduct> list) {
 
         int childCount = ll_container.getChildCount();
-        ViewCategoryItem mView = new ViewCategoryItem(contextWeakReference.get(), arrayList);
+        ViewCategoryItem mView = new ViewCategoryItem(contextWeakReference.get(), arrayList,list);
         mView.setPosition(childCount);
         ll_container.addView(mView, childCount);
     }
@@ -133,32 +136,33 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         ll_container = (LinearLayout) findViewById(R.id.ll_container);
         btn_save = (Button) findViewById(R.id.btn_save);
         login_edtxt_emailmobile = (AutoCompleteTextView) findViewById(R.id.login_edtxt_emailmobile);
+        btn_save.setOnClickListener(this);
 
 
         //category and product
         spnr_category = (Spinner) findViewById(R.id.spnr_category);
         spnr_product = (Spinner) findViewById(R.id.spnr_product);
 
-        spnr_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(ActivityOrderCreate.this, category_list.get(position), Toast.LENGTH_SHORT).show();
-                if (HttpConnectionUrl.isNetworkAvailable(ActivityOrderCreate.this))
-                    if(category_list.get(position)!=null){
-                        String cat="";
-                        cat=category_list.get(position).toString().trim().replaceAll(" ","%20");
-                        fetchProduct(cat);
-                    }
-
-                else
-                    Toast.makeText(ActivityOrderCreate.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        spnr_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+////                Toast.makeText(ActivityOrderCreate.this, category_list.get(position), Toast.LENGTH_SHORT).show();
+//                if (HttpConnectionUrl.isNetworkAvailable(ActivityOrderCreate.this))
+//                    if(category_list.get(position)!=null){
+//                        String cat="";
+//                        cat=category_list.get(position).toString().trim().replaceAll(" ","%20");
+//                        fetchProduct(cat);
+//                    }
+//
+//                else
+//                    Toast.makeText(ActivityOrderCreate.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         spnr_product.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -176,62 +180,62 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
 
             }
         });
-        btn_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(!TextUtils.isEmpty(et_orderName.getText().toString()))
-                {
-                    if(!TextUtils.isEmpty(login_edtxt_emailmobile.getText().toString()))
-                    {
-                        if(!TextUtils.isEmpty(product_id.toString()))
-                        {
-                            if(!TextUtils.isEmpty(product_name.toString()))
-                            {
-                                if(!TextUtils.isEmpty(et_productQty.getText().toString()))
-                                {
-                                    if(!TextUtils.isEmpty(et_productPrice.getText().toString()))
-                                    {
-                                        CreateOrderAsync createOrderAsync=new CreateOrderAsync(ActivityOrderCreate.this,product_name,product_id,et_productPrice.getText().toString(),et_productQty.getText().toString(),null);
-                                        createOrderAsync.setOnContentListParserListner(new CreateOrderAsync.OnContentListSchedules() {
-                                            @Override
-                                            public void OnSuccess(String responsecode) {
-                                                Toast.makeText(ActivityOrderCreate.this,responsecode,Toast.LENGTH_SHORT).show();
-                                                finish();
-                                            }
-
-                                            @Override
-                                            public void OnError(String str_err) {
-
-                                            }
-
-                                            @Override
-                                            public void OnConnectTimeout() {
-
-                                            }
-                                        });
-                                        createOrderAsync.execute();
-                                    }
-                                    else
-                                        Toast.makeText(ActivityOrderCreate.this,"Enter price",Toast.LENGTH_SHORT).show();
-                                }
-                                else
-                                    Toast.makeText(ActivityOrderCreate.this,"Enter quantity",Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                                Toast.makeText(ActivityOrderCreate.this,"Select product name",Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                            Toast.makeText(ActivityOrderCreate.this,"Select product id",Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                        Toast.makeText(ActivityOrderCreate.this,"Enter order for",Toast.LENGTH_SHORT).show();
-                }  else
-                    Toast.makeText(ActivityOrderCreate.this,"Enter order name",Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
+//        btn_save.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if(!TextUtils.isEmpty(et_orderName.getText().toString()))
+//                {
+//                    if(!TextUtils.isEmpty(login_edtxt_emailmobile.getText().toString()))
+//                    {
+//                        if(!TextUtils.isEmpty(product_id.toString()))
+//                        {
+//                            if(!TextUtils.isEmpty(product_name.toString()))
+//                            {
+//                                if(!TextUtils.isEmpty(et_productQty.getText().toString()))
+//                                {
+//                                    if(!TextUtils.isEmpty(et_productPrice.getText().toString()))
+//                                    {
+//                                        CreateOrderAsync createOrderAsync=new CreateOrderAsync(ActivityOrderCreate.this,product_name,product_id,et_productPrice.getText().toString(),et_productQty.getText().toString(),null);
+//                                        createOrderAsync.setOnContentListParserListner(new CreateOrderAsync.OnContentListSchedules() {
+//                                            @Override
+//                                            public void OnSuccess(String responsecode) {
+//                                                Toast.makeText(ActivityOrderCreate.this,responsecode,Toast.LENGTH_SHORT).show();
+//                                                finish();
+//                                            }
+//
+//                                            @Override
+//                                            public void OnError(String str_err) {
+//
+//                                            }
+//
+//                                            @Override
+//                                            public void OnConnectTimeout() {
+//
+//                                            }
+//                                        });
+//                                        createOrderAsync.execute();
+//                                    }
+//                                    else
+//                                        Toast.makeText(ActivityOrderCreate.this,"Enter price",Toast.LENGTH_SHORT).show();
+//                                }
+//                                else
+//                                    Toast.makeText(ActivityOrderCreate.this,"Enter quantity",Toast.LENGTH_SHORT).show();
+//                            }
+//                            else
+//                                Toast.makeText(ActivityOrderCreate.this,"Select product name",Toast.LENGTH_SHORT).show();
+//                        }
+//                        else
+//                            Toast.makeText(ActivityOrderCreate.this,"Select product id",Toast.LENGTH_SHORT).show();
+//                    }
+//                    else
+//                        Toast.makeText(ActivityOrderCreate.this,"Enter order for",Toast.LENGTH_SHORT).show();
+//                }  else
+//                    Toast.makeText(ActivityOrderCreate.this,"Enter order name",Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//        });
 
         //
 
@@ -278,58 +282,64 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
 
     }
 
-    private void fetchProduct(String s) {
-
-        ProductListAsync productListAsync = new ProductListAsync(ActivityOrderCreate.this, s);
-        productListAsync.setOnContentListParserListner(new ProductListAsync.OnContentListSchedules() {
-            @Override
-            public void OnSuccess(ArrayList<DataProduct> arrayList) {
-                dataProduct=arrayList;
-                spnr_product.setAdapter(new ProductsAdapter(ActivityOrderCreate.this, R.layout.layout_spinner, arrayList));
-
-            }
-
-            @Override
-            public void OnError(String str_err) {
-
-            }
-
-            @Override
-            public void OnConnectTimeout() {
-
-            }
-        });
-        productListAsync.execute();
-
-    }
+//    private void fetchProduct(String s) {
+//
+//        ProductListAsync productListAsync = new ProductListAsync(ActivityOrderCreate.this, s);
+//        productListAsync.setOnContentListParserListner(new ProductListAsync.OnContentListSchedules() {
+//            @Override
+//            public void OnSuccess(ArrayList<DataProduct> arrayList) {
+//                dataProduct=arrayList;
+////                spnr_product.setAdapter(new ProductsAdapter(ActivityOrderCreate.this, R.layout.layout_spinner, arrayList));
+//                childViewSet(category_list,arrayList);
+//
+//            }
+//
+//            @Override
+//            public void OnError(String str_err) {
+//
+//            }
+//
+//            @Override
+//            public void OnConnectTimeout() {
+//
+//            }
+//        });
+//        productListAsync.execute();
+//
+//    }
 
     @Override
     public void onAddProductItem(ArrayList<DataProducts> mListProducts) {
 
+//        int childCount = ll_container.getChildCount();
+//        ViewProductItemCreate mView = new ViewProductItemCreate(contextWeakReference.get(), mListProducts);
+//        mView.setPosition(childCount);
+//        ll_container.addView(mView, childCount);
+
         int childCount = ll_container.getChildCount();
-        ViewProductItemCreate mView = new ViewProductItemCreate(contextWeakReference.get(), mListProducts);
+        ViewCategoryItem mView = new ViewCategoryItem(contextWeakReference.get(), category_list,dataProduct);
         mView.setPosition(childCount);
         ll_container.addView(mView, childCount);
     }
 
     @Override
     public String getProductName(int childPos) {
-        return ((ViewProductItemCreate) ll_container.getChildAt(childPos)).getProductName();
+        return ((ViewCategoryItem) ll_container.getChildAt(childPos)).getProductName();
     }
 
     @Override
     public String getProductId(int childPos) {
-        return "3";
+        return ((ViewCategoryItem) ll_container.getChildAt(childPos)).getProductId();
     }
 
     @Override
     public String getProductPrice(int childPos) {
-        return ((ViewProductItemCreate) ll_container.getChildAt(childPos)).getProductPrice();
+        return ((ViewCategoryItem) ll_container.getChildAt(childPos)).getProductPrice();
     }
 
     @Override
     public String getProductQuantity(int childPos) {
-        return ((ViewProductItemCreate) ll_container.getChildAt(childPos)).getProductQuantity();
+        return ((ViewCategoryItem) ll_container.getChildAt(childPos)).getProductQuantity();
     }
 
     @Override
@@ -344,13 +354,16 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
 
     @Override
     public void onClick(View view) {
-
-        if (Util.ORDER_FOR != null && Util.ORDER_FOR.length() > 0) {
-            btn_save.setClickable(false);
-            mPresenter.createOrder(ll_container.getChildCount());
-        } else {
-            Toast.makeText(ActivityOrderCreate.this, "Please select order for", Toast.LENGTH_SHORT).show();
-        }
+if(!TextUtils.isEmpty(et_orderName.getText().toString())) {
+    if (Util.ORDER_FOR != null && Util.ORDER_FOR.length() > 0) {
+        btn_save.setClickable(false);
+        mPresenter.createOrder(ll_container.getChildCount());
+    } else {
+        Toast.makeText(ActivityOrderCreate.this, "Please select order for", Toast.LENGTH_SHORT).show();
+    }
+}
+        else
+    Toast.makeText(ActivityOrderCreate.this, "Please enter order name", Toast.LENGTH_SHORT).show();
 
     }
 
