@@ -30,5 +30,5 @@ android:padding="@dimen/p_large">
     android:gravity="center"
     android:textColor="@android:color/white"
     android:background="@color/colorAccent"
-    android:text="Approve Order"/>
+    android:text="Quantity Sent"/>
 </LinearLayout>

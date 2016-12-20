@@ -53,7 +53,7 @@
             android:name=".UI.AddDistributer"
             android:screenOrientation="portrait"
              />
-        <activity android:name=".UI.orderLIst.ActivityOrderLIst"
+        <activity android:name=".UI.orderLIst.ActivityOrderList"
                   android:screenOrientation="portrait"/>
         <activity android:name=".UI.orderCreate.ActivityOrderCreate"
                   android:screenOrientation="portrait"/>
