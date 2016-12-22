@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,6 +81,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private Bundle bundle = null;
     private DataDistributor dataDistributor = new DataDistributor();
     private String id="";
+    private String territory_id="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -370,6 +372,21 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         CustomAutoCompleteAdapter customerAdapter_territory = new CustomAutoCompleteAdapter(this, R.layout.custom_auto, auto_territory);
         auto_text_territory.setAdapter(customerAdapter_territory);
 
+        auto_text_territory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+               // String name = "";
+                //name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < auto_territory.size(); i++) {
+                   // if (name.equalsIgnoreCase(auto_territory.get(i).getName())) {
+                        territory_id = auto_territory.get(i).getId();
+                   // }
+                }
+
+            }
+        });
+
 
     }
 
@@ -496,13 +513,17 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
                             {
 
-
+                                for (int i = 0; i < auto_territory.size(); i++) {
+                                    if (auto_text_territory.getText().toString().trim().equalsIgnoreCase(auto_territory.get(i).getName())) {
+                                        territory_id = auto_territory.get(i).getId();
+                                    }
+                                }
                                 EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,
                                         type, edt_countername.getText().toString().trim().replaceAll(" ", ""),
                                         edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString(),
                                         edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                         edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                        edt_countersize.getText().toString().trim(), parentId, "", auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
+                                        edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
                                 editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                                     @Override
                                     public void OnSuccess(String responsecode) {
@@ -532,7 +553,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                         edt_mobileno.getText().toString().trim(), lat, longitude, complete_address,
                                         edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                         edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                        edt_countersize.getText().toString().trim(), parentId, "", auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+                                        edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
                                 addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                                     @Override
                                     public void OnSuccess(String responsecode) {

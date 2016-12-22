@@ -140,8 +140,9 @@ android:src="@drawable/ic_launcher"
                 android:id="@+id/counterdtls_edtxt_ownername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_margin="@dimen/dp_10"
-                android:hint="Counter Owner Name"></EditText>
+                android:hint="Counter Owner Name*"></EditText>
 
             <EditText
                 android:id="@+id/counterdtls_edtxt_dob"
@@ -149,14 +150,14 @@ android:src="@drawable/ic_launcher"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_10"
                 android:focusableInTouchMode="false"
-                android:hint="Date of Birth(YYYY-MM-DD)"></EditText>
+                android:hint="Date of Birth(YYYY-MM-DD)*"></EditText>
 
             <AutoCompleteTextView
                 android:id="@+id/counterdtls_edtxt_territory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_10"
-                android:hint="Territory"></AutoCompleteTextView>
+                android:hint="Territory*"></AutoCompleteTextView>
 
             <EditText
                 android:id="@+id/counterdtls_edtxt_mobilenumber"
@@ -230,7 +231,7 @@ android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM "
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
 
-                android:hint="Parent Id"
+                android:hint="Parent Id*"
                 android:width="250dip" />
 
 

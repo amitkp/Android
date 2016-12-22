@@ -92,6 +92,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private Bundle bundle = null;
     private DataDistributor dataDistributor = new DataDistributor();
     private String id="";
+    private String territory_id="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +181,21 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
         CustomAutoCompleteAdapter customerAdapter_territory = new CustomAutoCompleteAdapter(this, R.layout.custom_auto, auto_territory);
         auto_text_territory.setAdapter(customerAdapter_territory);
+
+        auto_text_territory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+               // String name = "";
+               // name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < auto_territory.size(); i++) {
+                    //if (name.equalsIgnoreCase(auto_territory.get(i).getName())) {
+                        territory_id = auto_territory.get(i).getId();
+                    //}
+                }
+
+            }
+        });
 
     }
 
@@ -482,8 +498,15 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                 if (call_from.equalsIgnoreCase("edit"))
 
                                 {
+
+                                    for (int i = 0; i < auto_territory.size(); i++) {
+                                        if (auto_text_territory.getText().toString().trim().equalsIgnoreCase(auto_territory.get(i).getName())) {
+                                            territory_id = auto_territory.get(i).getId();
+                                        }
+                                    }
+
                                     EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                            edt_countersize.getText().toString().trim(), parentId, "", auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
+                                            edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
                                     editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                                         @Override
                                         public void OnSuccess(String responsecode) {
@@ -512,7 +535,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                             edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
                                             lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                             edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                                            parentId, path.trim().replaceAll(" ", ""), auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+                                            parentId, path.trim().replaceAll(" ", ""), territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
                                     addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
                                         @Override
                                         public void OnSuccess(String responsecode) {
