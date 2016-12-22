@@ -111,6 +111,11 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
                         list.setLongitude(HttpConnectionUrl.getJSONKeyvalue(object, "longitude"));
                         list.setAddress(HttpConnectionUrl.getJSONKeyvalue(object, "address"));
                         list.setTerritory(HttpConnectionUrl.getJSONKeyvalue(object, "territory"));
+
+                        list.setDob(HttpConnectionUrl.getJSONKeyvalue(object, "dob"));
+                        list.setEmail(HttpConnectionUrl.getJSONKeyvalue(object, "email"));
+                        list.setAnniversary(HttpConnectionUrl.getJSONKeyvalue(object, "anniversary"));
+                        list.setParrent_id(HttpConnectionUrl.getJSONKeyvalue(object, "parrent_id"));
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
                         arrayList.add(list);
 

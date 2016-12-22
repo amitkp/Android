@@ -35,6 +35,15 @@ public class List
 
     private String mobile;
 
+    public String getParrent_id() {
+        return parrent_id;
+    }
+
+    public void setParrent_id(String parrent_id) {
+        this.parrent_id = parrent_id;
+    }
+
+    private  String parrent_id;
     public String getCreated_by ()
     {
         return created_by;

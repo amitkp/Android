@@ -74,7 +74,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
-    private boolean adress_set=false;
+    private boolean adress_set = false;
     private String lat = "", longitude = "";
     String complete_address = "";
     private SimpleDateFormat dateFormatter;
@@ -85,14 +85,15 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private Bitmap bm;
 
     private ArrayList<ParentId> tempParentIds = new ArrayList<>();
-    private ArrayList<ParentId> auto_territory=new ArrayList<>();
-    private AutoCompleteTextView auto_text,auto_text_territory;
+    private ArrayList<ParentId> auto_territory = new ArrayList<>();
+    private AutoCompleteTextView auto_text, auto_text_territory;
     private Uri filePath;
-    private String call_from="";
+    private String call_from = "";
     private Bundle bundle = null;
     private DataDistributor dataDistributor = new DataDistributor();
-    private String id="";
-    private String territory_id="";
+    private String id = "";
+    private String territory_id = "";
+    String parentId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +133,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             }
         }
 
-        if(!call_from.equalsIgnoreCase("edit")) {
+        if (!call_from.equalsIgnoreCase("edit")) {
             //To setup location manager
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        LocationManager.requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener);
@@ -141,32 +142,42 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     }
 
     private void fetchData() {
-        edt_countername.setText(dataDistributor.getName());
+        if (dataDistributor.getName() != null)
+            edt_countername.setText(dataDistributor.getName());
+        if (dataDistributor.getAddress() != null)
+            edt_counteraddress.setText(dataDistributor.getAddress());
+        if (dataDistributor.getMobile() != null)
+            edt_mobileno.setText(dataDistributor.getMobile());
+        if (dataDistributor.getTerritory() != null)
+            auto_text_territory.setText(dataDistributor.getTerritory());
+        if (dataDistributor.getDob() != null)
+            edt_dob.setText(dataDistributor.getDob());
+        if (dataDistributor.getEmail() != null)
+            edt_emailid.setText(dataDistributor.getEmail());
+        if (dataDistributor.getAnniversary() != null)
+            edt_aniversary.setText(dataDistributor.getAnniversary());
+        if (dataDistributor.getBankName() != null)
+            edt_bankname.setText(dataDistributor.getBankName());
+        if (dataDistributor.getAccountNo() != null)
+            edt_accno.setText(dataDistributor.getAccountNo());
+        if (dataDistributor.getIfscCode() != null)
+            edt_ifsccode.setText(dataDistributor.getIfscCode());
+        if (dataDistributor.getCounterSize() != null)
+            edt_countersize.setText(dataDistributor.getCounterSize());
+        id = dataDistributor.getId();
 
-        edt_counteraddress.setText(dataDistributor.getAddress());
+        if(dataDistributor.getParrentId()!=null){
+           parentId=dataDistributor.getParrentId();
+            for(int i=0;i<tempParentIds.size();i++){
+                if(parentId.equalsIgnoreCase(tempParentIds.get(i).getId())){
+                    auto_text.setText(tempParentIds.get(i).getName());
+                }
+            }
+        }
 
 
-        edt_mobileno.setText(dataDistributor.getMobile());
-
-
-        auto_text_territory.setText(dataDistributor.getTerritory());
-
-//        edt_counterownername.setText(dataDistributor.);
-
-        edt_dob.setText(dataDistributor.getDob());
-        edt_mobileno.setText(dataDistributor.getMobile());
-        edt_emailid.setText(dataDistributor.getEmail());
-        edt_aniversary.setText(dataDistributor.getAnniversary());
-        edt_bankname.setText(dataDistributor.getBankName());
-        edt_accno.setText(dataDistributor.getAccountNo());
-        edt_ifsccode.setText(dataDistributor.getIfscCode());
-        edt_countersize.setText(dataDistributor.getCounterSize());
-        id=dataDistributor.getId();
-
-
-        if(call_from.equalsIgnoreCase("edit"))
-        {
-            press_current_loc=true;
+        if (call_from.equalsIgnoreCase("edit")) {
+            press_current_loc = true;
             txt_counterlocation_press.setVisibility(View.GONE);
         }
 
@@ -186,11 +197,11 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               // String name = "";
-               // name = parent.getItemAtPosition(position).toString();
+                // String name = "";
+                // name = parent.getItemAtPosition(position).toString();
                 for (int i = 0; i < auto_territory.size(); i++) {
                     //if (name.equalsIgnoreCase(auto_territory.get(i).getName())) {
-                        territory_id = auto_territory.get(i).getId();
+                    territory_id = auto_territory.get(i).getId();
                     //}
                 }
 
@@ -201,7 +212,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
     private void TerritoryListFetch() {
 
-        TerritoryAsync territoryAsync=new TerritoryAsync(AddCounter.this);
+        TerritoryAsync territoryAsync = new TerritoryAsync(AddCounter.this);
         territoryAsync.setOnContentListParserListner(new TerritoryAsync.OnContentListSchedules() {
             @Override
             public void OnSuccess(ArrayList<ParentId> arrayList) {
@@ -324,7 +335,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     }
 
     private void initView() {
-        auto_text_territory=(AutoCompleteTextView)findViewById(R.id.counterdtls_edtxt_territory);
+        auto_text_territory = (AutoCompleteTextView) findViewById(R.id.counterdtls_edtxt_territory);
         edt_countername = (EditText) findViewById(R.id.counterdtls_edtxt_name);
         edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
@@ -347,7 +358,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         edt_ifsccode = (EditText) findViewById(R.id.counterdtls_edtxt_ifsccode);
         edt_countersize = (EditText) findViewById(R.id.counterdtls_countersize);
         auto_text = (AutoCompleteTextView) findViewById(R.id.auto_text);
-        if(call_from.equalsIgnoreCase("edit"))
+        if (call_from.equalsIgnoreCase("edit"))
             submit.setText("Update");
         else
             submit.setText("Add");
@@ -436,10 +447,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
                 if (press_current_loc) {
 
-                    if(!adress_set)
+                    if (!adress_set)
                         txt_current_loc.setText(complete_address);
-                    if(!TextUtils.isEmpty(complete_address) && complete_address.length()>0)
-                        adress_set=true;
+                    if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
+                        adress_set = true;
                 }
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
@@ -481,11 +492,11 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    if(!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
+                    if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
                         if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
                             if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
-                                String parentId = "";
+
                                 if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                                     String[] separated = auto_text.getText().toString().trim().split("-");
                                     parentId = separated[1].toString();
@@ -562,14 +573,11 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                         } else {
                             Toast.makeText(AddCounter.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                    else {
+                    } else {
                         Toast.makeText(AddCounter.this, "Please enter territory", Toast.LENGTH_SHORT).show();
                     }
 
-                }
-
-                else
+                } else
                     Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(AddCounter.this, "Please press on current location", Toast.LENGTH_SHORT).show();
@@ -651,7 +659,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        filePath=data.getData();
+        filePath = data.getData();
         img_pic.setImageBitmap(thumbnail);
         bm = thumbnail;
     }
@@ -667,7 +675,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 e.printStackTrace();
             }
         }
-        filePath=data.getData();
+        filePath = data.getData();
         img_pic.setImageBitmap(bm);
     }
 

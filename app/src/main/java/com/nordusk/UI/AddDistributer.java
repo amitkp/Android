@@ -82,6 +82,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private DataDistributor dataDistributor = new DataDistributor();
     private String id="";
     private String territory_id="";
+    String parentId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,26 +141,39 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private void setData() {
 
 
-        edt_countername.setText(dataDistributor.getName());
+        if (dataDistributor.getName() != null)
+            edt_countername.setText(dataDistributor.getName());
+        if (dataDistributor.getAddress() != null)
+            edt_counteraddress.setText(dataDistributor.getAddress());
+        if (dataDistributor.getMobile() != null)
+            edt_mobileno.setText(dataDistributor.getMobile());
+        if (dataDistributor.getTerritory() != null)
+            auto_text_territory.setText(dataDistributor.getTerritory());
+        if (dataDistributor.getDob() != null)
+            edt_dob.setText(dataDistributor.getDob());
+        if (dataDistributor.getEmail() != null)
+            edt_emailid.setText(dataDistributor.getEmail());
+        if (dataDistributor.getAnniversary() != null)
+            edt_aniversary.setText(dataDistributor.getAnniversary());
+        if (dataDistributor.getBankName() != null)
+            edt_bankname.setText(dataDistributor.getBankName());
+        if (dataDistributor.getAccountNo() != null)
+            edt_accno.setText(dataDistributor.getAccountNo());
+        if (dataDistributor.getIfscCode() != null)
+            edt_ifsccode.setText(dataDistributor.getIfscCode());
+        if (dataDistributor.getCounterSize() != null)
+            edt_countersize.setText(dataDistributor.getCounterSize());
 
-        edt_counteraddress.setText(dataDistributor.getAddress());
+        if(dataDistributor.getParrentId()!=null){
+            parentId=dataDistributor.getParrentId();
+            for(int i=0;i<tempParentIds.size();i++){
+                if(parentId.equalsIgnoreCase(tempParentIds.get(i).getId())){
+                    auto_text.setText(tempParentIds.get(i).getName());
+                }
+            }
+        }
 
 
-        edt_mobileno.setText(dataDistributor.getMobile());
-
-
-        auto_text_territory.setText(dataDistributor.getTerritory());
-
-//        edt_counterownername.setText(dataDistributor.);
-
-        edt_dob.setText(dataDistributor.getDob());
-        edt_mobileno.setText(dataDistributor.getMobile());
-        edt_emailid.setText(dataDistributor.getEmail());
-        edt_aniversary.setText(dataDistributor.getAnniversary());
-        edt_bankname.setText(dataDistributor.getBankName());
-        edt_accno.setText(dataDistributor.getAccountNo());
-        edt_ifsccode.setText(dataDistributor.getIfscCode());
-        edt_countersize.setText(dataDistributor.getCounterSize());
         id=dataDistributor.getId();
 
 
@@ -504,7 +518,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
                             //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
-                            String parentId = "1";
+
                             if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                                 String[] separated = auto_text.getText().toString().trim().split("-");
                                 parentId = separated[1].toString();
