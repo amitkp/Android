@@ -93,6 +93,9 @@ public class Splash extends AppCompatActivity {
             if (Util.LAST_LOGIN_DATE != null && Util.LAST_LOGIN_DATE.length() > 0) {
                 if (!date.equalsIgnoreCase(Util.LAST_LOGIN_DATE)) {
                     loginAsyncCall();
+                }else{
+                    startActivity(new Intent(Splash.this, Dashboard.class));
+                    finish();
                 }
             } else {
                 Util.LAST_LOGIN_DATE = date;
