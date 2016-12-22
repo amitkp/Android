@@ -177,6 +177,7 @@
                 android:id="@+id/counterdtls_edtxt_ownername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:hint="Distributor owner name"
                 android:layout_margin="@dimen/dp_10"
                 ></EditText>
