@@ -65,6 +65,7 @@ public class Login extends AppCompatActivity {
                 public void OnSuccess(String response_code) {
 
                     new Prefs(Login.this).setString("UserName",edt_username.getText().toString().trim());
+                    new Prefs(Login.this).setString("Password",edt_password.getText().toString().trim());
 
                     Toast.makeText(Login.this, response_code, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Login.this, Dashboard.class));

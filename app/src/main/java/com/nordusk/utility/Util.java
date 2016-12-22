@@ -57,6 +57,8 @@ public class Util {
     public static String ORDER_FOR="";
     public static String ORDER_FOR_TYPE="";
 
+    public static String LAST_LOGIN_DATE="";
+
 
     /**
      * get the device IMEI no and save it into shared preference

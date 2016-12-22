@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference;
  * Created by gouravkundu on 11/12/16.
  */
 
-public class ActivityOrderLIst extends AppCompatActivity implements  OrderListPresenter.OnNotifyUiListener{
+public class ActivityOrderList extends AppCompatActivity implements  OrderListPresenter.OnNotifyUiListener{
 
     private WeakReference<Context> contextWeakReference;
     private OrderListPresenter.OnUserInteractionListener mPresenter;

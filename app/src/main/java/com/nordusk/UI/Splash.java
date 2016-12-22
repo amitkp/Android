@@ -15,23 +15,29 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.animation.HTextView;
 import com.nordusk.animation.HTextViewType;
 import com.nordusk.utility.Prefs;
+import com.nordusk.utility.Util;
+import com.nordusk.webservices.HttpConnectionUrl;
+import com.nordusk.webservices.LoginAsync;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Splash extends AppCompatActivity {
 
-    private ImageView imgicon_one,imgicon_two,imgicon_three,imgicon_four;
+    private ImageView imgicon_one, imgicon_two, imgicon_three, imgicon_four;
     private HTextView hTextView;
     private Button btn_login;
-    private boolean isGranted=false;
+    private boolean isGranted = false;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
 
     @Override
@@ -43,25 +49,24 @@ public class Splash extends AppCompatActivity {
 
         }
 
+
         initView();
         setListener();
         setAnimation();
     }
 
 
-
     private void setAnimation() {
 
-        final Animation animation=AnimationUtils.loadAnimation(Splash.this, R.anim.zoomin);
-        final Animation animation_two=AnimationUtils.loadAnimation(Splash.this, R.anim.zoomintwo);
-        final Animation animation_three=AnimationUtils.loadAnimation(Splash.this, R.anim.zoominthree);
-        final Animation animation_four=AnimationUtils.loadAnimation(Splash.this, R.anim.zoominfour);
+        final Animation animation = AnimationUtils.loadAnimation(Splash.this, R.anim.zoomin);
+        final Animation animation_two = AnimationUtils.loadAnimation(Splash.this, R.anim.zoomintwo);
+        final Animation animation_three = AnimationUtils.loadAnimation(Splash.this, R.anim.zoominthree);
+        final Animation animation_four = AnimationUtils.loadAnimation(Splash.this, R.anim.zoominfour);
 
         imgicon_one.setAnimation(animation);
         imgicon_two.setAnimation(animation_two);
         imgicon_three.setAnimation(animation_three);
         imgicon_four.setAnimation(animation_four);
-
 
 
         hTextView.setText("Hello Nordusk");
@@ -72,21 +77,26 @@ public class Splash extends AppCompatActivity {
 
     private void initView() {
 
-        imgicon_one=(ImageView)findViewById(R.id.splash_imgone);
-        imgicon_two=(ImageView)findViewById(R.id.splash_imgtwo);
-        imgicon_three=(ImageView)findViewById(R.id.splash_imgthree);
-        imgicon_four=(ImageView)findViewById(R.id.splash_imgfour);
-        hTextView=(HTextView)findViewById(R.id.splash_htxt);
+        imgicon_one = (ImageView) findViewById(R.id.splash_imgone);
+        imgicon_two = (ImageView) findViewById(R.id.splash_imgtwo);
+        imgicon_three = (ImageView) findViewById(R.id.splash_imgthree);
+        imgicon_four = (ImageView) findViewById(R.id.splash_imgfour);
+        hTextView = (HTextView) findViewById(R.id.splash_htxt);
         hTextView.setText("Hello Nordust");
 
-        btn_login=(Button)findViewById(R.id.splash_btn_login);
+        btn_login = (Button) findViewById(R.id.splash_btn_login);
 
-        String userId="";
-        userId=new Prefs(Splash.this).getString("userid","");
-        if(userId!=null && userId.length()>0){
-            startActivity(new Intent(Splash.this,Dashboard.class));
-
-            finish();
+        String userId = "";
+        userId = new Prefs(Splash.this).getString("userid", "");
+        if (userId != null && userId.length() > 0) {
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            if (Util.LAST_LOGIN_DATE != null && Util.LAST_LOGIN_DATE.length() > 0) {
+                if (!date.equalsIgnoreCase(Util.LAST_LOGIN_DATE)) {
+                    loginAsyncCall();
+                }
+            } else {
+                Util.LAST_LOGIN_DATE = date;
+            }
         }
     }
 
@@ -96,12 +106,12 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if(isGranted){
-                        startActivity(new Intent(Splash.this,Login.class));
+                    if (isGranted) {
+                        startActivity(new Intent(Splash.this, Login.class));
                         finish();
                     }
-                }else{
-                    startActivity(new Intent(Splash.this,Login.class));
+                } else {
+                    startActivity(new Intent(Splash.this, Login.class));
                     finish();
                 }
 
@@ -149,7 +159,7 @@ public class Splash extends AppCompatActivity {
             }
             return;
         }
-        isGranted=true;
+        isGranted = true;
 
     }
 
@@ -184,8 +194,7 @@ public class Splash extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS:
-            {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
                 Map<String, Integer> perms = new HashMap<String, Integer>();
                 // Initial
                 perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
@@ -204,7 +213,7 @@ public class Splash extends AppCompatActivity {
                         && perms.get(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
                         ) {
                     // All Permissions Granted
-                    isGranted=true;
+                    isGranted = true;
                 } else {
                     // Permission Denied
                     finish();
@@ -214,6 +223,41 @@ public class Splash extends AppCompatActivity {
             break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void loginAsyncCall() {
+
+        if (HttpConnectionUrl.isNetworkAvailable(Splash.this)) {
+
+            LoginAsync loginAsync = new LoginAsync(Splash.this, new Prefs(Splash.this).getString("UserName", ""), new Prefs(Splash.this).getString("Password", ""), null);
+            loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
+                @Override
+                public void OnSuccess(String response_code) {
+
+
+                    //Toast.makeText(Splash.this, response_code, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Splash.this, Dashboard.class));
+                    finish();
+
+                }
+
+                @Override
+                public void OnError(String str_err) {
+                    Toast.makeText(Splash.this, str_err, Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Splash.this, Login.class));
+                }
+
+                @Override
+                public void OnConnectTimeout() {
+                    Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(Splash.this, Login.class));
+                }
+            });
+            loginAsync.execute();
+        } else {
+            Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Splash.this, Login.class));
         }
     }
 }
