@@ -13,9 +13,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by DELL on 16-12-2016.
+ * Created by DELL on 17-11-2016.
  */
-public class TerritoryAsync extends AsyncTask<Void, Void, Void> {
+public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Void, Void, Void> {
 
     private Activity context;
     private boolean isTimeOut = false;
@@ -24,16 +24,19 @@ public class TerritoryAsync extends AsyncTask<Void, Void, Void> {
     private String responseMessage = "";
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
+    private String sp_id = "", type = "";
+    private String territory_id = "";
+    private ArrayList<List> arrayList = new ArrayList<List>();
 
-    private ArrayList<ParentId> arrayList = new ArrayList<ParentId>();
 
-
-    public TerritoryAsync(Activity context) {
+    public ListCounterDistributorByManagerTerritoryAsync(Activity context, String sp_id, String type, String territory_id) {
         this.context = context;
         mpProgressDialog = new ProgressDialog(context);
         mpProgressDialog.setMessage("Loading..");
         mpProgressDialog.show();
-
+        this.sp_id = sp_id;
+        this.type = type;
+        this.territory_id = territory_id;
 
         mpProgressDialog.setCancelable(false);
     }
@@ -48,7 +51,8 @@ public class TerritoryAsync extends AsyncTask<Void, Void, Void> {
         try {
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "territory_list.php", jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "list_by_territory.php?" +
+                    "sales_persion=" + sp_id + "&terittory_id=" + territory_id + "&type=" + type + "", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
                 parseResponseData(responsedata[1]);
@@ -88,22 +92,26 @@ public class TerritoryAsync extends AsyncTask<Void, Void, Void> {
             jsonObject = new JSONObject(response);
             responsecode = jsonObject.getString("response_code");
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
+
                 JSONArray jsonArray = jsonObject.getJSONArray("list");
                 if (jsonArray != null && jsonArray.length() > 0) {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
-                        ParentId list = new ParentId();
+                        List list = new List();
                         list.setId(HttpConnectionUrl.getJSONKeyvalue(object, "id"));
+                        list.setMobile(HttpConnectionUrl.getJSONKeyvalue(object, "mobile"));
+                        list.setLatitude(HttpConnectionUrl.getJSONKeyvalue(object, "latitude"));
+                        list.setLongitude(HttpConnectionUrl.getJSONKeyvalue(object, "longitude"));
+                        list.setAddress(HttpConnectionUrl.getJSONKeyvalue(object, "address"));
+                        list.setTerritory(HttpConnectionUrl.getJSONKeyvalue(object, "territory"));
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
-
                         arrayList.add(list);
 
                     }
                 }
 
-
             } else {
-                responseMessage = "No territory found";
+                responseMessage = "No data found";
             }
 
 
@@ -124,10 +132,12 @@ public class TerritoryAsync extends AsyncTask<Void, Void, Void> {
     }
 
     public interface OnContentListSchedules {
-        public void OnSuccess(ArrayList<ParentId> arrayList);
+        void OnSuccess(ArrayList<List> arrayList);
 
-        public void OnError(String str_err);
+        void OnError(String str_err);
 
-        public void OnConnectTimeout();
+        void OnConnectTimeout();
+
+
     }
 }

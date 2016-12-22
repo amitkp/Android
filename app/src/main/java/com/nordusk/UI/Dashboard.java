@@ -33,6 +33,8 @@ import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.ListUserTraceName;
 import com.nordusk.webservices.LogoutAsync;
+import com.nordusk.webservices.ParentId;
+import com.nordusk.webservices.TerritoryAsync;
 import com.nordusk.webservices.UserTrace;
 
 import java.text.SimpleDateFormat;
@@ -56,6 +58,8 @@ public class Dashboard extends AppCompatActivity {
         mPrefs = new Prefs(Dashboard.this);
         initView();
         populateAutocompleteUserData();
+
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,12 +114,41 @@ public class Dashboard extends AppCompatActivity {
         if (mPrefs.getString("designation", "").equalsIgnoreCase("4") || mPrefs.getString("designation", "").equalsIgnoreCase("3")
                 || mPrefs.getString("designation", "").equalsIgnoreCase("2")) {
             grid_dashboard_item.setAdapter(new GridDashboardAdapterManager(Dashboard.this));
+            populateterritoryData();
 
         } else {
             grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
         }
 
 
+    }
+
+    private void populateterritoryData() {
+        if(HttpConnectionUrl.isNetworkAvailable(Dashboard.this)) {
+            TerritoryAsync territoryAsync = new TerritoryAsync(Dashboard.this);
+            territoryAsync.setOnContentListParserListner(new TerritoryAsync.OnContentListSchedules() {
+                @Override
+                public void OnSuccess(ArrayList<ParentId> arrayList) {
+                    if(arrayList!=null && arrayList.size()>0)
+                    Util.TERRITORY_LIST=arrayList;
+
+                }
+
+                @Override
+                public void OnError(String str_err) {
+                    Toast.makeText(Dashboard.this,str_err,Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void OnConnectTimeout() {
+                    Toast.makeText(Dashboard.this,"Please check your network connection",Toast.LENGTH_SHORT).show();
+                }
+            });
+            territoryAsync.execute();
+        }else{
+            Toast.makeText(Dashboard.this,"Please check your network connection",Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override

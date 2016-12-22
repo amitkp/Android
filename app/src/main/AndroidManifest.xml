@@ -51,20 +51,31 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".UI.AddDistributer"
-            android:screenOrientation="portrait"
-             />
-        <activity android:name=".UI.orderLIst.ActivityOrderList"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".UI.orderCreate.ActivityOrderCreate"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".UI.targetList.ActivityTargetList"
-                  android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.orderLIst.ActivityOrderList"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.orderCreate.ActivityOrderCreate"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.targetList.ActivityTargetList"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".UI.ListManagerTarget"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.ListManagerTarget"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".UI.Listattendance"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".UI.Listattendance"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".UI.ListCounterDistributor"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".UI.ListCounterDistributorByManagerTerritory"
+            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -74,7 +85,7 @@
             android:name=".UI.LocationUpdateService"
             android:enabled="true" />
 
-        <activity android:name=".UI.ListCounterDistributor"></activity>
+
     </application>
 
 </manifest>

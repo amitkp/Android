@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
+import com.nordusk.UI.ListCounterDistributorByManagerTerritory;
 import com.nordusk.UI.ListManagerTarget;
 import com.nordusk.UI.Listattendance;
 import com.nordusk.UI.MapsActivity;
@@ -53,14 +54,15 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder,
             R.drawable.placeholders, R.drawable.placeholders, R.drawable.placeholder
-            , R.drawable.placeholders, R.drawable.placeholder,R.drawable.placeholders};
+            , R.drawable.placeholders, R.drawable.placeholder, R.drawable.placeholders};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
     private LayoutInflater layoutInflater;
     private Prefs mPrefs;
     private SimpleDateFormat dateFormatter;
-    ArrayList<String> name_list=new ArrayList<String>();
+    ArrayList<String> name_list = new ArrayList<String>();
+    ArrayList<String> territory_list = new ArrayList<String>();
 
 
     public GridDashboardAdapterManager(AppCompatActivity context) {
@@ -107,13 +109,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             public void onClick(View v) {
 
                 if (position == 0) {
-                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                    intent.putExtra("type", "1");
-                    mContext.startActivity(intent);
+                    selectCounterDistributorDialog("1");
+
                 } else if (position == 1) {
-                    Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                    intent.putExtra("type", "2");
-                    mContext.startActivity(intent);
+                    selectCounterDistributorDialog("2");
+
                 } else if (position == 2) {
 //                        showTrackDialog("all");
 //                    selectDialog();
@@ -128,7 +128,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     showTargetListDialog();
                     //Intent mIntent = new Intent(mContext, ActivityOrderList.class);
                     //mContext.startActivity(mIntent);
-                }else if(position==6){
+                } else if (position == 6) {
                     showAttendanceDialog();
                 }
 
@@ -140,7 +140,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 //                    mContext.startActivity(mIntent);
 //
 //                }
-                }
+            }
 
         });
 
@@ -177,13 +177,142 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         builder.show();
     }
 
+    private void selectCounterDistributorDialog(final String type) {
+
+        final CharSequence[] items = {"Self", "Others", "Cancel"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Select Type");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Self")) {
+
+                    if (type.equalsIgnoreCase("1")) {
+                        Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                        intent.putExtra("type", "1");
+                        mContext.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
+                        intent.putExtra("type", "2");
+                        mContext.startActivity(intent);
+                    }
+
+                } else if (items[item].equals("Others")) {
+                    showDialogOthersCounterDistributor(type);
+
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void showDialogOthersCounterDistributor(final String type) {
+        final AutoCompleteTextView old_password, login_edtxt_emailmobile_territory;
+
+        final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
+                android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount
+                .setContentView(R.layout.dialog_others_counter);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        old_password = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        login_edtxt_emailmobile_territory = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile_territory);
+
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
+                name_list.add(Util.getUserList().get(i).getName());
+            }
+        }
+
+        if (name_list != null && name_list.size() > 0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
+            old_password.setAdapter(adapter);
+        }
+
+
+        if (territory_list.size() < 1) {
+            for (int i = 0; i < Util.getTerritoryList().size(); i++) {
+                territory_list.add(Util.getTerritoryList().get(i).getName());
+            }
+        }
+
+        if (territory_list != null && territory_list.size() > 0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, territory_list);
+            login_edtxt_emailmobile_territory.setAdapter(adapter);
+        }
+
+        old_password.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name = "";
+                name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
+                    }
+                }
+
+            }
+        });
+
+        login_edtxt_emailmobile_territory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name = "";
+                name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < Util.getTerritoryList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getTerritoryList().get(i).getName())) {
+                        territory_id = Util.getTerritoryList().get(i).getId();
+                    }
+                }
+
+            }
+        });
+
+        Button login_btn_login = (Button) mDialog_SelectSelectAccount.findViewById(R.id.login_btn_login);
+        login_btn_login.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                if (sp_id != null && sp_id.length() > 0 && territory_id != null && territory_id.length() > 0) {
+                    Intent intent = new Intent(mContext, ListCounterDistributorByManagerTerritory.class);
+                    intent.putExtra("sp_id", sp_id);
+                    intent.putExtra("territory_id", territory_id);
+                    intent.putExtra("type", type);
+                    mContext.startActivity(intent);
+                } else {
+                    Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
+
+        mDialog_SelectSelectAccount.show();
+
+    }
+
     public class Holder {
         private ImageView img_icon;
         private TextView txt_option;
     }
 
-    private String userName="";
-    private String sp_id="";
+    private String userName = "";
+    private String territory_id = "";
+    private String sp_id = "";
+
     public void showTrackDialog(final String tag) {
 
         final EditText new_password;
@@ -202,13 +331,13 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                 new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         old_password = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
-        if(name_list.size()<1){
-            for(int i=0;i<Util.getUserList().size();i++){
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
                 name_list.add(Util.getUserList().get(i).getName());
             }
         }
 
-        if(name_list!=null && name_list.size()>0) {
+        if (name_list != null && name_list.size() > 0) {
             ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
             old_password.setAdapter(adapter);
         }
@@ -217,11 +346,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String name="";
+                String name = "";
                 name = parent.getItemAtPosition(position).toString();
-                for(int i=0;i<Util.getUserList().size();i++){
-                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
-                        userName=Util.getUserList().get(i).getUsername();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        userName = Util.getUserList().get(i).getUsername();
                     }
                 }
 
@@ -231,7 +360,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
         new_password = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_pswrd);
 
-        if(tag.equalsIgnoreCase("sales")){
+        if (tag.equalsIgnoreCase("sales")) {
             old_password.setVisibility(View.GONE);
         }
 
@@ -247,7 +376,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                 if (tag.equalsIgnoreCase("all")) {
 
 
-                    if (userName!=null && userName.length()>0
+                    if (userName != null && userName.length() > 0
                             &&
                             new_password.getText().toString().trim() != null && new_password.getText().toString().trim().length() > 0) {
                         Intent intent = new Intent(mContext, MapsActivity.class);
@@ -294,9 +423,9 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         mDialog_SelectSelectAccount.show();
     }
 
-    private void addTarget(){
+    private void addTarget() {
 
-        final EditText et_date,et_amount;
+        final EditText et_date, et_amount;
         final AutoCompleteTextView login_edtxt_emailmobile;
         final Button btn_save;
 
@@ -318,13 +447,13 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         btn_save = (Button) mDialog_SelectSelectAccount.findViewById(R.id.btn_save);
 
 
-        if(name_list.size()<1){
-            for(int i=0;i<Util.getUserList().size();i++){
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
                 name_list.add(Util.getUserList().get(i).getName());
             }
         }
 
-        if(name_list!=null && name_list.size()>0) {
+        if (name_list != null && name_list.size() > 0) {
             ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
             login_edtxt_emailmobile.setAdapter(adapter);
         }
@@ -333,11 +462,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String name="";
+                String name = "";
                 name = parent.getItemAtPosition(position).toString();
-                for(int i=0;i<Util.getUserList().size();i++){
-                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
-                        sp_id=Util.getUserList().get(i).getId();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
                     }
                 }
 
@@ -365,37 +494,37 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sp_id!=null && sp_id.length()>0
-                        && et_amount.getText().toString()!=null && et_amount.getText().toString().length()>0
-                        && et_date.getText().toString()!=null && et_date.getText().toString().length()>0){
+                if (sp_id != null && sp_id.length() > 0
+                        && et_amount.getText().toString() != null && et_amount.getText().toString().length() > 0
+                        && et_date.getText().toString() != null && et_date.getText().toString().length() > 0) {
 
-                    String date="";
-                    date=et_date.getText().toString().substring(0,7);
-                    Log.e("date",date);
+                    String date = "";
+                    date = et_date.getText().toString().substring(0, 7);
+                    Log.e("date", date);
 
-                    AddManagerTargetAsync addManagerTargetAsync=new AddManagerTargetAsync(mContext,date,sp_id,et_amount.getText().toString().trim());
+                    AddManagerTargetAsync addManagerTargetAsync = new AddManagerTargetAsync(mContext, date, sp_id, et_amount.getText().toString().trim());
                     addManagerTargetAsync.setOnContentListParserListner(new AddManagerTargetAsync.OnContentListSchedules() {
                         @Override
                         public void OnSuccess(String arrayList) {
                             mDialog_SelectSelectAccount.dismiss();
-                            Toast.makeText(mContext,arrayList,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, arrayList, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void OnError(String str_err) {
                             mDialog_SelectSelectAccount.dismiss();
-                            Toast.makeText(mContext,str_err,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, str_err, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void OnConnectTimeout() {
-                            Toast.makeText(mContext,"Check your network connection",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "Check your network connection", Toast.LENGTH_SHORT).show();
                         }
                     });
                     addManagerTargetAsync.execute();
 
-                }else{
-                    Toast.makeText(mContext,"Please provide all fields",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -403,7 +532,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
     }
 
-    private void showTargetListDialog(){
+    private void showTargetListDialog() {
         final AutoCompleteTextView login_edtxt_emailmobile;
         final Button btn_save;
 
@@ -423,13 +552,13 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         btn_save = (Button) mDialog_SelectSelectAccount.findViewById(R.id.btn_save);
 
 
-        if(name_list.size()<1){
-            for(int i=0;i<Util.getUserList().size();i++){
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
                 name_list.add(Util.getUserList().get(i).getName());
             }
         }
 
-        if(name_list!=null && name_list.size()>0) {
+        if (name_list != null && name_list.size() > 0) {
             ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
             login_edtxt_emailmobile.setAdapter(adapter);
         }
@@ -439,11 +568,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String name="";
+                String name = "";
                 name = parent.getItemAtPosition(position).toString();
-                for(int i=0;i<Util.getUserList().size();i++){
-                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
-                        sp_id=Util.getUserList().get(i).getId();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
                     }
                 }
 
@@ -451,16 +580,15 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         });
 
 
-
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sp_id!=null && sp_id.length()>0){
+                if (sp_id != null && sp_id.length() > 0) {
                     Intent mIntent = new Intent(mContext, ListManagerTarget.class);
-                    mIntent.putExtra("sp_id",sp_id);
+                    mIntent.putExtra("sp_id", sp_id);
                     mContext.startActivity(mIntent);
-                }else{
-                    Toast.makeText(mContext,"Please select a sales person",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "Please select a sales person", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -469,7 +597,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
     }
 
-    private void showAttendanceDialog(){
+    private void showAttendanceDialog() {
         final AutoCompleteTextView login_edtxt_emailmobile;
         final Button btn_save;
         final EditText et_date;
@@ -491,13 +619,13 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         btn_save = (Button) mDialog_SelectSelectAccount.findViewById(R.id.btn_save);
 
 
-        if(name_list.size()<1){
-            for(int i=0;i<Util.getUserList().size();i++){
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
                 name_list.add(Util.getUserList().get(i).getName());
             }
         }
 
-        if(name_list!=null && name_list.size()>0) {
+        if (name_list != null && name_list.size() > 0) {
             ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
             login_edtxt_emailmobile.setAdapter(adapter);
         }
@@ -525,11 +653,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String name="";
+                String name = "";
                 name = parent.getItemAtPosition(position).toString();
-                for(int i=0;i<Util.getUserList().size();i++){
-                    if(name.equalsIgnoreCase(Util.getUserList().get(i).getName())){
-                        sp_id=Util.getUserList().get(i).getId();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
                     }
                 }
 
@@ -537,12 +665,11 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         });
 
 
-
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sp_id!=null && sp_id.length()>0
-                        && et_date.getText().toString()!=null && et_date.getText().toString().length()>0) {
+                if (sp_id != null && sp_id.length() > 0
+                        && et_date.getText().toString() != null && et_date.getText().toString().length() > 0) {
                     String date = "";
                     date = et_date.getText().toString().substring(0, 7);
                     Intent intent = new Intent(mContext, Listattendance.class);
@@ -550,8 +677,8 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     intent.putExtra("id", sp_id);
                     mContext.startActivity(intent);
 
-                }else{
-                    Toast.makeText(mContext,"Please provide all fields",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -559,8 +686,6 @@ public class GridDashboardAdapterManager extends BaseAdapter {
         mDialog_SelectSelectAccount.show();
 
     }
-
-
 
 
 }

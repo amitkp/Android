@@ -30,6 +30,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.nordusk.webservices.ParentId;
 import com.nordusk.webservices.UserTrace;
 
 import java.text.SimpleDateFormat;
@@ -52,6 +53,16 @@ public class Util {
     }
 
     public  static  ArrayList<UserTrace> UserList=new ArrayList<UserTrace>();
+
+    public static ArrayList<ParentId> getTerritoryList() {
+        return TERRITORY_LIST;
+    }
+
+    public static void setTerritoryList(ArrayList<ParentId> territoryList) {
+        TERRITORY_LIST = territoryList;
+    }
+
+    public static ArrayList<ParentId> TERRITORY_LIST=new ArrayList<ParentId>();
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     public static String ORDER_FOR="";
