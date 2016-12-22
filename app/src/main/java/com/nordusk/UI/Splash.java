@@ -39,6 +39,7 @@ public class Splash extends AppCompatActivity {
     private Button btn_login;
     private boolean isGranted = false;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+    private String date="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class Splash extends AppCompatActivity {
 
         }
 
+         date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         initView();
         setListener();
@@ -89,14 +91,20 @@ public class Splash extends AppCompatActivity {
         String userId = "";
         userId = new Prefs(Splash.this).getString("userid", "");
         if (userId != null && userId.length() > 0) {
-            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             if (Util.LAST_LOGIN_DATE != null && Util.LAST_LOGIN_DATE.length() > 0) {
-                if (!date.equalsIgnoreCase(Util.LAST_LOGIN_DATE)) {
-                    loginAsyncCall();
-                }else{
-                    startActivity(new Intent(Splash.this, Dashboard.class));
-                    finish();
-                }
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!date.equalsIgnoreCase(Util.LAST_LOGIN_DATE)) {
+                            loginAsyncCall();
+                        }else{
+                            startActivity(new Intent(Splash.this, Dashboard.class));
+                            finish();
+                        }
+                    }
+                },1000);
+
             } else {
                 Util.LAST_LOGIN_DATE = date;
             }

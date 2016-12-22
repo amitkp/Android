@@ -52,11 +52,15 @@ public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.Hold
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mListOrder.get(position).getItems().get(0).getItemId()!=null &&
-                        mListOrder.get(position).getItems().get(0).getItemId().length()>0)
-                showapproveDialog(mListOrder.get(position).getItems().get(0).getItemId());
-                else
-                    Toast.makeText(context,"There is no item to approve in this order",Toast.LENGTH_SHORT).show();
+                if (mListOrder.get(position).getItems() != null && mListOrder.get(position).getItems().size()>0) {
+                    if (mListOrder.get(position).getItems().get(0).getItemId() != null &&
+                            mListOrder.get(position).getItems().get(0).getItemId().length() > 0)
+                        showapproveDialog(mListOrder.get(position).getItems().get(0).getId());
+                    else
+                        Toast.makeText(context, "There is no item to approve in this order", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(context, "There is no item to approve in this order", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

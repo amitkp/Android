@@ -83,6 +83,6 @@
 
     <string name="please_enter_amount">Please enter amount</string>
     <string name="please_enter_validdate">Please enter valid date</string>
-    <string name="target">Target:</string>
+    <string name="target">Achieved Amount \u20B9</string>
 
 </resources>

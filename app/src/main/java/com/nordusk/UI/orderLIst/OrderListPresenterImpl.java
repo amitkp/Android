@@ -64,6 +64,7 @@ public class OrderListPresenterImpl implements
         RestCallback.OrderListCallback mLoginCallback = mRetrofit.create(RestCallback.OrderListCallback.class);
 
         String url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId + "&order_for_type="+Util.ORDER_FOR_TYPE;
+        Log.e("order_list",url);
         Call<ResponseBody> mCall = mLoginCallback.onOrderListReceive(url);
         mCall.enqueue(this);
     }

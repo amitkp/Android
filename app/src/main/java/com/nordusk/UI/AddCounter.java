@@ -465,77 +465,85 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    // if(!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                    if(!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
+                        if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
+                            if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
-                    String parentId = "";
-                    if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
-                        String[] separated = auto_text.getText().toString().trim().split("-");
-                        parentId = separated[1].toString();
-                    }
-                    String path = "";
-                    if (filePath != null) {
-                        path = getPath(filePath);
-                    }
+                                String parentId = "";
+                                if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
+                                    String[] separated = auto_text.getText().toString().trim().split("-");
+                                    parentId = separated[1].toString();
+                                }
+                                String path = "";
+                                if (filePath != null) {
+                                    path = getPath(filePath);
+                                }
 
-                    if (call_from.equalsIgnoreCase("edit"))
+                                if (call_from.equalsIgnoreCase("edit"))
 
-                    {
-                        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),id, null);
-                        editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
-                            @Override
-                            public void OnSuccess(String responsecode) {
-                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                                {
+                                    EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                            edt_countersize.getText().toString().trim(), parentId, "", auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
+                                    editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
+                                        @Override
+                                        public void OnSuccess(String responsecode) {
+                                            Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
 
-                            @Override
-                            public void OnError(String str_err) {
-                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-                            }
+                                        @Override
+                                        public void OnError(String str_err) {
+                                            Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+                                        }
 
-                            @Override
-                            public void OnConnectTimeout() {
+                                        @Override
+                                        public void OnConnectTimeout() {
 
-                            }
-                        });
+                                        }
+                                    });
 
-                        editCounterAsync.execute();
+                                    editCounterAsync.execute();
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
-                    } else {
+                                } else {
 
-                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
-                                edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
-                                lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                                parentId, path.trim().replaceAll(" ", ""), auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),null);
-                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
-                            @Override
-                            public void OnSuccess(String responsecode) {
-                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-                                finish();
+                                    AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
+                                            edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
+                                            lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                            edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
+                                            parentId, path.trim().replaceAll(" ", ""), auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+                                    addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+                                        @Override
+                                        public void OnSuccess(String responsecode) {
+                                            Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void OnError(String str_err) {
+                                            Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void OnConnectTimeout() {
+
+                                        }
+                                    });
+
+                                    addCounterAsync.execute();
+                                }
+                            } else {
+                                Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
                             }
-
-                            @Override
-                            public void OnError(String str_err) {
-                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void OnConnectTimeout() {
-
-                            }
-                        });
-
-                        addCounterAsync.execute();
-                        //  }
-//                    else
-//                    {
-//                        Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
-//                    }
+                        } else {
+                            Toast.makeText(AddCounter.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
+                        }
                     }
+                    else {
+                        Toast.makeText(AddCounter.this, "Please enter territory", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
 
                 else

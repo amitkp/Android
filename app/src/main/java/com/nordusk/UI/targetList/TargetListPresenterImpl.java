@@ -2,6 +2,7 @@ package com.nordusk.UI.targetList;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -60,7 +61,7 @@ public class TargetListPresenterImpl implements TargetListPresenter.OnUserIntera
             try {
                 String url = "http://dynamicsglobal.net/app/sp_targer_list.php?userid=" + userId +
                         "&target_month=" + date;
-
+                Log.e("target_url",url);
                 Call<ResponseBody> mCall = mLoginCallback.onTargetListFetch(url);
                 mCall.enqueue(this);
             } catch (Exception e) {

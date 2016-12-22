@@ -75,10 +75,20 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     ArrayList<String> category_list = new ArrayList<String>();
     private ArrayList<DataProduct> dataProduct=new ArrayList<DataProduct>();
     private String product_id="",product_name="";
+    private String product_id_fromlist="",type_from_list="";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getIntent().getStringExtra("id")!=null && getIntent().getStringExtra("id").length()>0) {
+            product_id_fromlist = getIntent().getStringExtra("id");
+            Util.ORDER_FOR=product_id_fromlist;
+        }
+        if(getIntent().getStringExtra("type")!=null && getIntent().getStringExtra("type").length()>0) {
+            type_from_list = getIntent().getStringExtra("type");
+            Util.ORDER_FOR_TYPE=type_from_list;
+        }
+
         initPresenter();
         setContentView(R.layout.activity_create_order);
         initView();
@@ -136,6 +146,8 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         ll_container = (LinearLayout) findViewById(R.id.ll_container);
         btn_save = (Button) findViewById(R.id.btn_save);
         login_edtxt_emailmobile = (AutoCompleteTextView) findViewById(R.id.login_edtxt_emailmobile);
+        if(getIntent().getStringExtra("name")!=null && getIntent().getStringExtra("name").length()>0)
+        login_edtxt_emailmobile.setText(getIntent().getStringExtra("name"));
         btn_save.setOnClickListener(this);
 
 
@@ -354,16 +366,16 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
 
     @Override
     public void onClick(View view) {
-if(!TextUtils.isEmpty(et_orderName.getText().toString())) {
-    if (Util.ORDER_FOR != null && Util.ORDER_FOR.length() > 0) {
-        btn_save.setClickable(false);
-        mPresenter.createOrder(ll_container.getChildCount());
-    } else {
-        Toast.makeText(ActivityOrderCreate.this, "Please select order for", Toast.LENGTH_SHORT).show();
-    }
-}
+        if(!TextUtils.isEmpty(et_orderName.getText().toString())) {
+            if (Util.ORDER_FOR != null && Util.ORDER_FOR.length() > 0) {
+                btn_save.setClickable(false);
+                mPresenter.createOrder(ll_container.getChildCount());
+            } else {
+                Toast.makeText(ActivityOrderCreate.this, "Please select order for", Toast.LENGTH_SHORT).show();
+            }
+        }
         else
-    Toast.makeText(ActivityOrderCreate.this, "Please enter order name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityOrderCreate.this, "Please enter order name", Toast.LENGTH_SHORT).show();
 
     }
 

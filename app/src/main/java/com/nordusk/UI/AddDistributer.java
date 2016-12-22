@@ -482,84 +482,87 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
+                    if(!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
+                        if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
 
-                    //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                            //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
-                    String parentId = "1";
-                    if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
-                        String[] separated = auto_text.getText().toString().trim().split("-");
-                        parentId = separated[1].toString();
-                    }
-                    if (call_from.equalsIgnoreCase("edit"))
-
-                    {
-
-
-
-
-
-
-
-                        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,
-                                type, edt_countername.getText().toString().trim().replaceAll(" ", ""),
-                                edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString(),
-                                edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(),id, null);
-                        editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
-                            @Override
-                            public void OnSuccess(String responsecode) {
-                                Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
-                                finish();
+                            String parentId = "1";
+                            if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
+                                String[] separated = auto_text.getText().toString().trim().split("-");
+                                parentId = separated[1].toString();
                             }
+                            if (call_from.equalsIgnoreCase("edit"))
 
-                            @Override
-                            public void OnError(String str_err) {
-                                Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
-                            }
+                            {
 
-                            @Override
-                            public void OnConnectTimeout() {
 
-                            }
-                        });
+                                EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,
+                                        type, edt_countername.getText().toString().trim().replaceAll(" ", ""),
+                                        edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString(),
+                                        edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                        edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                        edt_countersize.getText().toString().trim(), parentId, "", auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
+                                editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
+                                    @Override
+                                    public void OnSuccess(String responsecode) {
+                                        Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
 
-                        editCounterAsync.execute();
+                                    @Override
+                                    public void OnError(String str_err) {
+                                        Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void OnConnectTimeout() {
+
+                                    }
+                                });
+
+                                editCounterAsync.execute();
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
-                    } else {
+                            } else {
 
-                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
-                                edt_countername.getText().toString().trim().replaceAll(" ", ""),
-                                edt_mobileno.getText().toString().trim(), lat, longitude, complete_address,
-                                edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                edt_countersize.getText().toString().trim(), parentId, "",auto_text_territory.getText().toString(),edt_aniversary.getText().toString(),edt_dob.getText().toString(), null);
-                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
-                            @Override
-                            public void OnSuccess(String responsecode) {
-                                Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
+                                AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
+                                        edt_countername.getText().toString().trim().replaceAll(" ", ""),
+                                        edt_mobileno.getText().toString().trim(), lat, longitude, complete_address,
+                                        edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                        edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                        edt_countersize.getText().toString().trim(), parentId, "", auto_text_territory.getText().toString(), edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+                                addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+                                    @Override
+                                    public void OnSuccess(String responsecode) {
+                                        Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
 
-                            @Override
-                            public void OnError(String str_err) {
-                                Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
-                            }
+                                    @Override
+                                    public void OnError(String str_err) {
+                                        Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
+                                    }
 
-                            @Override
-                            public void OnConnectTimeout() {
+                                    @Override
+                                    public void OnConnectTimeout() {
 
-                            }
-                        });
+                                    }
+                                });
 
-                        addCounterAsync.execute();
+                                addCounterAsync.execute();
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
+                            }
+                        }
+                        else
+                            Toast.makeText(AddDistributer.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
                     }
-
+                    else {
+                        Toast.makeText(AddDistributer.this, "Please enter territory", Toast.LENGTH_SHORT).show();
+                    }
                 } else
                     Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
             } else

@@ -36,10 +36,12 @@ public class AdapterTarget extends RecyclerView.Adapter<AdapterTarget.HolderTarg
 
     @Override
     public void onBindViewHolder(HolderTarget holder, int position) {
-        holder.tv_amout.setText(holder.tv_amout.getContext().getResources().getString(R.string.rs) + " "
+        holder.tv_amout.setText("Target Amount "+holder.tv_amout.getContext().getResources().getString(R.string.rs) + " "
                 + mListTarget.get(position).getAmount());
         holder.tv_target.setText(holder.tv_target.getContext().getResources().getString(R.string.target) + " "
                 + mListTarget.get(position).getTargetAchived());
+        holder.tv_date.setText("Date :"+ " "
+                + mListTarget.get(position).getDate());
     }
 
     @Override
@@ -54,12 +56,13 @@ public class AdapterTarget extends RecyclerView.Adapter<AdapterTarget.HolderTarg
     }
 
     public static class HolderTarget extends RecyclerView.ViewHolder {
-        TextView tv_target, tv_amout;
+        TextView tv_target, tv_amout,tv_date;
 
         public HolderTarget(View itemView) {
             super(itemView);
             tv_amout = (TextView) itemView.findViewById(R.id.tv_amout);
             tv_target = (TextView) itemView.findViewById(R.id.tv_target);
+            tv_date = (TextView) itemView.findViewById(R.id.tv_date);
         }
     }
 

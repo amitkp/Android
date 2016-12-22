@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.nordusk.R;
 import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
+import com.nordusk.UI.orderCreate.ActivityOrderCreate;
 import com.nordusk.pojo.DataDistributor;
 
 
@@ -71,6 +72,7 @@ public class CounterDistributorListAdapter extends BaseAdapter {
             holder = new Holder();
 
             holder.btn_edit = (Button) convertView.findViewById(R.id.btn_edit);
+            holder.btn_order=(Button)convertView.findViewById(R.id.btn_order);
             holder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
             holder.txt_address = (TextView) convertView.findViewById(R.id.txt_address);
 
@@ -137,12 +139,34 @@ public class CounterDistributorListAdapter extends BaseAdapter {
             }
         });
 
+        holder.btn_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(type.equalsIgnoreCase("2")) {
+                    Intent intent = new Intent(context, ActivityOrderCreate.class);
+                    intent.putExtra("id", arr_datacounterdis.get(position).getId());
+                    intent.putExtra("name", arr_datacounterdis.get(position).getName());
+                    intent.putExtra("type", "2");
+                    context.startActivity(intent);
+                } else
+                {
+                    Intent intent = new Intent(context, ActivityOrderCreate.class);
+                    intent.putExtra("id", arr_datacounterdis.get(position).getId());
+                    intent.putExtra("name", arr_datacounterdis.get(position).getName());
+                    intent.putExtra("type", "1");
+                    context.startActivity(intent);
+                }
+
+            }
+        });
+
         return convertView;
     }
 
     public class Holder {
         public ImageView iv_collect, iv_tick;
-        public Button btn_edit, btn_call;
+        public Button btn_edit, btn_call,btn_order;
         private TextView txt_name, txt_address;
         private RelativeLayout rlMain;
     }
@@ -155,7 +179,7 @@ public class CounterDistributorListAdapter extends BaseAdapter {
         }
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
         context.startActivity(intent);
-}
+    }
 
 
 
