@@ -120,9 +120,7 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
                     //intent.putExtra("id", sp_id);
                     mContext.startActivity(intent);
                 } else if (position == 3) {
-                    Intent intent = new Intent(mContext, ActivityOrderList.class);
-                    Util.ORDER_FOR_TYPE="3";
-                    mContext.startActivity(intent);
+                    selectCounterDistributorDialog();
                 } else if (position == 4) {
 
                 }
@@ -134,61 +132,33 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
     }
 
 
-    private void selectDialog() {
 
-        final CharSequence[] items = {"Track Self", "Track Others"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Select Tracking");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                boolean result = Util.checkPermission(mContext);
+    private void selectCounterDistributorDialog() {
 
-                if (items[item].equals("Track Self")) {
+        final CharSequence[] items = {"Counter", "Distributor", "Prime Partner"};
 
-                    if (result)
-                        showTrackDialog("sales");
-
-                } else if (items[item].equals("Track Others")) {
-
-                    if (result)
-                        showTrackDialog("all");
-
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    private void selectCounterDistributorDialog(final String type) {
-
-        final CharSequence[] items = {"Self", "Others", "Cancel"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("Select Type");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Self")) {
+                if (items[item].equals("Counter")) {
 
-                    if (type.equalsIgnoreCase("1")) {
-                        Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                        intent.putExtra("type", "1");
-                        mContext.startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(mContext, MapsActivityContractorDistributor.class);
-                        intent.putExtra("type", "2");
-                        mContext.startActivity(intent);
-                    }
+                    Intent intent = new Intent(mContext, ActivityOrderList.class);
+                    Util.ORDER_FOR_TYPE="1";
+                    mContext.startActivity(intent);
 
-                } else if (items[item].equals("Others")) {
-                    showDialogOthersCounterDistributor(type);
+                } else if (items[item].equals("Distributor")) {
+                    Intent intent = new Intent(mContext, ActivityOrderList.class);
+                    Util.ORDER_FOR_TYPE="2";
+                    mContext.startActivity(intent);
 
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
+
+                } else if (items[item].equals("Prime Partner")) {
+                    Intent intent = new Intent(mContext, ActivityOrderList.class);
+                    Util.ORDER_FOR_TYPE="3";
+                    mContext.startActivity(intent);
                 }
             }
         });

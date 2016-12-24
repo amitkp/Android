@@ -1,5 +1,6 @@
 package com.nordusk.UI.orderLIst;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -42,13 +43,17 @@ public class OrderListPresenterImpl implements
     private OrderListPresenter.OnNotifyUiListener mInteractor;
 
     private String userId = "";
+    private ProgressDialog mpProgressDialog;
 
 
     public OrderListPresenterImpl(WeakReference<Context> contextWeakReference,
                                   OrderListPresenter.OnNotifyUiListener mInteractor) {
         this.contextWeakReference = contextWeakReference;
         this.mInteractor = mInteractor;
-
+        mpProgressDialog=new ProgressDialog(contextWeakReference.get());
+        mpProgressDialog.setMessage("Loading...");
+        mpProgressDialog.setCancelable(true);
+        mpProgressDialog.show();
         userId = new Prefs(contextWeakReference.get()).getString("userid", "");
     }
 
@@ -56,6 +61,8 @@ public class OrderListPresenterImpl implements
     public void onActivityDestroyed() {
         this.mInteractor = null;
         this.contextWeakReference = null;
+        if(mpProgressDialog!=null&&mpProgressDialog.isShowing())
+            mpProgressDialog.dismiss();
     }
 
     @Override
@@ -83,9 +90,13 @@ public class OrderListPresenterImpl implements
                 } catch (IOException e) {
                     e.printStackTrace();
                     mInteractor.onErrorMessageReceived(R.string.parseError);
+                    if(mpProgressDialog!=null&&mpProgressDialog.isShowing())
+                        mpProgressDialog.dismiss();
                 } catch (NullPointerException npe) {
                     npe.printStackTrace();
                     mInteractor.onErrorMessageReceived(R.string.parseError);
+                    if(mpProgressDialog!=null&&mpProgressDialog.isShowing())
+                        mpProgressDialog.dismiss();
                 }
             }
         }
@@ -100,12 +111,16 @@ public class OrderListPresenterImpl implements
         }.getType();
         ArrayList<DataOrder> mListOrder = mGson.fromJson(mNewArray.toString(), listType);
         mInteractor.getAdapterImpl().updateListElement(mListOrder);
+        if(mpProgressDialog!=null&&mpProgressDialog.isShowing())
+            mpProgressDialog.dismiss();
     }
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         try {
             mInteractor.onErrorMessageReceived(t.getMessage());
+            if(mpProgressDialog!=null&&mpProgressDialog.isShowing())
+                mpProgressDialog.dismiss();
         } catch (NullPointerException npe) {
             npe.printStackTrace();
         }
