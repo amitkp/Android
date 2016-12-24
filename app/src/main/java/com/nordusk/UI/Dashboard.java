@@ -29,6 +29,7 @@ import com.nordusk.adapter.GridDashboardAdapter;
 import com.nordusk.adapter.GridDashboardAdapterAdmin;
 import com.nordusk.adapter.GridDashboardAdapterManager;
 import com.nordusk.utility.Prefs;
+import com.nordusk.webservices.AdminSPAsync;
 import com.nordusk.webservices.ChangepasswordAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.utility.Util;
@@ -116,6 +117,7 @@ public class Dashboard extends AppCompatActivity {
             populateterritoryData();
 
         } else if (mPrefs.getString("designation", "").equalsIgnoreCase("6")) {
+            populateadminSPData();
             grid_dashboard_item.setAdapter(new GridDashboardAdapterAdmin(Dashboard.this));
         } else {
             grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
@@ -133,6 +135,33 @@ public class Dashboard extends AppCompatActivity {
                     if (arrayList != null && arrayList.size() > 0)
                         Util.TERRITORY_LIST = arrayList;
 
+                }
+
+                @Override
+                public void OnError(String str_err) {
+                    Toast.makeText(Dashboard.this, str_err, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void OnConnectTimeout() {
+                    Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                }
+            });
+            territoryAsync.execute();
+        } else {
+            Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void populateadminSPData() {
+        if (HttpConnectionUrl.isNetworkAvailable(Dashboard.this)) {
+            AdminSPAsync territoryAsync = new AdminSPAsync(Dashboard.this);
+            territoryAsync.setOnContentListParserListner(new AdminSPAsync.OnContentListSchedules() {
+                @Override
+                public void OnSuccess(ArrayList<ParentId> arrayList) {
+                    if (arrayList != null && arrayList.size() > 0)
+                        Util.ADMIN_SP_LIST = arrayList;
                 }
 
                 @Override

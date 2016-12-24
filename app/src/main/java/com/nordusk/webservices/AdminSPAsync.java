@@ -13,9 +13,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by DELL on 17-11-2016.
+ * Created by DELL on 16-12-2016.
  */
-public class ListCounterDistributorPrimePartnerAdminAsync extends AsyncTask<Void, Void, Void> {
+public class AdminSPAsync extends AsyncTask<Void, Void, Void> {
 
     private Activity context;
     private boolean isTimeOut = false;
@@ -24,17 +24,16 @@ public class ListCounterDistributorPrimePartnerAdminAsync extends AsyncTask<Void
     private String responseMessage = "";
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
-    private String sp_id = "", type = "";
-    private ArrayList<List> arrayList = new ArrayList<List>();
+
+    private ArrayList<ParentId> arrayList = new ArrayList<ParentId>();
 
 
-    public ListCounterDistributorPrimePartnerAdminAsync(Activity context, String sp_id, String type) {
+    public AdminSPAsync(Activity context) {
         this.context = context;
         mpProgressDialog = new ProgressDialog(context);
         mpProgressDialog.setMessage("Loading..");
         mpProgressDialog.show();
-        this.sp_id = sp_id;
-        this.type = type;
+
 
         mpProgressDialog.setCancelable(false);
     }
@@ -49,8 +48,7 @@ public class ListCounterDistributorPrimePartnerAdminAsync extends AsyncTask<Void
         try {
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "counter_distributor_pp_list_admin.php?"+
-                    "type=" +type +"&created_by="+sp_id, jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "manager_list_admin.php?level=1", jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
                 parseResponseData(responsedata[1]);
@@ -90,26 +88,22 @@ public class ListCounterDistributorPrimePartnerAdminAsync extends AsyncTask<Void
             jsonObject = new JSONObject(response);
             responsecode = jsonObject.getString("response_code");
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
-
                 JSONArray jsonArray = jsonObject.getJSONArray("list");
                 if (jsonArray != null && jsonArray.length() > 0) {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
-                        List list = new List();
+                        ParentId list = new ParentId();
                         list.setId(HttpConnectionUrl.getJSONKeyvalue(object, "id"));
-                        list.setMobile(HttpConnectionUrl.getJSONKeyvalue(object, "mobile"));
-                        list.setLatitude(HttpConnectionUrl.getJSONKeyvalue(object, "latitude"));
-                        list.setLongitude(HttpConnectionUrl.getJSONKeyvalue(object, "longitude"));
-                        list.setAddress(HttpConnectionUrl.getJSONKeyvalue(object, "address"));
-                        list.setTerritory(HttpConnectionUrl.getJSONKeyvalue(object, "territory"));
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
+
                         arrayList.add(list);
 
                     }
                 }
 
+
             } else {
-                responseMessage = "No data found";
+                responseMessage = "No territory found";
             }
 
 
@@ -130,12 +124,10 @@ public class ListCounterDistributorPrimePartnerAdminAsync extends AsyncTask<Void
     }
 
     public interface OnContentListSchedules {
-        void OnSuccess(ArrayList<List> arrayList);
+        public void OnSuccess(ArrayList<ParentId> arrayList);
 
-        void OnError(String str_err);
+        public void OnError(String str_err);
 
-        void OnConnectTimeout();
-
-
+        public void OnConnectTimeout();
     }
 }

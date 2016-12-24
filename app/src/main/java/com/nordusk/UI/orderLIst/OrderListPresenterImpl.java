@@ -71,7 +71,7 @@ public class OrderListPresenterImpl implements
         RestCallback.OrderListCallback mLoginCallback = mRetrofit.create(RestCallback.OrderListCallback.class);
         String url="";
         if(new Prefs(contextWeakReference.get()).getString("designation", "").equalsIgnoreCase("6")){
-            url = "http://dynamicsglobal.net/app/order_list_admin.php?order_for_type="+Util.ORDER_FOR_TYPE;
+            url = "http://dynamicsglobal.net/app/order_list_admin.php?order_for_type="+Util.ORDER_FOR_TYPE+"&created_by="+Util.SP_ID;
         }else{
              url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId + "&order_for_type="+Util.ORDER_FOR_TYPE;
         }

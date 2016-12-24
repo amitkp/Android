@@ -54,6 +54,14 @@ public class Util {
 
     public  static  ArrayList<UserTrace> UserList=new ArrayList<UserTrace>();
 
+    public static ArrayList<ParentId> getAdminSpList() {
+        return ADMIN_SP_LIST;
+    }
+
+    public static void setAdminSpList(ArrayList<ParentId> adminSpList) {
+        ADMIN_SP_LIST = adminSpList;
+    }
+
     public static ArrayList<ParentId> getTerritoryList() {
         return TERRITORY_LIST;
     }
@@ -63,10 +71,12 @@ public class Util {
     }
 
     public static ArrayList<ParentId> TERRITORY_LIST=new ArrayList<ParentId>();
+    public static ArrayList<ParentId> ADMIN_SP_LIST=new ArrayList<ParentId>();
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     public static String ORDER_FOR="";
     public static String ORDER_FOR_TYPE="";
+    public static String SP_ID="";
 
     public static String LAST_LOGIN_DATE="";
 
