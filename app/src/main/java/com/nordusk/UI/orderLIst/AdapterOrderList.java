@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.UI.helper.ViewOrderitem;
 import com.nordusk.pojo.DataOrder;
+import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.ApproveOrderAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 
@@ -34,11 +35,13 @@ public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.Hold
     private OrderListPresenter.OnUserInteractionListener mPresenter;
     private ArrayList<DataOrder> mListOrder;
     private Activity context;
+    private Prefs mPrefs;
 
     public AdapterOrderList(OrderListPresenter.OnUserInteractionListener mPresenter, Activity context) {
         this.mPresenter = mPresenter;
         this.context=context;
         mListOrder = new ArrayList<>();
+        mPrefs=new Prefs(context);
     }
 
     @Override
@@ -52,14 +55,17 @@ public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.Hold
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListOrder.get(position).getItems() != null && mListOrder.get(position).getItems().size()>0) {
-                    if (mListOrder.get(position).getItems().get(0).getItemId() != null &&
-                            mListOrder.get(position).getItems().get(0).getItemId().length() > 0)
-                        showapproveDialog(mListOrder.get(position).getItems().get(0).getId());
-                    else
+
+                if (!mPrefs.getString("designation", "").equalsIgnoreCase("6")) {
+                    if (mListOrder.get(position).getItems() != null && mListOrder.get(position).getItems().size() > 0) {
+                        if (mListOrder.get(position).getItems().get(0).getItemId() != null &&
+                                mListOrder.get(position).getItems().get(0).getItemId().length() > 0)
+                            showapproveDialog(mListOrder.get(position).getItems().get(0).getId());
+                        else
+                            Toast.makeText(context, "There is no item to approve in this order", Toast.LENGTH_SHORT).show();
+                    } else {
                         Toast.makeText(context, "There is no item to approve in this order", Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(context, "There is no item to approve in this order", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

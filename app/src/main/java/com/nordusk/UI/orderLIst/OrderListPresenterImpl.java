@@ -62,8 +62,13 @@ public class OrderListPresenterImpl implements
     public void doFetchOrderList() {
         Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(contextWeakReference.get()));
         RestCallback.OrderListCallback mLoginCallback = mRetrofit.create(RestCallback.OrderListCallback.class);
+        String url="";
+        if(new Prefs(contextWeakReference.get()).getString("designation", "").equalsIgnoreCase("6")){
+            url = "http://dynamicsglobal.net/app/order_list_admin.php?order_for_type="+Util.ORDER_FOR_TYPE;
+        }else{
+             url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId + "&order_for_type="+Util.ORDER_FOR_TYPE;
+        }
 
-        String url = "http://dynamicsglobal.net/app/order_list.php?created_by=" + userId + "&order_for_type="+Util.ORDER_FOR_TYPE;
         Log.e("order_list",url);
         Call<ResponseBody> mCall = mLoginCallback.onOrderListReceive(url);
         mCall.enqueue(this);

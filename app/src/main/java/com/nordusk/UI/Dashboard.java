@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
+import com.nordusk.adapter.GridDashboardAdapterAdmin;
 import com.nordusk.adapter.GridDashboardAdapterManager;
 import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.ChangepasswordAsync;
@@ -58,8 +59,6 @@ public class Dashboard extends AppCompatActivity {
         mPrefs = new Prefs(Dashboard.this);
         initView();
         populateAutocompleteUserData();
-
-
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -116,6 +115,8 @@ public class Dashboard extends AppCompatActivity {
             grid_dashboard_item.setAdapter(new GridDashboardAdapterManager(Dashboard.this));
             populateterritoryData();
 
+        } else if (mPrefs.getString("designation", "").equalsIgnoreCase("6")) {
+            grid_dashboard_item.setAdapter(new GridDashboardAdapterAdmin(Dashboard.this));
         } else {
             grid_dashboard_item.setAdapter(new GridDashboardAdapter(Dashboard.this));
         }
@@ -124,29 +125,29 @@ public class Dashboard extends AppCompatActivity {
     }
 
     private void populateterritoryData() {
-        if(HttpConnectionUrl.isNetworkAvailable(Dashboard.this)) {
+        if (HttpConnectionUrl.isNetworkAvailable(Dashboard.this)) {
             TerritoryAsync territoryAsync = new TerritoryAsync(Dashboard.this);
             territoryAsync.setOnContentListParserListner(new TerritoryAsync.OnContentListSchedules() {
                 @Override
                 public void OnSuccess(ArrayList<ParentId> arrayList) {
-                    if(arrayList!=null && arrayList.size()>0)
-                    Util.TERRITORY_LIST=arrayList;
+                    if (arrayList != null && arrayList.size() > 0)
+                        Util.TERRITORY_LIST = arrayList;
 
                 }
 
                 @Override
                 public void OnError(String str_err) {
-                    Toast.makeText(Dashboard.this,str_err,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Dashboard.this, str_err, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void OnConnectTimeout() {
-                    Toast.makeText(Dashboard.this,"Please check your network connection",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
                 }
             });
             territoryAsync.execute();
-        }else{
-            Toast.makeText(Dashboard.this,"Please check your network connection",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
 
         }
     }
@@ -310,11 +311,11 @@ public class Dashboard extends AppCompatActivity {
             listUserTraceName.setOnContentListParserListner(new ListUserTraceName.OnContentListSchedules() {
                 @Override
                 public void OnSuccess(ArrayList<UserTrace> arrayList) {
-                    if (Util.getUserList() != null && Util.getUserList().size() > 0 && arrayList!=null && arrayList.size()>0) {
+                    if (Util.getUserList() != null && Util.getUserList().size() > 0 && arrayList != null && arrayList.size() > 0) {
                         Util.getUserList().clear();
                         Util.setUserList(arrayList);
-                    }else{
-                        if(arrayList!=null && arrayList.size()>0){
+                    } else {
+                        if (arrayList != null && arrayList.size() > 0) {
                             Util.setUserList(arrayList);
                         }
                     }
