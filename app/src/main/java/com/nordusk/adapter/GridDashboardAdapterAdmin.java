@@ -33,6 +33,7 @@ import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderLIst.ActivityOrderList;
+import com.nordusk.admin.CreateUser;
 import com.nordusk.admin.ListCounterDistributorPrimePartnerAdmin;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
@@ -115,14 +116,14 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
                     mContext.startActivity(intent);
 
                 } else if (position == 2) {
-                        Intent intent = new Intent(mContext, ListCounterDistributorPrimePartnerAdmin.class);
+                    Intent intent = new Intent(mContext, ListCounterDistributorPrimePartnerAdmin.class);
                     intent.putExtra("type", "3");
                     //intent.putExtra("id", sp_id);
                     mContext.startActivity(intent);
                 } else if (position == 3) {
                     selectCounterDistributorDialog();
                 } else if (position == 4) {
-
+                    selectCreateUserDialog();
                 }
             }
 
@@ -130,8 +131,6 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
 
         return convertView;
     }
-
-
 
 
     private void selectCounterDistributorDialog() {
@@ -146,19 +145,47 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
                 if (items[item].equals("Counter")) {
 
                     Intent intent = new Intent(mContext, ActivityOrderList.class);
-                    Util.ORDER_FOR_TYPE="1";
+                    Util.ORDER_FOR_TYPE = "1";
                     mContext.startActivity(intent);
 
                 } else if (items[item].equals("Distributor")) {
                     Intent intent = new Intent(mContext, ActivityOrderList.class);
-                    Util.ORDER_FOR_TYPE="2";
+                    Util.ORDER_FOR_TYPE = "2";
                     mContext.startActivity(intent);
 
 
                 } else if (items[item].equals("Prime Partner")) {
                     Intent intent = new Intent(mContext, ActivityOrderList.class);
-                    Util.ORDER_FOR_TYPE="3";
+                    Util.ORDER_FOR_TYPE = "3";
                     mContext.startActivity(intent);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void selectCreateUserDialog() {
+
+        final CharSequence[] items = {"Sales Person", "Manager"};
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Select Type");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Sales Person")) {
+                    Intent intent = new Intent(mContext, CreateUser.class);
+                    intent.putExtra("designation", "1");
+                    intent.putExtra("level", "2");
+                    mContext.startActivity(intent);
+
+                } else if (items[item].equals("Manager")) {
+                    Intent intent = new Intent(mContext, CreateUser.class);
+                    intent.putExtra("designation", "2");
+                    intent.putExtra("level", "3");
+                    mContext.startActivity(intent);
+
+
                 }
             }
         });
