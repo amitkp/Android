@@ -166,7 +166,7 @@ public class CreateUser extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (user_name.getText().toString().trim() != null && user_name.getText().toString().trim().length() > 0 &&
-                        user_password.getText().toString().trim() != null && user_password.getText().toString().trim().length() > 0
+                        user_password.getText().toString().trim() != null && user_password.getText().toString().trim().length() >= 6
                         && name.getText().toString().trim() != null && name.getText().toString().trim().length() > 0
                         && mobile.getText().toString().trim() != null && mobile.getText().toString().trim().length() > 0) {
 
