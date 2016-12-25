@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.pojo.DataDistributor;
+import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 import com.nordusk.webservices.ParentId;
@@ -515,8 +516,9 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                             territory_id = auto_territory.get(i).getId();
                                         }
                                     }
-
-                                    EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                    if(complete_address!=null && complete_address.length()>0)
+                                        complete_address=complete_address.replaceAll(" ","%20");
+                                    EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
                                             edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
                                     editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                                         @Override
@@ -542,8 +544,12 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 //                    }
                                 } else {
 
+                                  //  "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + territory + "&anniversary=" + aniversery + "&dob=" + dob + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + ""
+
+                                    if(complete_address!=null && complete_address.length()>0)
+                                        complete_address=complete_address.replaceAll(" ","%20");
                                     AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
-                                            edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
+                                            edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(),
                                             lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                             edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
                                             parentId, path.trim().replaceAll(" ", ""), territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);

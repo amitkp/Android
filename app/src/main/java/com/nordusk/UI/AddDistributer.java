@@ -533,8 +533,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                     }
                                 }
                                 EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,
-                                        type, edt_countername.getText().toString().trim().replaceAll(" ", ""),
-                                        edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString(),
+                                        type, edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
+                                        edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"),
                                         edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                         edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
                                         edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
@@ -562,8 +562,11 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 //                    }
                             } else {
 
+                                if(complete_address!=null && complete_address.length()>0)
+                                    complete_address=complete_address.replaceAll(" ","%20");
+
                                 AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
-                                        edt_countername.getText().toString().trim().replaceAll(" ", ""),
+                                        edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
                                         edt_mobileno.getText().toString().trim(), lat, longitude, complete_address,
                                         edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
                                         edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
