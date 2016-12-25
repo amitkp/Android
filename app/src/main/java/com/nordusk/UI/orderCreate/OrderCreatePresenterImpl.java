@@ -17,6 +17,9 @@ import com.nordusk.utility.Util;
 import com.nordusk.webservices.rest.RestCallback;
 import com.nordusk.webservices.rest.WebApiClient;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.net.UnknownHostException;
@@ -103,7 +106,7 @@ mInteractor.onHideLoader();
 
         try {
             String url = "http://dynamicsglobal.net/app/order_create.php?created_by=" + userId +
-                    "&product_name=" + getProductNames(childCount) + "&product_id=" +
+                    "&product_name=" + getProductNames(childCount).replaceAll(" ","%20") + "&product_id=" +
                     getProductId(childCount) + "&price=" + getProductPrice(childCount) + "&quantity=" +
                     getProductQty(childCount) + "&order_for=" + Util.ORDER_FOR + "&order_for_type=" + Util.ORDER_FOR_TYPE;
 
@@ -125,10 +128,24 @@ mInteractor.onHideLoader();
             mInteractor.onHideLoader();
             mInteractor.onCreateOrderFailure();
             if (response.code() == 200) {
-                mInteractor.onErrorMsgReceived(R.string.order_created);
-                mInteractor.onCreateOrderSuccessfull();
+                try {
+                    JsonElement jelement = new JsonParser().parse(response.body().string());
+                    JsonObject mJson = jelement.getAsJsonObject();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(mJson);
+                    JSONObject jsonObject=new JSONObject(json);
+                    if(jsonObject.getString("response_code").toString().equalsIgnoreCase("200")){
+                        mInteractor.onErrorMsgReceived(R.string.order_created);
+                        mInteractor.onCreateOrderSuccessfull();
+                    }else{
+                        mInteractor.onErrorMsgReceived(jsonObject.getString("response_msg").toString());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }else{
-                mInteractor.onErrorMsgReceived(response.message());
+
             }
         }
     }
