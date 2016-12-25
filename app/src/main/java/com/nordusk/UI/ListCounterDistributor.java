@@ -35,6 +35,11 @@ public class ListCounterDistributor extends AppCompatActivity {
         setContentView(R.layout.activity_list_counter_distributor);
 
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         populateDataFetch();
     }
 

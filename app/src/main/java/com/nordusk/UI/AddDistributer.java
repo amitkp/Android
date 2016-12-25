@@ -80,8 +80,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private String call_from = "";
     private Bundle bundle = null;
     private DataDistributor dataDistributor = new DataDistributor();
-    private String id="";
-    private String territory_id="";
+    private String id = "";
+    private String territory_id = "";
     String parentId = "";
 
     @Override
@@ -164,19 +164,17 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         if (dataDistributor.getCounterSize() != null)
             edt_countersize.setText(dataDistributor.getCounterSize());
 
-        if(dataDistributor.getParrentId()!=null){
-            parentId=dataDistributor.getParrentId();
-            for(int i=0;i<tempParentIds.size();i++){
-                if(parentId.equalsIgnoreCase(tempParentIds.get(i).getId())){
+        if (dataDistributor.getParrentId() != null) {
+            parentId = dataDistributor.getParrentId();
+            for (int i = 0; i < tempParentIds.size(); i++) {
+                if (parentId.equalsIgnoreCase(tempParentIds.get(i).getId())) {
                     auto_text.setText(tempParentIds.get(i).getName());
                 }
             }
         }
 
 
-        id=dataDistributor.getId();
-
-
+        id = dataDistributor.getId();
 
 
         if (call_from.equalsIgnoreCase("edit")) {
@@ -195,7 +193,15 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             public void OnSuccess(ArrayList<ParentId> arrayList) {
 
                 auto_territory = arrayList;
-
+                if (call_from != null && call_from.equals("edit")) {
+                    for (int i = 0; i < auto_territory.size(); i++) {
+                        if (dataDistributor.getTerritory().equals(auto_territory.get(i).getId())) {
+                            auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i).getId());
+                            territory_id = auto_territory.get(i).getId();
+                            break;
+                        }
+                    }
+                }
                 setAutoTextAdapter();
             }
 
@@ -220,8 +226,15 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             public void OnSuccess(ArrayList<ParentId> arrayList) {
 
                 tempParentIds = arrayList;
-
-                setAutoTextAdapter();
+                if (call_from != null && call_from.equals("edit")) {
+                    for (int i = 0; i < tempParentIds.size(); i++) {
+                        if (dataDistributor.getParrentId().equals(tempParentIds.get(i).getId())) {
+                            auto_text.setText(tempParentIds.get(i).getName() + "-" + tempParentIds.get(i).getId());
+                            break;
+                        }
+                    }
+                }
+                setupParentAdapter();
             }
 
             @Override
@@ -377,11 +390,12 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         rd_type = (RadioGroup) findViewById(R.id.radiotype);
     }
 
-    private void setAutoTextAdapter() {
-
-
+    private void setupParentAdapter() {
         CustomAutoCompleteAdapter customerAdapter = new CustomAutoCompleteAdapter(this, R.layout.custom_auto, tempParentIds);
         auto_text.setAdapter(customerAdapter);
+    }
+
+    private void setAutoTextAdapter() {
 
         CustomAutoCompleteAdapter customerAdapter_territory = new CustomAutoCompleteAdapter(this, R.layout.custom_auto, auto_territory);
         auto_text_territory.setAdapter(customerAdapter_territory);
@@ -390,12 +404,12 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               // String name = "";
+                // String name = "";
                 //name = parent.getItemAtPosition(position).toString();
                 for (int i = 0; i < auto_territory.size(); i++) {
-                   // if (name.equalsIgnoreCase(auto_territory.get(i).getName())) {
-                        territory_id = auto_territory.get(i).getId();
-                   // }
+                    // if (name.equalsIgnoreCase(auto_territory.get(i).getName())) {
+                    territory_id = auto_territory.get(i).getId();
+                    // }
                 }
 
             }
@@ -513,7 +527,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
             if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    if(!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
+                    if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
                         if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
 
                             //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
@@ -562,8 +576,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 //                    }
                             } else {
 
-                                if(complete_address!=null && complete_address.length()>0)
-                                    complete_address=complete_address.replaceAll(" ","%20");
+                                if (complete_address != null && complete_address.length() > 0)
+                                    complete_address = complete_address.replaceAll(" ", "%20");
 
                                 AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
                                         edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
@@ -594,11 +608,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
                             }
-                        }
-                        else
+                        } else
                             Toast.makeText(AddDistributer.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(AddDistributer.this, "Please enter territory", Toast.LENGTH_SHORT).show();
                     }
                 } else
