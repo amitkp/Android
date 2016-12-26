@@ -42,7 +42,21 @@
             android:text="Address">
         </TextView>
 
-
+        <Button
+            android:id="@+id/btn_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="right"
+            android:layout_below="@+id/txt_address"
+            android:layout_toLeftOf="@+id/btn_call"
+            android:background="@color/colorAccent"
+            android:text="View Stock"
+            android:textSize="10sp"
+            android:layout_marginRight="@dimen/dp_10"
+            android:textColor="@android:color/white"
+            >
+        </Button>
 
     </LinearLayout>
 

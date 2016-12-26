@@ -50,7 +50,7 @@ public class ListCounterDistributorByManagerTerritory extends AppCompatActivity 
                 public void OnSuccess(ArrayList<com.nordusk.webservices.List> arrayList) {
 
                     if(arrayList!=null && arrayList.size()>0){
-                        counterDistributorListAdapterByManagerTerritory=new CounterDistributorListAdapterByManagerTerritory(ListCounterDistributorByManagerTerritory.this,arrayList);
+                        counterDistributorListAdapterByManagerTerritory=new CounterDistributorListAdapterByManagerTerritory(ListCounterDistributorByManagerTerritory.this,arrayList,type);
                         list_counter_dis.setAdapter(counterDistributorListAdapterByManagerTerritory);
                     }
                 }
@@ -79,7 +79,7 @@ public class ListCounterDistributorByManagerTerritory extends AppCompatActivity 
     private void initView() {
 
         list_counter_dis = (ListView) findViewById(R.id.listView_counr_dis);
-        counterDistributorListAdapterByManagerTerritory=new CounterDistributorListAdapterByManagerTerritory(this,new ArrayList<com.nordusk.webservices.List>());
+        counterDistributorListAdapterByManagerTerritory=new CounterDistributorListAdapterByManagerTerritory(this,new ArrayList<com.nordusk.webservices.List>(),type);
         list_counter_dis.setAdapter(counterDistributorListAdapterByManagerTerritory);
 
         if (getIntent().getStringExtra("sp_id") != null && getIntent().getStringExtra("sp_id").length() > 0)

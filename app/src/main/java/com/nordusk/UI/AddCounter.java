@@ -545,9 +545,9 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                                 territory_id = auto_territory.get(i).getId();
                                             }
                                         }
-                                        if (complete_address != null && complete_address.length() > 0)
-                                            complete_address = complete_address.replaceAll(" ", "%20");
-                                        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(), lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                        //if (complete_address != null && complete_address.length() > 0)
+                                          //  complete_address = complete_address.replaceAll(" ", "%20");
+                                        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ","%20"), edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
                                                 edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
                                         editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                                             @Override

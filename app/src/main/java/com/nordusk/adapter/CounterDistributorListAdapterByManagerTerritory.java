@@ -2,26 +2,41 @@ package com.nordusk.adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nordusk.R;
 import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
+import com.nordusk.admin.ListCounterDistributorPrimePartnerAdmin;
 import com.nordusk.pojo.DataDistributor;
+import com.nordusk.utility.Util;
+import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.List;
+import com.nordusk.webservices.ParentId;
+import com.nordusk.webservices.StockDistributorAsync;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,11 +51,10 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
     private String type = "";
 
 
-    public CounterDistributorListAdapterByManagerTerritory(Activity context, ArrayList<List> arr_datacounterdis) {
+    public CounterDistributorListAdapterByManagerTerritory(Activity context, ArrayList<List> arr_datacounterdis, String type) {
         this.context = context;
         this.arr_datacounterdis = arr_datacounterdis;
         this.type = type;
-
         this.mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
     }
@@ -71,14 +85,21 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
             holder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
             holder.txt_address = (TextView) convertView.findViewById(R.id.txt_address);
             holder.txt_mobile = (TextView) convertView.findViewById(R.id.txt_mobile);
+            holder.btn_stock = (Button) convertView.findViewById(R.id.btn_stock);
 
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
 
+        if (type.equalsIgnoreCase("2")) {
+            holder.btn_stock.setVisibility(View.VISIBLE);
+        } else {
+            holder.btn_stock.setVisibility(View.GONE);
+        }
 
-        List dataDistributor = arr_datacounterdis.get(position);
+
+        final List dataDistributor = arr_datacounterdis.get(position);
         if (dataDistributor != null) {
             if (dataDistributor.getName() != null)
                 holder.txt_name.setText("Name : " + dataDistributor.getName());
@@ -89,12 +110,44 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
 
         }
 
+        holder.btn_stock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (HttpConnectionUrl.isNetworkAvailable(context)) {
+                    StockDistributorAsync stockDistributorAsync = new StockDistributorAsync(context, dataDistributor.getId());
+                    stockDistributorAsync.setOnContentListParserListner(new StockDistributorAsync.OnContentListSchedules() {
+                        @Override
+                        public void OnSuccess(ArrayList<ParentId> arrayList) {
+
+                            if(arrayList!=null && arrayList.size()>0)
+                                daiogselectSp(arrayList);
+                        }
+
+                        @Override
+                        public void OnError(String str_err) {
+                            Toast.makeText(context, str_err, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void OnConnectTimeout() {
+                            Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    stockDistributorAsync.execute();
+                } else {
+                    Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         return convertView;
     }
 
     public class Holder {
         private TextView txt_name, txt_address, txt_mobile;
+        private Button btn_stock;
     }
 
     public void makeCall(String mobile) {
@@ -105,6 +158,29 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
         }
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mobile));
         context.startActivity(intent);
+    }
+
+    private void daiogselectSp(ArrayList<ParentId> arrayList) {
+        ListView lv_stock;
+        final Dialog mDialog_SelectSelectAccount = new Dialog(context,
+                android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount
+                .setContentView(R.layout.dialog_stock);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        lv_stock = (ListView) mDialog_SelectSelectAccount.findViewById(R.id.lv_stock);
+
+        AdapterStock adapterStock = new AdapterStock(context, arrayList);
+        lv_stock.setAdapter(adapterStock);
+
+
+        mDialog_SelectSelectAccount.show();
+
     }
 
 
