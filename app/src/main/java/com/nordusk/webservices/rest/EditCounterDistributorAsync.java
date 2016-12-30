@@ -31,7 +31,11 @@ public class EditCounterDistributorAsync extends AsyncTask<Void, Void, Void>
     private String id="";
 
 
-    public EditCounterDistributorAsync(Activity context, String type, String countername, String mobile, String lattitude, String longitude, String address, String email, String Bankname, String Accno, String ifsc, String countersize, String parntid, String path, String territory,String aniversery,String dob,String id,JSONObject jsonObject) {
+    public EditCounterDistributorAsync(Activity context, String type, String countername, String mobile,
+                                       String lattitude, String longitude, String address, String email,
+                                       String Bankname, String Accno, String ifsc, String countersize,
+                                       String parntid, String path, String territory,String aniversery,
+                                       String dob,String id,JSONObject jsonObject) {
         this.context = context;
         this.type = type;
         this.countername = countername;

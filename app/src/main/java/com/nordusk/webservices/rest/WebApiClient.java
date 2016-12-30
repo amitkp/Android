@@ -22,9 +22,9 @@ public class WebApiClient {
     private static Retrofit mRetrofit = null;
     public static String uId = "", appKey = "", deviceId = "";
 
-    private static final int CONNECT_TIMEOUT = 15;
-    private static final int WRITE_TIMEOUT = 15;
-    private static final int READ_TIMEOUT = 15;
+    private static final int CONNECT_TIMEOUT = 30;
+    private static final int WRITE_TIMEOUT = 30;
+    private static final int READ_TIMEOUT = 30;
 
     static Gson getInstance() {
         Gson gson = new GsonBuilder().create();
