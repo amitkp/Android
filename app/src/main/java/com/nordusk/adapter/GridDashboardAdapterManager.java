@@ -22,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.ListCounterDistributorByManagerTerritory;
 import com.nordusk.UI.ListManagerTarget;
+import com.nordusk.UI.ListOrderVsBill;
 import com.nordusk.UI.Listattendance;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
@@ -54,7 +57,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder,
             R.drawable.placeholders, R.drawable.placeholders, R.drawable.placeholder
-            , R.drawable.placeholders, R.drawable.placeholder, R.drawable.placeholders};
+            , R.drawable.placeholders, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -130,7 +133,10 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     //mContext.startActivity(mIntent);
                 } else if (position == 6) {
                     showAttendanceDialog();
+                } else if(position == 7){
+                    orderVsBill();
                 }
+
 
 //                else if (position == 6) {
 //                    DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
@@ -687,5 +693,88 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
     }
 
+    private void orderVsBill() {
+        final AutoCompleteTextView login_edtxt_emailmobile;
+        final Button create_bill;
+        final RadioGroup radio_group;
+        final RadioButton radio_counter,radio_disrtibutor,radio_prime_partner;
 
+        final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
+                android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount
+                .setContentView(R.layout.dialog_order_vs_bill_sp);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        radio_group = (RadioGroup) mDialog_SelectSelectAccount.findViewById(R.id.radio_group);
+        radio_counter = (RadioButton) mDialog_SelectSelectAccount.findViewById(R.id.radio_counter);
+        radio_disrtibutor = (RadioButton) mDialog_SelectSelectAccount.findViewById(R.id.radio_distributor);
+        radio_prime_partner = (RadioButton) mDialog_SelectSelectAccount.findViewById(R.id.radio_prime_partner);
+        login_edtxt_emailmobile = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        create_bill = (Button) mDialog_SelectSelectAccount.findViewById(R.id.create_bill);
+
+
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
+                name_list.add(Util.getUserList().get(i).getName());
+            }
+        }
+
+        if (name_list != null && name_list.size() > 0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
+            login_edtxt_emailmobile.setAdapter(adapter);
+        }
+
+
+        login_edtxt_emailmobile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name = "";
+                name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
+                    }
+                }
+
+            }
+        });
+
+
+        create_bill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String custId = null;
+                if(radio_counter.isChecked()){
+                    Log.d("Radio","Counter");
+                    custId = "1";
+                } else if (radio_disrtibutor.isChecked()){
+                    Log.d("Radio","Distributor");
+                    custId = "2";
+                } else if (radio_prime_partner.isChecked()){
+                    Log.d("Radio","Prime Partner");
+                    custId = "3";
+                }else
+                Log.d("Radio","No button Checked");
+                if (sp_id != null && sp_id.length() > 0 && custId != null) {
+                    Intent intent = new Intent(mContext, ListOrderVsBill.class);
+                    intent.putExtra("id", sp_id);
+                    intent.putExtra("custId", custId);
+                    mContext.startActivity(intent);
+
+                } else {
+                    Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mDialog_SelectSelectAccount.show();
+
+    }
 }

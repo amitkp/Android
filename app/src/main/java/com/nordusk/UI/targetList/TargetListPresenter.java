@@ -24,6 +24,6 @@ public interface TargetListPresenter {
     }
 
     interface OnAdapterNotifyListener{
-        void updateTargetElements(ArrayList<DataTarget> mListTarget);
+        void updateTargetElements(ArrayList<DataTarget> mListTarget, ArrayList<String> additnalData);
     }
 }

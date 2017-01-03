@@ -12,7 +12,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/p_normal">
+        android:padding="@dimen/p_normal"
+        android:layout_marginTop="19dp">
+
 
         <TextView
             android:id="@+id/tv_date"

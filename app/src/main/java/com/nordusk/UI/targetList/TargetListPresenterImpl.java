@@ -89,12 +89,26 @@ public class TargetListPresenterImpl implements TargetListPresenter.OnUserIntera
         JsonElement jelement = new JsonParser().parse(response);
         JsonObject mJson = jelement.getAsJsonObject();
         JsonArray mNewArray = mJson.getAsJsonArray("list");
+        JsonElement data = null,data1 = null;
+        try{
+            data = mJson.get("total_target_achived");
+            data1 = mJson.get("total_target");
+            Log.e("target_url","Data-"+data.toString()+"::::Data1-"+data1.toString());
+        }catch (Exception e){
+            Log.e("target_url",""+e.getMessage());
+        }
+
         Gson mGson = new Gson();
         Type listType = new TypeToken<List<DataTarget>>() {
         }.getType();
         if (mNewArray != null) {
             ArrayList<DataTarget> mListTarget = mGson.fromJson(mNewArray.toString(), listType);
-            mInteractor.getAdapterImpl().updateTargetElements(mListTarget);
+            ArrayList<String> additnalData = new ArrayList<>();
+            if(null != data && null != data1){
+                additnalData.add(data.toString());
+                additnalData.add(data1.toString());
+            }
+            mInteractor.getAdapterImpl().updateTargetElements(mListTarget,additnalData);
         }
     }
 

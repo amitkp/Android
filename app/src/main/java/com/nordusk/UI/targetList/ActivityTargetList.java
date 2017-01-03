@@ -20,6 +20,8 @@ import com.nordusk.pojo.DataTarget;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static java.security.AccessController.getContext;
+
 /**
  * Created by gouravkundu on 16/12/16.
  */
@@ -27,33 +29,32 @@ import java.util.Calendar;
 public class ActivityTargetList extends AppCompatActivity
         implements View.OnClickListener, TargetListPresenter.OnNotifyUiListener, DatePickerDialog.OnDateSetListener {
 
-    private TargetListPresenter.OnUserInteractionListener mPresenter;
+   // private TargetListPresenter.OnUserInteractionListener mPresenter;
 
     private AdapterTarget mAdapter;
 
-    private TextView tv_date;
+    private TextView tv_date,total_target,total_target_achieved;
     private RecyclerView rv;
+    private TargetListPresenter.OnUserInteractionListener mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_target_list);
         mPresenter = new TargetListPresenterImpl(this, getBaseContext());
-
         initView();
     }
 
     private void initView() {
 
         tv_date = (TextView) findViewById(R.id.tv_date);
+        total_target_achieved = (TextView) findViewById(R.id.total_target_achieved);
+        total_target = (TextView) findViewById(R.id.total_target);
         rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(getBaseContext(), LinearLayoutManager.VERTICAL, false));
-
-        mAdapter = new AdapterTarget(mPresenter);
+        mAdapter = new AdapterTarget(mPresenter,total_target,total_target_achieved);
         rv.setAdapter(mAdapter);
-
         rv.addItemDecoration(new VerticalSpaceItemDecoration(5));
-
         tv_date.setOnClickListener(this);
     }
 
@@ -73,8 +74,8 @@ public class ActivityTargetList extends AppCompatActivity
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         Log.i("Response", "onDateSet: " + i + i1 + i2);
-        tv_date.setText(i + "-" + (i1 + 1) + "-" + i2);
-        getAdapterImpl().updateTargetElements(new ArrayList<DataTarget>());
+        tv_date.setText("Selected Date - "+i + "-" + (i1 + 1) + "-" + i2);
+        getAdapterImpl().updateTargetElements(new ArrayList<DataTarget>(), new ArrayList<String>());
         mPresenter.onDateSelect(i + "-" + (i1 + 1), getBaseContext());
     }
 

@@ -262,21 +262,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         }
 
-                        if(total_path_list!=null && total_path_list.size()>0) {
-                            mpProgressDialog = new ProgressDialog(MapsActivity.this);
-                            mpProgressDialog.setMessage("Loading data.Please wait..");
-                            mpProgressDialog.setCancelable(false);
-                            mpProgressDialog.show();
-                            calculateTotalPath();
-                        }else{
-                            Toast.makeText(MapsActivity.this, "No data found", Toast.LENGTH_SHORT).show();
-                        }
+
                         // Distance distance=new Distance();
                         // distance.execute();
 
 
                     } else {
                         Toast.makeText(MapsActivity.this, "No activity found today", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if(total_path_list!=null && total_path_list.size()>0) {
+                        mpProgressDialog = new ProgressDialog(MapsActivity.this);
+                        mpProgressDialog.setMessage("Loading data.Please wait..");
+                        mpProgressDialog.setCancelable(false);
+                        mpProgressDialog.show();
+                        calculateTotalPath();
+                    }else{
+                        Toast.makeText(MapsActivity.this, "No data found", Toast.LENGTH_SHORT).show();
                     }
 
                     // Toast.makeText(MapsActivity.this, String.valueOf(short_distance_km), Toast.LENGTH_SHORT).show();

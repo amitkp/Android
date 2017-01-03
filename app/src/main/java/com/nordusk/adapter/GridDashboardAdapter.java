@@ -54,7 +54,9 @@ public class GridDashboardAdapter extends BaseAdapter {
 
     private int[] img_ids = {R.drawable.store, R.drawable.distributor,
             R.drawable.placeholder, R.drawable.placeholders,
-            R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholders};
+            R.drawable.placeholder, R.drawable.placeholders,
+            R.drawable.placeholder, R.drawable.placeholders,
+            R.drawable.placeholders};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
