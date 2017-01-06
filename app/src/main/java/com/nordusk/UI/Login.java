@@ -14,21 +14,37 @@ import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.LoginAsync;
+import com.nordusk.utility.GPSTracker;
 
 public class Login extends AppCompatActivity {
 
     private Button btn_login;
     private EditText edt_username, edt_password;
+    private Double lat,lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loginscreen);
+        GPSCheck();
 
-        initView();
-        SetListener();
     }
+    private void GPSCheck(){
+        GPSTracker gpsTracker = new GPSTracker(this);
+        if(gpsTracker.canGetLocation()){
+            lat = gpsTracker.getLatitude();
+            lon = gpsTracker.getLongitude();
+            if(lat != null && lat != 0.0 && lon != null && lon != 0.0) {
+                initView();
+                SetListener();
+            } else {
 
+            }
+        }else{
+            gpsTracker.showSettingsAlert();
+
+        }
+    }
     private void initView() {
         btn_login = (Button) findViewById(R.id.login_btn_login);
         edt_username = (EditText) findViewById(R.id.login_edtxt_emailmobile);
@@ -59,7 +75,7 @@ public class Login extends AppCompatActivity {
     private void loginAsyncCall() {
 
         if(HttpConnectionUrl.isNetworkAvailable(Login.this)) {
-            LoginAsync loginAsync = new LoginAsync(Login.this, edt_username.getText().toString().trim(), edt_password.getText().toString().trim(), null);
+            LoginAsync loginAsync = new LoginAsync(Login.this, edt_username.getText().toString().trim(), edt_password.getText().toString().trim(), null, lon, lat);
             loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
                 @Override
                 public void OnSuccess(String response_code) {

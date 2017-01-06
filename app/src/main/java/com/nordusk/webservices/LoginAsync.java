@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.nordusk.R;
 import com.nordusk.UI.Dashboard;
@@ -27,9 +28,10 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
     private JSONObject jsonObject = null;
     private String Username="",Password="";
     private String deviceId="";
+    private Double lat,lon;
 
 
-    public LoginAsync(Activity context, String username,String password, JSONObject jsonObject) {
+    public LoginAsync(Activity context, String username,String password, JSONObject jsonObject, Double lat, Double lon) {
         this.context = context;
 
         this.jsonObject = jsonObject;
@@ -39,6 +41,8 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
         this.Username=username;
         this.Password=password;
         this.deviceId= Util.getDeviceId(context);
+        this.lat = lat;
+        this.lon = lon;
 
         mpProgressDialog.setCancelable(false);
     }
@@ -52,14 +56,18 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         try {
 
-
-
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url)+ "username="+Username+"&password="+Password+"&deviceId="+ deviceId+"", jsonObject);
-            isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
-            if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
-                parseResponseData(responsedata[1]);
+            if(lat != null && lat != 0.0 && lon != null && lon != 0.0) {
+                String url = context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url) + "username=" + Username + "&password=" + Password + "&deviceId=" + deviceId + "&latitude" + lat + "&longitude" + lon + "";
+                Log.e("Login URL",url);
+                String[] responsedata = HttpConnectionUrl.post(context, url, jsonObject);
+                isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
+                if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
+                    parseResponseData(responsedata[1]);
+                }
+            }else{
+                Log.e("Login","Unable to get Lat and Lon");
+                onContentListParserListner.OnError("Unable to get GPS Data");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

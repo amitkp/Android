@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ public class ListCounterDistributorByManagerTerritory extends AppCompatActivity 
     private String type = "";
     private String sp_id, territory_id = "";
     private CounterDistributorListAdapterByManagerTerritory counterDistributorListAdapterByManagerTerritory;
+    private TextView txt_total;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,9 @@ public class ListCounterDistributorByManagerTerritory extends AppCompatActivity 
             ListCounterDistributorByManagerTerritoryAsync listCounterDistributorByManagerTerritory=new ListCounterDistributorByManagerTerritoryAsync(this,sp_id,type,territory_id);
             listCounterDistributorByManagerTerritory.setOnContentListParserListner(new ListCounterDistributorByManagerTerritoryAsync.OnContentListSchedules() {
                 @Override
-                public void OnSuccess(ArrayList<com.nordusk.webservices.List> arrayList) {
+                public void OnSuccess(ArrayList<com.nordusk.webservices.List> arrayList, String total) {
+                    if(total!=null && total.length()>0)
+                        txt_total.setText("Total Count :"+total);
 
                     if(arrayList!=null && arrayList.size()>0){
                         counterDistributorListAdapterByManagerTerritory=new CounterDistributorListAdapterByManagerTerritory(ListCounterDistributorByManagerTerritory.this,arrayList,type);
@@ -78,6 +82,7 @@ public class ListCounterDistributorByManagerTerritory extends AppCompatActivity 
 
     private void initView() {
 
+        txt_total = (TextView) findViewById(R.id.txt_total);
         list_counter_dis = (ListView) findViewById(R.id.listView_counr_dis);
         counterDistributorListAdapterByManagerTerritory=new CounterDistributorListAdapterByManagerTerritory(this,new ArrayList<com.nordusk.webservices.List>(),type);
         list_counter_dis.setAdapter(counterDistributorListAdapterByManagerTerritory);

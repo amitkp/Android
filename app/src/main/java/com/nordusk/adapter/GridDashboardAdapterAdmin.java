@@ -48,8 +48,9 @@ import java.util.Locale;
  */
 public class GridDashboardAdapterAdmin extends BaseAdapter {
 
-    private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder,
-            R.drawable.placeholders, R.drawable.placeholders};
+    private int[] img_ids = {R.mipmap.ic_counter, R.mipmap.ic_distributor,
+            R.mipmap.ic_view_prime_partner,
+            R.mipmap.ic_target_list, R.mipmap.ic_create_user};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -305,11 +306,13 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
                        intent.putExtra("sp_id", sp_id);
                        mContext.startActivity(intent);
                    }else if(type.equalsIgnoreCase("1")){
+                       Toast.makeText(mContext,"Calling id type 2",Toast.LENGTH_SHORT).show();
                        Intent intent = new Intent(mContext, ListCounterDistributorPrimePartnerAdmin.class);
                        intent.putExtra("type", "2");
                        intent.putExtra("sp_id", sp_id);
                        mContext.startActivity(intent);
                    }else if(type.equalsIgnoreCase("2")){
+                       Toast.makeText(mContext,"Calling id type 3",Toast.LENGTH_SHORT).show();
                        Intent intent = new Intent(mContext, ListCounterDistributorPrimePartnerAdmin.class);
                        intent.putExtra("type", "3");
                        intent.putExtra("sp_id", sp_id);

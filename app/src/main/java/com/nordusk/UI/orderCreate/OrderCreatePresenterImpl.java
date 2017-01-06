@@ -99,7 +99,7 @@ mInteractor.onHideLoader();
     }
 
     @Override
-    public void createOrder(int childCount) {
+    public void createOrder(int childCount, Double lat, Double lon) {
 
         Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(contextWeakReference.get()));
         RestCallback.OrderCreateCallback mLoginCallback = mRetrofit.create(RestCallback.OrderCreateCallback.class);
@@ -108,7 +108,8 @@ mInteractor.onHideLoader();
             String url = "http://dynamicsglobal.net/app/order_create.php?created_by=" + userId +
                     "&product_name=" + getProductNames(childCount).replaceAll(" ","%20") + "&product_id=" +
                     getProductId(childCount) + "&price=" + getProductPrice(childCount) + "&quantity=" +
-                    getProductQty(childCount) + "&order_for=" + Util.ORDER_FOR + "&order_for_type=" + Util.ORDER_FOR_TYPE;
+                    getProductQty(childCount) + "&order_for=" + Util.ORDER_FOR + "&order_for_type=" + Util.ORDER_FOR_TYPE
+                    +"&latitude=" + lat + "&longitude=" + lon;
 
             Log.e("url",url);
 

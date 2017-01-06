@@ -28,6 +28,7 @@ import com.nordusk.R;
 import com.nordusk.adapter.GridDashboardAdapter;
 import com.nordusk.adapter.GridDashboardAdapterAdmin;
 import com.nordusk.adapter.GridDashboardAdapterManager;
+import com.nordusk.utility.GPSTracker;
 import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.AdminSPAsync;
 import com.nordusk.webservices.ChangepasswordAsync;
@@ -207,29 +208,8 @@ public class Dashboard extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            LogoutAsync logoutAsync = new LogoutAsync(Dashboard.this, null);
-            logoutAsync.setOnContentListParserListner(new LogoutAsync.OnContentListSchedules() {
-                @Override
-                public void OnSuccess(String responsecode) {
-                    Toast.makeText(Dashboard.this, responsecode, Toast.LENGTH_SHORT).show();
-                    new Prefs(Dashboard.this).clearData();
-                    startActivity(new Intent(Dashboard.this, Login.class));
-                    finish();
-                }
 
-                @Override
-                public void OnError(String str_err) {
-                    Toast.makeText(Dashboard.this, str_err, Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void OnConnectTimeout() {
-                    Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            logoutAsync.execute();
-
+            GPSCheck();
         } else if (id == R.id.action_chnge) {
 
             //Toast.makeText(Dashboard.this, "Under Development", Toast.LENGTH_SHORT).show();
@@ -240,6 +220,46 @@ public class Dashboard extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void GPSCheck(){
+        GPSTracker gpsTracker = new GPSTracker(this);
+        if(gpsTracker.canGetLocation()){
+            Double lat = gpsTracker.getLatitude();
+            Double lon = gpsTracker.getLongitude();
+            if(lat != null && lat != 0.0 && lon != null && lon != 0.0) {
+                logout(lat,lon);
+            } else {
+
+            }
+        }else{
+            gpsTracker.showSettingsAlert();
+
+        }
+    }
+
+    public void logout(Double lat, Double lon) {
+        LogoutAsync logoutAsync = new LogoutAsync(Dashboard.this, null, lat, lon);
+        logoutAsync.setOnContentListParserListner(new LogoutAsync.OnContentListSchedules() {
+            @Override
+            public void OnSuccess(String responsecode) {
+                Toast.makeText(Dashboard.this, responsecode, Toast.LENGTH_SHORT).show();
+                new Prefs(Dashboard.this).clearData();
+                startActivity(new Intent(Dashboard.this, Login.class));
+                finish();
+            }
+
+            @Override
+            public void OnError(String str_err) {
+                Toast.makeText(Dashboard.this, str_err, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void OnConnectTimeout() {
+                Toast.makeText(Dashboard.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        logoutAsync.execute();
+    }
 //    @SuppressWarnings("StatementWithEmptyBody")
 //    @Override
 //    public boolean onNavigationItemSelected(MenuItem item) {

@@ -27,16 +27,16 @@ public class StockDistributorAsync extends AsyncTask<Void, Void, Void> {
 
     private ArrayList<ParentId> arrayList = new ArrayList<ParentId>();
     private String id="";
+    private String Url="";
 
-
-    public StockDistributorAsync(Activity context,String id) {
+    public StockDistributorAsync(Activity context,String id,String Url) {
         this.context = context;
         mpProgressDialog = new ProgressDialog(context);
         mpProgressDialog.setMessage("Loading..");
         mpProgressDialog.show();
 
         this.id=id;
-
+        this.Url=Url;
         mpProgressDialog.setCancelable(false);
     }
 
@@ -50,7 +50,7 @@ public class StockDistributorAsync extends AsyncTask<Void, Void, Void> {
         try {
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "stock_distributor.php?"+"id="+id, jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + Url +"id="+id, jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
                 parseResponseData(responsedata[1]);

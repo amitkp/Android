@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.google.gson.JsonElement;
 import com.nordusk.R;
 
 import org.json.JSONArray;
@@ -21,6 +22,7 @@ public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Voi
     private boolean isTimeOut = false;
 
     private String responsecode = "";
+    private String totalCount = "";
     private String responseMessage = "";
     private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
@@ -37,7 +39,6 @@ public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Voi
         this.sp_id = sp_id;
         this.type = type;
         this.territory_id = territory_id;
-
         mpProgressDialog.setCancelable(false);
     }
 
@@ -75,7 +76,8 @@ public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Voi
             }
         }
         if (onContentListParserListner != null && responsecode.equalsIgnoreCase("200")) {
-            onContentListParserListner.OnSuccess(arrayList);
+//            onContentListParserListner.OnSuccess(arrayList);
+            onContentListParserListner.OnSuccess(arrayList, totalCount);
 
         } else {
             if (responseMessage != null && responseMessage.length() > 0) {
@@ -92,7 +94,7 @@ public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Voi
             jsonObject = new JSONObject(response);
             responsecode = jsonObject.getString("response_code");
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
-
+                totalCount = jsonObject.getString("total");
                 JSONArray jsonArray = jsonObject.getJSONArray("list");
                 if (jsonArray != null && jsonArray.length() > 0) {
                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -105,6 +107,7 @@ public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Voi
                         list.setAddress(HttpConnectionUrl.getJSONKeyvalue(object, "address"));
                         list.setTerritory(HttpConnectionUrl.getJSONKeyvalue(object, "territory"));
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
+                        list.setCreated_at(HttpConnectionUrl.getJSONKeyvalue(object, "created_at"));
                         arrayList.add(list);
 
                     }
@@ -132,7 +135,7 @@ public class ListCounterDistributorByManagerTerritoryAsync extends AsyncTask<Voi
     }
 
     public interface OnContentListSchedules {
-        void OnSuccess(ArrayList<List> arrayList);
+        void OnSuccess(ArrayList<List> arrayList, String totalCount);
 
         void OnError(String str_err);
 

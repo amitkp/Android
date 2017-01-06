@@ -23,14 +23,19 @@
     <string name="txt_adddistributor">Add Distributor</string>
     <string name="txt_viewcounter">View Counter</string>
     <string name="txt_viewdistributor">View Distributor</string>
+    <string name="txt_view_prime_partner">View Prime Partner</string>
+    <string name="txt_create_user">Create User</string>
     <string name="txt_track">Tracking Details</string>
     <string name="txt_order">Order</string>
     <string name="txt_order_list">Order List</string>
-    <string name="teritorry">Teritorry</string>
+    <string name="teritorry">Add Teritorry</string>
     <string name="create_target">Create Target</string>
     <string name="target_list">Target List</string>
     <string name="check_attendance">Attendance Report</string>
     <string name="order_vs_bill">Order Vs Bill</string>
+    <string name="daily_tracking">Daily Tracking</string>
+    <string name="create_notice">Create Notice</string>
+    <string name="view_notice">View Notice</string>
 
     <!-- Url-->
     <string name="base_url">http://dynamicsglobal.net/app/</string>
@@ -38,6 +43,10 @@
     <string name="logoutasync_url">logout.php?</string>
     <string name="addcounter_url">counter_distributer_add.php?</string>
     <string name="editcounter_url">counter_distributer_edit.php?</string>
+    <string name="attendance_url">attendance.php?</string>
+    <string name="attendance_hourly_url">user_trace_by_hour.php?</string>
+    <string name="create_notice_url">notice_add.php?</string>
+    <string name="notice_list">notice_list.php</string>
 
 
     <!--Utility String-->
@@ -58,6 +67,7 @@
         <item>@string/txt_order_list</item>
         <item>@string/create_target</item>
         <item>@string/target_list</item>
+        <item>@string/view_notice</item>
     </array>
 
     <array name="options_dashboard_manager">
@@ -69,14 +79,16 @@
         <item>@string/target_list</item>
         <item>@string/check_attendance</item>
         <item>@string/order_vs_bill</item>
+        <item>@string/daily_tracking</item>
+        <item>@string/create_notice</item>
     </array>
 
     <array name="options_dashboard_admin">
         <item>@string/txt_viewcounter</item>
         <item>@string/txt_viewdistributor</item>
-        <item>"View Prime Partner"</item>
+        <item>@string/txt_view_prime_partner</item>
         <item>@string/txt_order_list</item>
-        <item>"Create User"</item>
+        <item>@string/txt_create_user</item>
     </array>
 
     <string name="parseError">Parseing Error</string>

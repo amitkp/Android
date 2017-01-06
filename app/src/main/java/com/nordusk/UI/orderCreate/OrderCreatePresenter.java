@@ -15,7 +15,7 @@ public interface OrderCreatePresenter {
         void onActivityDestroyed();
         void fetchProductList();
         void onAddProductClick();
-        void createOrder(int childCount);
+        void createOrder(int childCount, Double lat, Double lon);
     }
     interface OnNotifyUiListener{
         void onAddProductItem(ArrayList<DataProducts> mListProducts);

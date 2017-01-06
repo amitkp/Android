@@ -2,12 +2,16 @@ package com.nordusk.webservices;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.nordusk.R;
 import com.nordusk.pojo.DataObjectAttendance;
 import com.nordusk.pojo.DataProduct;
+import com.nordusk.utility.GPSTracker;
 import com.nordusk.utility.Prefs;
 
 import org.json.JSONArray;
@@ -56,10 +60,11 @@ public class AttendanceSPAsync extends AsyncTask<Void, Void, Void> {
         try {
 
 
-            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + "attendance.php?"+"user_id="+sp_id+"&month="+date, jsonObject);
+            String[] responsedata = HttpConnectionUrl.post(context, context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.attendance_url)+"user_id="+sp_id+"&month="+date, jsonObject);
             isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
             if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {
                 parseResponseData(responsedata[1]);
+
             }
 
         } catch (Exception e) {
@@ -103,8 +108,12 @@ public class AttendanceSPAsync extends AsyncTask<Void, Void, Void> {
                         dp.setDate(HttpConnectionUrl.getJSONKeyvalue(object, "date"));
                         dp.setLogin_time(HttpConnectionUrl.getJSONKeyvalue(object, "login_time"));
                         dp.setLogout_time(HttpConnectionUrl.getJSONKeyvalue(object, "logout_time"));
-                        arrayList.add(dp);
+                        dp.setLogin_latitude(HttpConnectionUrl.getJSONKeyvalue(object, "login_latitude"));
+                        dp.setLogin_longitutde(HttpConnectionUrl.getJSONKeyvalue(object, "login_longitude"));
+                        dp.setLogout_latitude(HttpConnectionUrl.getJSONKeyvalue(object, "logout_latitude"));
+                        dp.setLogout_longitude(HttpConnectionUrl.getJSONKeyvalue(object, "logout_longitude"));
 
+                        arrayList.add(dp);
                     }
                 }
             } else {

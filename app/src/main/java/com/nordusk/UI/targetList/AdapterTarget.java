@@ -61,7 +61,6 @@ public class AdapterTarget extends RecyclerView.Adapter<AdapterTarget.HolderTarg
             target_achieved.setText("Total Target Achieved "+additnalData.get(0));
         }
         else {
-            total_target.setText("No data found for selected date");
             Log.e("Array","Array Null");
         }
     }

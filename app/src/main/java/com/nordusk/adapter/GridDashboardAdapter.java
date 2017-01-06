@@ -32,6 +32,7 @@ import com.nordusk.UI.AddDistributer;
 import com.nordusk.UI.ListCounterDistributor;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.ViewNoticeSalesPerson;
 import com.nordusk.UI.createTarget.DialogTargetCreate;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
@@ -52,11 +53,12 @@ import java.util.Locale;
  */
 public class GridDashboardAdapter extends BaseAdapter {
 
-    private int[] img_ids = {R.drawable.store, R.drawable.distributor,
-            R.drawable.placeholder, R.drawable.placeholders,
-            R.drawable.placeholder, R.drawable.placeholders,
-            R.drawable.placeholder, R.drawable.placeholders,
-            R.drawable.placeholders};
+    private int[] img_ids = {R.mipmap.ic_counter, R.mipmap.ic_distributor,
+            R.mipmap.ic_counter, R.mipmap.ic_distributor,
+            R.mipmap.ic_track, R.mipmap.ic_order_create,
+            R.mipmap.ic_order_create, R.mipmap.ic_create_target,
+            R.mipmap.ic_target_list, R.mipmap.ic_reports};
+
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -146,8 +148,11 @@ public class GridDashboardAdapter extends BaseAdapter {
                     DialogTargetCreate mDialog = DialogTargetCreate.newInstance();
                     mDialog.show(mContext.getSupportFragmentManager(), DialogTargetCreate.class.getSimpleName());
                 } else if (position == 8) {
-                    //TODO show Target list
                     Intent mIntent = new Intent(mContext, ActivityTargetList.class);
+                    mContext.startActivity(mIntent);
+
+                } else if (position == 9) {
+                    Intent mIntent = new Intent(mContext, ViewNoticeSalesPerson.class);
                     mContext.startActivity(mIntent);
 
                 }

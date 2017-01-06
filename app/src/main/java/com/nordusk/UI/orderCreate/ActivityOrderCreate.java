@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -37,6 +38,7 @@ import com.nordusk.pojo.DataProduct;
 import com.nordusk.pojo.DataProducts;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
+import com.nordusk.utility.GPSTracker;
 import com.nordusk.webservices.CreateOrderAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.ListContractorDistributorAsync;
@@ -75,7 +77,11 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     ArrayList<String> category_list = new ArrayList<String>();
     private ArrayList<DataProduct> dataProduct=new ArrayList<DataProduct>();
     private String product_id="",product_name="";
-    private String product_id_fromlist="",type_from_list="";
+    private String product_id_fromlist="";
+    private String type_from_list="";
+    private TextView txt_currentlocation;
+    private TextView txt_currentownerdetails;
+    private Double lat=0.0,lon=0.0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,7 +155,8 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         if(getIntent().getStringExtra("name")!=null && getIntent().getStringExtra("name").length()>0)
         login_edtxt_emailmobile.setText(getIntent().getStringExtra("name"));
         btn_save.setOnClickListener(this);
-
+        txt_currentlocation = (TextView) findViewById(R.id.txt_currentlocation);
+        txt_currentownerdetails = (TextView) findViewById(R.id.txt_currentownerdetails);
 
         //category and product
         spnr_category = (Spinner) findViewById(R.id.spnr_category);
@@ -292,6 +299,24 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         });
 
 
+        /*
+        Code for current town location
+         */
+        txt_currentlocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                GPSTracker gpsTracker = new GPSTracker(v.getContext());
+                if (gpsTracker.canGetLocation()) {
+                    lat = gpsTracker.getLatitude();
+                    lon = gpsTracker.getLongitude();
+                    txt_currentownerdetails.setText(gpsTracker.addressSet(lat, lon));
+                } else {
+                    gpsTracker.showSettingsAlert();
+                }
+                //
+            }
+        });
     }
 
 //    private void fetchProduct(String s) {
@@ -368,8 +393,12 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     public void onClick(View view) {
         if(!TextUtils.isEmpty(et_orderName.getText().toString())) {
             if (Util.ORDER_FOR != null && Util.ORDER_FOR.length() > 0) {
-                btn_save.setClickable(false);
-                mPresenter.createOrder(ll_container.getChildCount());
+                if(lat != 0.0 && lon != 0.0) {
+                    btn_save.setClickable(false);
+                    mPresenter.createOrder(ll_container.getChildCount(),lat,lon);
+                }else{
+                    Toast.makeText(ActivityOrderCreate.this, "Tap on Order Location to Locate", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(ActivityOrderCreate.this, "Please select order for", Toast.LENGTH_SHORT).show();
             }

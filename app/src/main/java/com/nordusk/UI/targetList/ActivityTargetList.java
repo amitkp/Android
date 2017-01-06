@@ -75,6 +75,8 @@ public class ActivityTargetList extends AppCompatActivity
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         Log.i("Response", "onDateSet: " + i + i1 + i2);
         tv_date.setText("Selected Date - "+i + "-" + (i1 + 1) + "-" + i2);
+        total_target.setText("");
+        total_target_achieved.setText("");
         getAdapterImpl().updateTargetElements(new ArrayList<DataTarget>(), new ArrayList<String>());
         mPresenter.onDateSelect(i + "-" + (i1 + 1), getBaseContext());
     }

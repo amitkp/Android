@@ -16,14 +16,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".UI.Splash"
             android:label="@string/app_name"
@@ -34,8 +32,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".UI.Login"
             android:screenOrientation="portrait" />
@@ -64,32 +60,30 @@
         <activity
             android:name=".UI.targetList.ActivityTargetList"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".UI.ListManagerTarget"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".UI.Listattendance"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".UI.ListCounterDistributor"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".UI.ListCounterDistributorByManagerTerritory"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".admin.ListCounterDistributorPrimePartnerAdmin"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".admin.CreateUser"
-            android:screenOrientation="portrait"></activity>
-
-        <activity android:name=".UI.ListOrderVsBill"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.ListOrderVsBill"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.ListattendanceHourlyReport"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -99,7 +93,8 @@
             android:name=".UI.LocationUpdateService"
             android:enabled="true" />
 
-
+        <activity android:name=".UI.CreateNoticeManager" />
+        <activity android:name=".UI.ViewNoticeSalesPerson"></activity>
     </application>
 
 </manifest>

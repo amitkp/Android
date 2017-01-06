@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.animation.HTextView;
 import com.nordusk.animation.HTextViewType;
+import com.nordusk.utility.GPSTracker;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
@@ -240,32 +241,45 @@ public class Splash extends AppCompatActivity {
     private void loginAsyncCall() {
 
         if (HttpConnectionUrl.isNetworkAvailable(Splash.this)) {
+            GPSTracker gpsTracker = new GPSTracker(this);
+            if(gpsTracker.canGetLocation()){
+                Double lat = gpsTracker.getLatitude();
+                Double lon = gpsTracker.getLongitude();
+                if(lat != null && lat != 0.0 && lon != null && lon != 0.0) {
+                    initView();
+                    LoginAsync loginAsync = new LoginAsync(Splash.this, new Prefs(Splash.this).getString("UserName", ""), new Prefs(Splash.this).getString("Password", ""), null, lat, lon);
+                    loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
+                        @Override
+                        public void OnSuccess(String response_code) {
 
-            LoginAsync loginAsync = new LoginAsync(Splash.this, new Prefs(Splash.this).getString("UserName", ""), new Prefs(Splash.this).getString("Password", ""), null);
-            loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
-                @Override
-                public void OnSuccess(String response_code) {
 
+                            //Toast.makeText(Splash.this, response_code, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Splash.this, Dashboard.class));
+                            finish();
 
-                    //Toast.makeText(Splash.this, response_code, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Splash.this, Dashboard.class));
-                    finish();
+                        }
+
+                        @Override
+                        public void OnError(String str_err) {
+                            Toast.makeText(Splash.this, str_err, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Splash.this, Login.class));
+                        }
+
+                        @Override
+                        public void OnConnectTimeout() {
+                            Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(Splash.this, Login.class));
+                        }
+                    });
+                    loginAsync.execute();
+                } else {
 
                 }
+            }else{
+                gpsTracker.showSettingsAlert();
 
-                @Override
-                public void OnError(String str_err) {
-                    Toast.makeText(Splash.this, str_err, Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Splash.this, Login.class));
-                }
+            }
 
-                @Override
-                public void OnConnectTimeout() {
-                    Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(Splash.this, Login.class));
-                }
-            });
-            loginAsync.execute();
         } else {
             Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(Splash.this, Login.class));

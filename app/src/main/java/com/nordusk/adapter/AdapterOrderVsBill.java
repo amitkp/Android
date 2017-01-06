@@ -20,14 +20,12 @@ public class AdapterOrderVsBill extends BaseAdapter {
     private Context context;
     private List<DataObjectOrderVsBill> list_BeneficiaryItems;
     private LayoutInflater mInflater;
-    private LayoutInflater detailInflater;
 
 
     public AdapterOrderVsBill(Context context, List<DataObjectOrderVsBill> list_BeneficiaryItems) {
         this.context = context;
         this.list_BeneficiaryItems = list_BeneficiaryItems;
         this.mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        this.detailInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/orderDetails">
+    android:id="@+id/orderDetails"
+    >
 
 
     <TextView
@@ -35,6 +36,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginLeft="39dp"
-        android:layout_below="@+id/order_price"></LinearLayout>
+        android:layout_below="@+id/order_price"/>
+
+    <LinearLayout
+        android:id="@+id/lin_separator"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/lin_items"
+        android:background="@color/cardview_shadow_start_color"
+        />
 
 </RelativeLayout>

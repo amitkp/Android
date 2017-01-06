@@ -50,13 +50,11 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
     private ArrayList<List> arr_datacounterdis;
     private String type = "";
 
-
-    public CounterDistributorListAdapterByManagerTerritory(Activity context, ArrayList<List> arr_datacounterdis, String type) {
+    public CounterDistributorListAdapterByManagerTerritory(Activity context, ArrayList<List> arr_datacounterdis,String type) {
         this.context = context;
         this.arr_datacounterdis = arr_datacounterdis;
         this.type = type;
         this.mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-
     }
 
     @Override
@@ -85,14 +83,16 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
             holder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
             holder.txt_address = (TextView) convertView.findViewById(R.id.txt_address);
             holder.txt_mobile = (TextView) convertView.findViewById(R.id.txt_mobile);
+            holder.txt_creation_date = (TextView) convertView.findViewById(R.id.txt_creation_date);
             holder.btn_stock = (Button) convertView.findViewById(R.id.btn_stock);
-
             convertView.setTag(holder);
         } else {
             holder = (Holder) convertView.getTag();
         }
 
         if (type.equalsIgnoreCase("2")) {
+            holder.btn_stock.setVisibility(View.VISIBLE);
+        } else if (type.equalsIgnoreCase("3")) {
             holder.btn_stock.setVisibility(View.VISIBLE);
         } else {
             holder.btn_stock.setVisibility(View.GONE);
@@ -107,35 +107,42 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
                 holder.txt_address.setText("Address : " + dataDistributor.getAddress());
             if (dataDistributor.getMobile() != null)
                 holder.txt_mobile.setText("Mobile : " + dataDistributor.getMobile());
-
+            if (dataDistributor.getCreated_at() != null)
+                holder.txt_creation_date.setText("Creation Date : " + dataDistributor.getCreated_at());
         }
 
         holder.btn_stock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (HttpConnectionUrl.isNetworkAvailable(context)) {
-                    StockDistributorAsync stockDistributorAsync = new StockDistributorAsync(context, dataDistributor.getId());
-                    stockDistributorAsync.setOnContentListParserListner(new StockDistributorAsync.OnContentListSchedules() {
-                        @Override
-                        public void OnSuccess(ArrayList<ParentId> arrayList) {
+                    StockDistributorAsync stockDistributorAsync = null;
+                    if (type.equalsIgnoreCase("2")) {
+                        stockDistributorAsync = new StockDistributorAsync(context, dataDistributor.getId(), "stock_distributor.php?");
+                    } else if (type.equalsIgnoreCase("3")) {
+                        stockDistributorAsync = new StockDistributorAsync(context, dataDistributor.getId(), "stock_pp.php?");
+                    }
+                    if(null != stockDistributorAsync) {
+                        stockDistributorAsync.setOnContentListParserListner(new StockDistributorAsync.OnContentListSchedules() {
+                            @Override
+                            public void OnSuccess(ArrayList<ParentId> arrayList) {
 
-                            if(arrayList!=null && arrayList.size()>0)
-                                daiogselectSp(arrayList);
-                        }
+                                if (arrayList != null && arrayList.size() > 0)
+                                    daiogselectSp(arrayList);
+                            }
 
-                        @Override
-                        public void OnError(String str_err) {
-                            Toast.makeText(context, str_err, Toast.LENGTH_SHORT).show();
-                        }
+                            @Override
+                            public void OnError(String str_err) {
+                                Toast.makeText(context, str_err, Toast.LENGTH_SHORT).show();
+                            }
 
-                        @Override
-                        public void OnConnectTimeout() {
-                            Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    stockDistributorAsync.execute();
-                } else {
+                            @Override
+                            public void OnConnectTimeout() {
+                                Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        stockDistributorAsync.execute();
+                    }
+                }else {
                     Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -146,7 +153,7 @@ public class CounterDistributorListAdapterByManagerTerritory extends BaseAdapter
     }
 
     public class Holder {
-        private TextView txt_name, txt_address, txt_mobile;
+        private TextView txt_name, txt_address, txt_mobile, txt_creation_date;
         private Button btn_stock;
     }
 

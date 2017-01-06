@@ -2,6 +2,8 @@ package com.nordusk.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.nordusk.R;
 import com.nordusk.pojo.DataObjectAttendance;
 import com.nordusk.pojo.DataTargetManager;
+import com.nordusk.utility.GPSTracker;
 
 import java.util.List;
 
@@ -47,11 +50,39 @@ public class AdapterAttendance extends BaseAdapter {
 
 		Holder holder = null;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.row_manager_target_list, parent, false);
+			convertView = mInflater.inflate(R.layout.row_manager_attendance_list, parent, false);
 			holder = new Holder();
 			holder.txt_month = (TextView) convertView.findViewById(R.id.txt_month);
 			holder.txt_amount = (TextView) convertView.findViewById(R.id.txt_amount);
 			holder.txt_target = (TextView) convertView.findViewById(R.id.txt_target);
+			holder.txt_login_address = (TextView) convertView.findViewById(R.id.txt_login_address);
+			holder.txt_logout_address = (TextView) convertView.findViewById(R.id.txt_logout_address);
+
+			DataObjectAttendance dp = list_BeneficiaryItems.get(position);
+
+			if(dp.getLogin_latitude() != "" && dp.getLogin_longitutde()!= "" && dp.getLogout_latitude() != "" && dp.getLogout_longitude() != ""){
+				GPSTracker gpsTracker = new GPSTracker(context);
+				Double loginlat ,loginlon, logoutlat, logoutlon;
+
+				loginlat = Double.parseDouble(dp.getLogin_latitude());
+				loginlon = Double.parseDouble(dp.getLogin_longitutde());
+				logoutlat = Double.parseDouble(dp.getLogout_latitude());
+				logoutlon = Double.parseDouble(dp.getLogout_longitude());
+
+				if(loginlat > 0.0 && loginlon > 0.0 && logoutlat > 0.0 && logoutlon > 0.0){
+				/*Location loginloc = new Location("");
+				Location logoutloc = new Location("");
+				loginloc.setLatitude(loginlat);
+				loginloc.setLongitude(loginlon);
+				logoutloc.setLatitude(logoutlat);
+				logoutloc.setLongitude(logoutlon);*/
+					dp.setLogin_addresss(gpsTracker.addressSet(loginlat,loginlon));
+					dp.setLogout_address(gpsTracker.addressSet(logoutlat,logoutlon));
+					Log.e("GPS","Date-"+dp.getDate()+"Login-"+dp.getLogin_addresss()+"Logout"+dp.getLogout_address());
+				}
+
+			}
+
 			convertView.setTag(holder);
 		} else {
 			holder = (Holder) convertView.getTag();
@@ -68,16 +99,18 @@ public class AdapterAttendance extends BaseAdapter {
 		if(dataTargetManager.getLogout_time()!=null)
 			holder.txt_target.setText("LogOut Time : "+list_BeneficiaryItems.get(position).getLogout_time());
 
+		if(dataTargetManager.getLogin_addresss()!=null)
+			holder.txt_login_address.setText("Login Address : "+list_BeneficiaryItems.get(position).getLogin_addresss());
 
-
-
+		if(dataTargetManager.getLogout_address()!=null)
+			holder.txt_logout_address.setText("Logout Address : "+list_BeneficiaryItems.get(position).getLogout_address());
 
 
 		return convertView;
 	}
 
 	public class Holder {
-		public TextView txt_month,txt_amount,txt_target;
+		public TextView txt_month,txt_amount,txt_target,txt_login_address,txt_logout_address;
 	}
 
 }

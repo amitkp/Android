@@ -30,10 +30,12 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.UI.AddCounter;
 import com.nordusk.UI.AddDistributer;
+import com.nordusk.UI.CreateNoticeManager;
 import com.nordusk.UI.ListCounterDistributorByManagerTerritory;
 import com.nordusk.UI.ListManagerTarget;
 import com.nordusk.UI.ListOrderVsBill;
 import com.nordusk.UI.Listattendance;
+import com.nordusk.UI.ListattendanceHourlyReport;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
 import com.nordusk.UI.createTarget.DialogTargetCreate;
@@ -55,9 +57,12 @@ import java.util.Locale;
  */
 public class GridDashboardAdapterManager extends BaseAdapter {
 
-    private int[] img_ids = {R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder,
-            R.drawable.placeholders, R.drawable.placeholders, R.drawable.placeholder
-            , R.drawable.placeholders, R.drawable.placeholder, R.drawable.placeholders, R.drawable.placeholder};
+    private int[] img_ids = {
+            R.mipmap.ic_counter, R.mipmap.ic_distributor,
+            R.mipmap.ic_track, R.mipmap.ic_teritory,
+            R.mipmap.ic_create_target, R.mipmap.ic_target_list,
+            R.mipmap.ic_attendance, R.mipmap.ic_order_vs_bill,
+            R.mipmap.ic_daily_track, R.mipmap.ic_notice};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -135,6 +140,10 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     showAttendanceDialog();
                 } else if(position == 7){
                     orderVsBill();
+                } else if (position == 8){
+                    dailyTrackingReport();
+                } else if (position == 9){
+                    createNotice();
                 }
 
 
@@ -776,5 +785,102 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
         mDialog_SelectSelectAccount.show();
 
+    }
+
+
+    private void dailyTrackingReport() {
+        final AutoCompleteTextView login_edtxt_emailmobile;
+        final Button btn_save;
+        final EditText et_date;
+
+        final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
+                android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount
+                .setContentView(R.layout.dialog_daily_tracking_report_sp);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(
+                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        et_date = (EditText) mDialog_SelectSelectAccount.findViewById(R.id.et_date);
+        login_edtxt_emailmobile = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        btn_save = (Button) mDialog_SelectSelectAccount.findViewById(R.id.btn_save);
+
+
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
+                name_list.add(Util.getUserList().get(i).getName());
+            }
+        }
+
+        if (name_list != null && name_list.size() > 0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
+            login_edtxt_emailmobile.setAdapter(adapter);
+        }
+
+        et_date.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // TODO Auto-generated method stub
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                        Util.setDateFromDatePicker(et_date, mContext, dateFormatter);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+
+                }
+
+                return true;
+            }
+        });
+
+
+        login_edtxt_emailmobile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name = "";
+                name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
+                    }
+                }
+
+            }
+        });
+
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sp_id != null && sp_id.length() > 0
+                        && et_date.getText().toString() != null && et_date.getText().toString().length() > 0) {
+                    String date = "";
+                    date = et_date.getText().toString();
+                    Log.e("Attendance",date);
+                    Intent intent = new Intent(mContext, ListattendanceHourlyReport.class);
+                    intent.putExtra("date", date);
+                    intent.putExtra("id", sp_id);
+                    mContext.startActivity(intent);
+
+                } else {
+                    Toast.makeText(mContext, "Please provide all fields", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mDialog_SelectSelectAccount.show();
+
+    }
+
+    private void createNotice(){
+        Intent intent = new Intent(mContext, CreateNoticeManager.class);
+        mContext.startActivity(intent);
     }
 }
