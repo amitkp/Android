@@ -1,5 +1,7 @@
 package com.nordusk.webservices.rest;
 
+import android.util.Log;
+
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -64,6 +66,11 @@ public interface RestCallback {
                 @PartMap() Map<String, RequestBody> partMap, @Part MultipartBody.Part file);
     }
 
-
+    interface EditCounterCallback{
+        @Multipart
+        @POST("http://dynamicsglobal.net/app/counter_distributer_edit.php?")
+        Call<ResponseBody> onEditCounterResponse(
+                @PartMap() Map<String, RequestBody> partMap, @Part MultipartBody.Part file);
+    }
 }
 

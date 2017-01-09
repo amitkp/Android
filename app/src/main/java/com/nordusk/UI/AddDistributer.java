@@ -6,19 +6,23 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -35,6 +39,8 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.pojo.DataDistributor;
+import com.nordusk.utility.FileUtils;
+import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
@@ -43,17 +49,35 @@ import com.nordusk.webservices.ParentIdAsync;
 import com.nordusk.webservices.PrimePatnerAsync;
 import com.nordusk.webservices.TerritoryAsync;
 import com.nordusk.webservices.rest.EditCounterDistributorAsync;
+import com.nordusk.webservices.rest.RestCallback;
+import com.nordusk.webservices.rest.WebApiClient;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class AddDistributer extends AppCompatActivity implements LocationListener {
 
@@ -83,6 +107,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private String id = "";
     private String territory_id = "";
     String parentId = "";
+    private Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,8 +164,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     }
 
     private void setData() {
-
-
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        if (dataDistributor.getName() != null)
+            imageLoader.displayImage(dataDistributor.getImage(), img_pic);
         if (dataDistributor.getName() != null)
             edt_countername.setText(dataDistributor.getName());
         if (dataDistributor.getAddress() != null)
@@ -373,8 +399,11 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
         txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit = (Button) findViewById(R.id.counterprofile_btn_submit);
-        if (call_from.equalsIgnoreCase("edit"))
+        if (call_from.equalsIgnoreCase("edit")) {
             submit.setText("Update");
+            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+            ImageLoader.getInstance().init(config);
+        }
         else
             submit.setText("Add");
 
@@ -481,7 +510,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                         addressFragments).replaceAll("\\s+", "");
 
                 if (press_current_loc) {
-                    Toast.makeText(AddDistributer.this, complete_address, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddDistributer.this, complete_address, Toast.LENGTH_SHORT).show();
                     if (!adress_set)
                         txt_current_loc.setText(complete_address);
                     if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
@@ -537,6 +566,10 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                 String[] separated = auto_text.getText().toString().trim().split("-");
                                 parentId = separated[1].toString();
                             }
+                            String path = "";
+                            if (filePath != null) {
+                                path = getPath(filePath);
+                            }
                             if (call_from.equalsIgnoreCase("edit"))
 
                             {
@@ -576,7 +609,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 //                    }
                             } else {
 
-                                if (complete_address != null && complete_address.length() > 0)
+                                /*if (complete_address != null && complete_address.length() > 0)
                                     complete_address = complete_address.replaceAll(" ", "%20");
 
                                 AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
@@ -603,7 +636,95 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                     }
                                 });
 
-                                addCounterAsync.execute();
+                                addCounterAsync.execute();*/
+                                if (complete_address != null && complete_address.length() > 0)
+                                    complete_address = complete_address.replaceAll(" ", "%20");
+
+                                Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
+                                RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
+
+                                MultipartBody.Part body = null;
+                                try {
+                                    body = prepareFilePart("image", filePath);
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                                HashMap<String, RequestBody> map = new HashMap<>();
+                                RequestBody mBodyType = createPartFromString("2");
+                                map.put("type", mBodyType);
+                                RequestBody userId = createPartFromString(new Prefs(AddDistributer.this).getString("userid", ""));
+                                map.put("userId", userId);
+                                RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
+                                map.put("name", mBody);
+                                RequestBody mBodyTerritory = createPartFromString(territory_id);
+                                map.put("territory", mBodyTerritory);
+                                RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
+                                map.put("mobile", mBodyMobile);
+                                RequestBody mBodyLay = createPartFromString(lat);
+                                map.put("latitude", mBodyLay);
+                                RequestBody mBodyLng = createPartFromString(longitude);
+                                map.put("longitde", mBodyLng);
+                                RequestBody mBodyAddress = createPartFromString(complete_address);
+                                map.put("address", mBodyAddress);
+                                RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
+                                        ().trim());
+                                map.put("email", mBodyEmail);
+                                RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString
+                                        ().trim());
+                                map.put("bank_name", mBodyBank);
+
+                                RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
+                                map.put("account_no", mBodyAccount);
+
+                                RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString
+                                        ().trim());
+                                map.put("ifsc_code", mBodyIfsc);
+
+                                RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
+                                map.put("counter_size", mBodyCounter);
+
+                                RequestBody mBodyParent = createPartFromString(parentId);
+                                map.put("parrent_id", mBodyParent);
+
+
+
+                                RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
+                                        ());
+                                map.put("dob", mBodyDob);
+
+
+
+
+
+                                Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
+                                mCall.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        try {
+                                            Log.i("", "onResponse: ");
+                                            if (response.code() == 200) {
+                                                AddDistributer.this.finish();
+                                            }
+                                        } catch (NullPointerException npe) {
+                                            npe.printStackTrace();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        try {
+                                            Log.i("", "onResponse: ");
+                                            if (t instanceof SocketTimeoutException || t instanceof
+                                                    ConnectException || t instanceof UnknownHostException) {
+                                                Toast.makeText(getBaseContext(), "Please check your network " +
+                                                        "connection", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (NullPointerException npe) {
+                                            npe.printStackTrace();
+                                        }
+                                    }
+                                });
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
@@ -695,7 +816,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        filePath = data.getData();
         img_pic.setImageBitmap(thumbnail);
         bm = thumbnail;
     }
@@ -711,7 +832,61 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                 e.printStackTrace();
             }
         }
-
+        filePath = data.getData();
         img_pic.setImageBitmap(bm);
+    }
+
+    public String getPath(Uri uri) {
+        Cursor cursor = getApplicationContext().getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        String document_id = cursor.getString(0);
+        document_id = document_id.substring(document_id.lastIndexOf(":") + 1);
+        cursor.close();
+
+        cursor = getApplicationContext().getContentResolver().query(
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
+        cursor.moveToFirst();
+        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+        cursor.close();
+
+        return path;
+    }
+
+    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+
+    @NonNull
+    private RequestBody createPartFromString(String descriptionString) {
+        return RequestBody.create(
+                MediaType.parse(MULTIPART_FORM_DATA), descriptionString);
+    }
+
+    @NonNull
+    private MultipartBody.Part prepareFilePart(String partName, Uri path) throws URISyntaxException {
+        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+        // use the FileUtils to get the actual file by uri
+        File file = FileUtils.getFile(this, path);
+
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 }

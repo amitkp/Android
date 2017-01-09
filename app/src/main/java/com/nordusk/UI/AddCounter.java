@@ -48,6 +48,8 @@ import com.nordusk.webservices.UserTrace;
 import com.nordusk.webservices.rest.EditCounterDistributorAsync;
 import com.nordusk.webservices.rest.RestCallback;
 import com.nordusk.webservices.rest.WebApiClient;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -114,6 +116,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private String id = "";
     private String territory_id = "";
     String parentId = "";
+    private boolean imageChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +165,9 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     }
 
     private void fetchData() {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        if (dataDistributor.getName() != null)
+            imageLoader.displayImage(dataDistributor.getImage(), img_pic);
         if (dataDistributor.getName() != null)
             edt_countername.setText(dataDistributor.getName());
         if (dataDistributor.getAddress() != null)
@@ -185,6 +191,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         if (dataDistributor.getCounterSize() != null)
             edt_countersize.setText(dataDistributor.getCounterSize());
         id = dataDistributor.getId();
+
 
 //        if(dataDistributor.getParrentId()!=null){
 //           parentId=dataDistributor.getParrentId();
@@ -405,8 +412,12 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         edt_ifsccode = (EditText) findViewById(R.id.counterdtls_edtxt_ifsccode);
         edt_countersize = (EditText) findViewById(R.id.counterdtls_countersize);
         auto_text = (AutoCompleteTextView) findViewById(R.id.auto_text);
-        if (call_from.equalsIgnoreCase("edit"))
+        if (call_from.equalsIgnoreCase("edit")) {
             submit.setText("Update");
+            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+            ImageLoader.getInstance().init(config);
+
+        }
         else
             submit.setText("Add");
 
@@ -566,8 +577,25 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         }
                                         //if (complete_address != null && complete_address.length() > 0)
                                           //  complete_address = complete_address.replaceAll(" ", "%20");
-                                        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1", edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ","%20"), edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                                edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
+                                        populateEditDetails();
+                                        /*EditCounterDistributorAsync editCounterAsync;
+                                        if(imageChanged) {
+                                            editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1",
+                                                    edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
+                                                    edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"),
+                                                    edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                                    edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                                    edt_countersize.getText().toString().trim(), parentId, filePath.toString(), territory_id, edt_aniversary.getText().toString(),
+                                                    edt_dob.getText().toString(), id, null);
+                                        }else{
+                                            editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1",
+                                                    edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
+                                                    edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"),
+                                                    edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                                                    edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                                                    edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(),
+                                                    edt_dob.getText().toString(), id, null);
+                                        }
                                         editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
                                             @Override
                                             public void OnSuccess(String responsecode) {
@@ -586,7 +614,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                             }
                                         });
 
-                                        editCounterAsync.execute();
+                                        editCounterAsync.execute();*/
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
@@ -609,8 +637,12 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         HashMap<String, RequestBody> map = new HashMap<>();
                                         RequestBody mBodyType = createPartFromString("1");
                                         map.put("type", mBodyType);
+                                        RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
+                                        map.put("userId", userId);
                                         RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
                                         map.put("name", mBody);
+                                        RequestBody mBodyTerritory = createPartFromString(territory_id);
+                                        map.put("territory", mBodyTerritory);
                                         RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
                                         map.put("mobile", mBodyMobile);
                                         RequestBody mBodyLay = createPartFromString(lat);
@@ -639,12 +671,14 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         RequestBody mBodyParent = createPartFromString(parentId);
                                         map.put("parrent_id", mBodyParent);
 
-                                        RequestBody mBodyTerritory = createPartFromString(territory_id);
-                                        map.put("territory", mBodyTerritory);
+
 
                                         RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                                                 ());
                                         map.put("dob", mBodyDob);
+
+
+
 
 
                                         Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
@@ -727,12 +761,111 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     }
 
 
+    private void populateEditDetails(){
+        if (complete_address != null && complete_address.length() > 0)
+            complete_address = complete_address.replaceAll(" ", "%20");
+
+        Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
+        RestCallback.EditCounterCallback mEditCounterCallback = mRetrofit.create(RestCallback.EditCounterCallback.class);
+        HashMap<String, RequestBody> map = new HashMap<>();
+        MultipartBody.Part body = null;
+        if(imageChanged) {
+            try {
+                body = prepareFilePart("image", filePath);
+                RequestBody new_image = createPartFromString("1");
+                map.put("new_image", new_image);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }else{
+            RequestBody new_image = createPartFromString("0");
+            map.put("new_image", new_image);
+        }
+
+        RequestBody mBodyType = createPartFromString("1");
+        map.put("type", mBodyType);
+        RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
+        map.put("id", userId);
+        RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
+        map.put("name", mBody);
+        RequestBody mBodyTerritory = createPartFromString(territory_id);
+        map.put("territory", mBodyTerritory);
+        RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
+        map.put("mobile", mBodyMobile);
+        RequestBody mBodyLay = createPartFromString(lat);
+        map.put("latitude", mBodyLay);
+        RequestBody mBodyLng = createPartFromString(longitude);
+        map.put("longitde", mBodyLng);
+        RequestBody mBodyAddress = createPartFromString(complete_address);
+        map.put("address", mBodyAddress);
+        RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
+                ().trim());
+        map.put("email", mBodyEmail);
+        RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString
+                ().trim());
+        map.put("bank_name", mBodyBank);
+
+        RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
+        map.put("account_no", mBodyAccount);
+
+        RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString
+                ().trim());
+        map.put("ifsc_code", mBodyIfsc);
+
+        RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
+        map.put("counter_size", mBodyCounter);
+
+        RequestBody mBodyParent = createPartFromString(parentId);
+        map.put("parrent_id", mBodyParent);
+
+
+
+        RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
+                ());
+        map.put("dob", mBodyDob);
+
+
+
+
+
+        Call<ResponseBody> mCall = mEditCounterCallback.onEditCounterResponse(map, body);
+        mCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Log.i("", "onResponse: ");
+                    if (response.code() == 200) {
+                        AddCounter.this.finish();
+                    }
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                try {
+                    Log.i("", "onResponse: ");
+                    if (t instanceof SocketTimeoutException || t instanceof
+                            ConnectException || t instanceof UnknownHostException) {
+                        Toast.makeText(getBaseContext(), "Please check your network " +
+                                "connection", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(AddCounter.this);
         builder.setTitle("Add Photo!");
+        imageChanged = true;
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -749,6 +882,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                         galleryIntent();
 
                 } else if (items[item].equals("Cancel")) {
+                    imageChanged = false;
                     dialog.dismiss();
                 }
             }

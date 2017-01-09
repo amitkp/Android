@@ -117,6 +117,7 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
                         list.setAnniversary(HttpConnectionUrl.getJSONKeyvalue(object, "anniversary"));
                         list.setParrent_id(HttpConnectionUrl.getJSONKeyvalue(object, "parrent_id"));
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
+                        list.setImage(HttpConnectionUrl.getJSONKeyvalue(object, "image"));
                         arrayList.add(list);
 
                     }
