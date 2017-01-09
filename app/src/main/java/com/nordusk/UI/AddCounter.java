@@ -64,8 +64,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -241,7 +244,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                     if (response.length >= 2) {
                         for (int i = 0; i < auto_territory.size(); i++) {
                             if (response[1].equals(auto_territory.get(i).getId())) {
-                                auto_text_territory.setText(auto_territory.get(i).getName()+"-" + auto_territory.get(i)
+                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i)
                                         .getId());
                                 territory_id = auto_territory.get(i).getId();
                             }
@@ -249,7 +252,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                     } else if (response.length == 1) {
                         for (int i = 0; i < auto_territory.size(); i++) {
                             if (response[0].equals(auto_territory.get(i).getId())) {
-                                auto_text_territory.setText(auto_territory.get(i).getName()+"-" + auto_territory.get(i)
+                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i)
                                         .getId());
                                 territory_id = auto_territory.get(i).getId();
                             }
@@ -648,12 +651,29 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         mCall.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                Log.i("", "onResponse: ");
+                                                try {
+                                                    Log.i("", "onResponse: ");
+                                                    if (response.code() == 200) {
+                                                        AddCounter.this.finish();
+                                                    }
+                                                } catch (NullPointerException npe) {
+                                                    npe.printStackTrace();
+                                                }
+
                                             }
 
                                             @Override
                                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                Log.i("", "onResponse: ");
+                                                try {
+                                                    Log.i("", "onResponse: ");
+                                                    if (t instanceof SocketTimeoutException || t instanceof
+                                                            ConnectException || t instanceof UnknownHostException) {
+                                                        Toast.makeText(getBaseContext(), "Please check your network " +
+                                                                "connection", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } catch (NullPointerException npe) {
+                                                    npe.printStackTrace();
+                                                }
                                             }
                                         });
 
@@ -876,8 +896,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     public String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
