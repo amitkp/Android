@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.pojo.DataDistributor;
+import com.nordusk.utility.FileUtils;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
@@ -44,6 +46,8 @@ import com.nordusk.webservices.ParentIdAsync;
 import com.nordusk.webservices.TerritoryAsync;
 import com.nordusk.webservices.UserTrace;
 import com.nordusk.webservices.rest.EditCounterDistributorAsync;
+import com.nordusk.webservices.rest.RestCallback;
+import com.nordusk.webservices.rest.WebApiClient;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -59,6 +63,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,10 +76,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class AddCounter extends AppCompatActivity implements LocationListener {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_territory, edt_aniversary,
-            edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
+    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno,
+            edt_emailid, edt_territory, edt_aniversary, edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
     private Button submit;
     private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
@@ -225,7 +244,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                     if (response.length >= 2) {
                         for (int i = 0; i < auto_territory.size(); i++) {
                             if (response[1].equals(auto_territory.get(i).getId())) {
-                                auto_text_territory.setText(auto_territory.get(i).getName()+"-" + auto_territory.get(i)
+                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i)
                                         .getId());
                                 territory_id = auto_territory.get(i).getId();
                             }
@@ -233,7 +252,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                     } else if (response.length == 1) {
                         for (int i = 0; i < auto_territory.size(); i++) {
                             if (response[0].equals(auto_territory.get(i).getId())) {
-                                auto_text_territory.setText(auto_territory.get(i).getName()+"-" + auto_territory.get(i)
+                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i)
                                         .getId());
                                 territory_id = auto_territory.get(i).getId();
                             }
@@ -577,30 +596,111 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
                                         if (complete_address != null && complete_address.length() > 0)
                                             complete_address = complete_address.replaceAll(" ", "%20");
-                                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
-                                                edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(),
-                                                lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-                                                parentId, path.trim().replaceAll(" ", ""), territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
-                                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+
+                                        Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
+                                        RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
+
+                                        MultipartBody.Part body = null;
+                                        try {
+                                            body = prepareFilePart("image", filePath);
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                        HashMap<String, RequestBody> map = new HashMap<>();
+                                        RequestBody mBodyType = createPartFromString("1");
+                                        map.put("type", mBodyType);
+                                        RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
+                                        map.put("name", mBody);
+                                        RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
+                                        map.put("mobile", mBodyMobile);
+                                        RequestBody mBodyLay = createPartFromString(lat);
+                                        map.put("latitude", mBodyLay);
+                                        RequestBody mBodyLng = createPartFromString(longitude);
+                                        map.put("longitde", mBodyLng);
+                                        RequestBody mBodyAddress = createPartFromString(complete_address);
+                                        map.put("address", mBodyAddress);
+                                        RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
+                                                ().trim());
+                                        map.put("email", mBodyEmail);
+                                        RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString
+                                                ().trim());
+                                        map.put("bank_name", mBodyBank);
+
+                                        RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
+                                        map.put("account_no", mBodyAccount);
+
+                                        RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString
+                                                ().trim());
+                                        map.put("ifsc_code", mBodyIfsc);
+
+                                        RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
+                                        map.put("counter_size", mBodyCounter);
+
+                                        RequestBody mBodyParent = createPartFromString(parentId);
+                                        map.put("parrent_id", mBodyParent);
+
+                                        RequestBody mBodyTerritory = createPartFromString(territory_id);
+                                        map.put("territory", mBodyTerritory);
+
+                                        RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
+                                                ());
+                                        map.put("dob", mBodyDob);
+
+
+                                        Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
+                                        mCall.enqueue(new Callback<ResponseBody>() {
                                             @Override
-                                            public void OnSuccess(String responsecode) {
-                                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-                                                finish();
+                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                try {
+                                                    Log.i("", "onResponse: ");
+                                                    if (response.code() == 200) {
+                                                        AddCounter.this.finish();
+                                                    }
+                                                } catch (NullPointerException npe) {
+                                                    npe.printStackTrace();
+                                                }
+
                                             }
 
                                             @Override
-                                            public void OnError(String str_err) {
-                                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void OnConnectTimeout() {
-
+                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                try {
+                                                    Log.i("", "onResponse: ");
+                                                    if (t instanceof SocketTimeoutException || t instanceof
+                                                            ConnectException || t instanceof UnknownHostException) {
+                                                        Toast.makeText(getBaseContext(), "Please check your network " +
+                                                                "connection", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                } catch (NullPointerException npe) {
+                                                    npe.printStackTrace();
+                                                }
                                             }
                                         });
 
-                                        addCounterAsync.execute();
+//                                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
+//                                                edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(),
+//                                                lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+//                                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
+//                                                parentId, path.trim().replaceAll(" ", ""), territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+//                                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+//                                            @Override
+//                                            public void OnSuccess(String responsecode) {
+//                                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+//                                                finish();
+//                                            }
+//
+//                                            @Override
+//                                            public void OnError(String str_err) {
+//                                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+//                                            }
+//
+//                                            @Override
+//                                            public void OnConnectTimeout() {
+//
+//                                            }
+//                                        });
+
+//                                        addCounterAsync.execute();
                                     }
 
                                 } else {
@@ -769,6 +869,43 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         cursor.close();
 
         return path;
+    }
+
+    public static final String MULTIPART_FORM_DATA = "multipart/form-data";
+
+    @NonNull
+    private RequestBody createPartFromString(String descriptionString) {
+        return RequestBody.create(
+                MediaType.parse(MULTIPART_FORM_DATA), descriptionString);
+    }
+
+    @NonNull
+    private MultipartBody.Part prepareFilePart(String partName, Uri path) throws URISyntaxException {
+        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+        // use the FileUtils to get the actual file by uri
+        File file = FileUtils.getFile(this, path);
+
+        // create RequestBody instance from file
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse(MULTIPART_FORM_DATA), file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+    }
+
+    public String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 
 }

@@ -106,5 +106,6 @@
     <string name="please_enter_amount">Please enter amount</string>
     <string name="please_enter_validdate">Please enter valid date</string>
     <string name="target">Achieved Amount \u20B9</string>
+    <string name="internal_storage">Internal Storage</string>
 
 </resources>
