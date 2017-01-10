@@ -527,26 +527,6 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     }
 
 
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String[] permissions,
-//                                           int[] grantResults) {
-//        if (requestCode == REQUEST_LOCATION) {
-//
-//            if (grantResults.length == 1
-//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                // We can now safely use the API we requested access to
-//
-//            } else {
-//                // Permission was denied or request was cancelled
-//                finish();
-//            }
-//
-//
-//        } else {
-//            // Permission was denied or request was cancelled
-//        }
-//    }
-
 
     private void validateInputs() {
 
@@ -561,8 +541,12 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
 
                                     if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
-                                        String[] separated = auto_text.getText().toString().trim().split("-");
-                                        parentId = separated[1].toString();
+                                        String validation = auto_text.getText().toString();
+                                        if(validation.contains("-")){
+                                            String[] separated = auto_text.getText().toString().trim().split("-");
+                                            parentId = separated[1].toString();
+                                        }
+                                        else parentId = validation;
                                     }
                                     String path = "";
                                     if (filePath != null) {
@@ -578,52 +562,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                                 territory_id = auto_territory.get(i).getId();
                                             }
                                         }
-                                        //if (complete_address != null && complete_address.length() > 0)
-                                          //  complete_address = complete_address.replaceAll(" ", "%20");
                                         populateEditDetails();
-                                        /*EditCounterDistributorAsync editCounterAsync;
-                                        if(imageChanged) {
-                                            editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1",
-                                                    edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
-                                                    edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"),
-                                                    edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                                    edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                                    edt_countersize.getText().toString().trim(), parentId, filePath.toString(), territory_id, edt_aniversary.getText().toString(),
-                                                    edt_dob.getText().toString(), id, null);
-                                        }else{
-                                            editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1",
-                                                    edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
-                                                    edt_mobileno.getText().toString().trim(), lat, longitude, edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"),
-                                                    edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-                                                    edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
-                                                    edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(),
-                                                    edt_dob.getText().toString(), id, null);
-                                        }
-                                        editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
-                                            @Override
-                                            public void OnSuccess(String responsecode) {
-                                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-                                                finish();
-                                            }
+                                        } else {
 
-                                            @Override
-                                            public void OnError(String str_err) {
-                                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void OnConnectTimeout() {
-
-                                            }
-                                        });
-
-                                        editCounterAsync.execute();*/
-//                    } else {
-//                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
-//                    }
-                                    } else {
-
-                                        //  "type=" + type + "&name=" + countername + "&address=" + address + "&territory=" + territory + "&anniversary=" + aniversery + "&dob=" + dob + "&mobile=" + mobile + "&alternative_mobile=" + mobile + "&email=" + email + "&latitude=" + lattitude + "&longitude=" + longitude + "&userId=" + new Prefs(context).getString("userid", "") + "&parrent_id=" + parntid + "&bank_name=" + Bankname + "&account_no=" + Accno + "&ifsc_code" + ifsc + "&counter_size=" + countersize + ""
+                                        mpProgressDialog = new ProgressDialog(AddCounter.this);
+                                        mpProgressDialog.setMessage("Adding Counter..");
+                                        mpProgressDialog.show();
+                                        mpProgressDialog.setCancelable(false);
 
                                         if (complete_address != null && complete_address.length() > 0)
                                             complete_address = complete_address.replaceAll(" ", "%20");
@@ -632,10 +577,14 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
 
                                         MultipartBody.Part body = null;
-                                        try {
-                                            body = prepareFilePart("image", filePath);
-                                        } catch (URISyntaxException e) {
-                                            e.printStackTrace();
+                                        if (imageChanged) {
+                                            try {
+
+                                                body = prepareFilePart("image", filePath);
+                                            } catch (Exception e) {
+                                                Log.e("Image", "Null image");
+                                                e.printStackTrace();
+                                            }
                                         }
                                         HashMap<String, RequestBody> map = new HashMap<>();
                                         RequestBody mBodyType = createPartFromString("1");
@@ -688,56 +637,35 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         mCall.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                                                    mpProgressDialog.dismiss();
                                                 try {
                                                     Log.i("", "onResponse: ");
                                                     if (response.code() == 200) {
-                                                        AddCounter.this.finish();
+                                                        Toast.makeText(AddCounter.this,"Success",Toast.LENGTH_SHORT).show();
                                                     }
-                                                } catch (NullPointerException npe) {
+                                                } catch (Exception npe) {
                                                     npe.printStackTrace();
                                                 }
-
+                                                AddCounter.this.finish();
                                             }
 
                                             @Override
                                             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                                                    mpProgressDialog.dismiss();
                                                 try {
                                                     Log.i("", "onResponse: ");
                                                     if (t instanceof SocketTimeoutException || t instanceof
                                                             ConnectException || t instanceof UnknownHostException) {
-                                                        Toast.makeText(getBaseContext(), "Please check your network " +
-                                                                "connection", Toast.LENGTH_SHORT).show();
+                                                        Log.e("TimeOut",t.getMessage());
                                                     }
-                                                } catch (NullPointerException npe) {
+                                                } catch (Exception npe) {
                                                     npe.printStackTrace();
                                                 }
+                                                AddCounter.this.finish();
                                             }
                                         });
-
-//                                        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
-//                                                edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(),
-//                                                lat, longitude, complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
-//                                                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
-//                                                parentId, path.trim().replaceAll(" ", ""), territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
-//                                        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
-//                                            @Override
-//                                            public void OnSuccess(String responsecode) {
-//                                                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
-//                                                finish();
-//                                            }
-//
-//                                            @Override
-//                                            public void OnError(String str_err) {
-//                                                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
-//                                            }
-//
-//                                            @Override
-//                                            public void OnConnectTimeout() {
-//
-//                                            }
-//                                        });
-
-//                                        addCounterAsync.execute();
                                     }
 
                                 } else {
@@ -768,7 +696,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         mpProgressDialog = new ProgressDialog(AddCounter.this);
         mpProgressDialog.setMessage("Updating Counter..");
         mpProgressDialog.show();
-        mpProgressDialog.setCancelable(true);
+        mpProgressDialog.setCancelable(false);
 
         Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
         RestCallback.EditCounterCallback mEditCounterCallback = mRetrofit.create(RestCallback.EditCounterCallback.class);
@@ -845,32 +773,28 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 try {
                     Log.i("", "onResponse: ");
                     if (response.code() == 200) {
-                        AddCounter.this.finish();
-                    }else{
-                        Toast.makeText(AddCounter.this,"Server Error",Toast.LENGTH_SHORT);
-                        //AddCounter.this.finish();
+                        Toast.makeText(AddCounter.this,"Success",Toast.LENGTH_SHORT).show();
                     }
-                } catch (NullPointerException npe) {
-                    npe.printStackTrace();
-                    Toast.makeText(AddCounter.this,"Null Data",Toast.LENGTH_SHORT);
                 } catch (Exception e){
-                    Toast.makeText(AddCounter.this,""+e.getMessage().toString(),Toast.LENGTH_SHORT);
+                    e.printStackTrace();
                 }
-
+                AddCounter.this.finish();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
                 try {
                     Log.i("", "onResponse: ");
                     if (t instanceof SocketTimeoutException || t instanceof
                             ConnectException || t instanceof UnknownHostException) {
-                        Toast.makeText(getBaseContext(), "Please check your network " +
-                                "connection", Toast.LENGTH_SHORT).show();
+                        Log.e("TimeOut",t.getMessage());
                     }
-                } catch (NullPointerException npe) {
+                } catch (Exception npe) {
                     npe.printStackTrace();
                 }
+                AddCounter.this.finish();
             }
         });
     }
