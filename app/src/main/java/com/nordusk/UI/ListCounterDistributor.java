@@ -65,10 +65,14 @@ public class ListCounterDistributor extends AppCompatActivity {
                 JsonElement jelement = new JsonParser().parse(response);
                 JsonObject mJson = jelement.getAsJsonObject();
                 JsonArray mNewArray = mJson.getAsJsonArray("list");
+                String fetchData = mNewArray.toString();
+                String updatedData = fetchData.replaceAll("%20"," ");
+                Log.e("Space before",fetchData);
+                Log.e("Space before",updatedData);
                 Gson mGson = new Gson();
                 Type listType = new TypeToken<List<DataDistributor>>() {
                 }.getType();
-                ArrayList<DataDistributor> mListDistributor = mGson.fromJson(mNewArray.toString(), listType);
+                ArrayList<DataDistributor> mListDistributor = mGson.fromJson(updatedData, listType);
                 Log.i(getClass().getSimpleName(), "onResponseData: " + mListDistributor.size());
 
                 CounterDistributorListAdapter counterDistributorListAdapter=new CounterDistributorListAdapter(ListCounterDistributor.this,mListDistributor,type);

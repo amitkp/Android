@@ -2,6 +2,7 @@ package com.nordusk.UI;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -117,6 +118,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private String territory_id = "";
     String parentId = "";
     private boolean imageChanged = false;
+    private ProgressDialog mpProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +167,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     }
 
     private void fetchData() {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
         ImageLoader imageLoader = ImageLoader.getInstance();
         if (dataDistributor.getName() != null)
             imageLoader.displayImage(dataDistributor.getImage(), img_pic);
@@ -414,8 +418,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         auto_text = (AutoCompleteTextView) findViewById(R.id.auto_text);
         if (call_from.equalsIgnoreCase("edit")) {
             submit.setText("Update");
-            ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-            ImageLoader.getInstance().init(config);
+
 
         }
         else
@@ -762,6 +765,11 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
 
     private void populateEditDetails(){
+        mpProgressDialog = new ProgressDialog(AddCounter.this);
+        mpProgressDialog.setMessage("Updating Counter..");
+        mpProgressDialog.show();
+        mpProgressDialog.setCancelable(true);
+
         if (complete_address != null && complete_address.length() > 0)
             complete_address = complete_address.replaceAll(" ", "%20");
 
@@ -784,18 +792,20 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
         RequestBody mBodyType = createPartFromString("1");
         map.put("type", mBodyType);
-        RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
-        map.put("id", userId);
+        /*RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
+        map.put("userId", userId);*/
+        RequestBody id = createPartFromString(dataDistributor.getId());
+        map.put("id", id);
         RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
         map.put("name", mBody);
         RequestBody mBodyTerritory = createPartFromString(territory_id);
         map.put("territory", mBodyTerritory);
         RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
         map.put("mobile", mBodyMobile);
-        RequestBody mBodyLay = createPartFromString(lat);
+        /*RequestBody mBodyLay = createPartFromString(lat);
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
-        map.put("longitde", mBodyLng);
+        map.put("longitde", mBodyLng);*/
         RequestBody mBodyAddress = createPartFromString(complete_address);
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
@@ -830,15 +840,24 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
         Call<ResponseBody> mCall = mEditCounterCallback.onEditCounterResponse(map, body);
         mCall.enqueue(new Callback<ResponseBody>() {
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
                 try {
                     Log.i("", "onResponse: ");
                     if (response.code() == 200) {
                         AddCounter.this.finish();
+                    }else{
+                        Toast.makeText(AddCounter.this,"Server Error",Toast.LENGTH_SHORT);
+                        //AddCounter.this.finish();
                     }
                 } catch (NullPointerException npe) {
                     npe.printStackTrace();
+                    Toast.makeText(AddCounter.this,"Null Data",Toast.LENGTH_SHORT);
+                } catch (Exception e){
+                    Toast.makeText(AddCounter.this,""+e.getMessage().toString(),Toast.LENGTH_SHORT);
                 }
 
             }
