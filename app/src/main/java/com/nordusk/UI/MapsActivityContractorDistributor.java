@@ -184,13 +184,10 @@ public class MapsActivityContractorDistributor extends AppCompatActivity impleme
 
         this.mList = mListResponse;
         for (int i = 0; i < mList.size(); i++) {
-            if(mList.get(i).getLatitude()!=null && mList.get(i).getLatitude().length()>0
-                    && mList.get(i).getLongitude()!=null && mList.get(i).getLongitude().length()>0) {
-                LatLng mLatLng = new LatLng((Double.parseDouble(mList.get(i).getLatitude())),
-                        Double.parseDouble(mList.get(i).getLongitude()));
+            if(mList.get(i).getLatitude()!=null && mList.get(i).getLatitude().length()>0 && mList.get(i).getLongitude()!=null && mList.get(i).getLongitude().length()>0) {
+                LatLng mLatLng = new LatLng((Double.parseDouble(mList.get(i).getLatitude())),Double.parseDouble(mList.get(i).getLongitude()));
 
-                Marker marker = mMap.addMarker(new MarkerOptions().position(mLatLng).
-                        icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_point)));
+                Marker marker = mMap.addMarker(new MarkerOptions().position(mLatLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_pin_point)));
                 String json = mGson.toJson(mList.get(i));
                 marker.setTitle(json);
                 marker.showInfoWindow();

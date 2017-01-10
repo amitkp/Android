@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.nordusk.R;
 import com.nordusk.pojo.DataDistributor;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 /**
  * Created by gouravkundu on 11/12/16.
@@ -24,8 +26,11 @@ public class ViewMarkerWindow extends FrameLayout implements View.OnClickListene
 
     private TextView tv_name, tv_address, tv_ph, tv_edit;
     private ImageView iv;
-
+    private Context context;
     private RelativeLayout rl_call;
+
+    private ImageLoaderConfiguration config;
+    private ImageLoader imageLoader;
 
 //    private SearchPointItemModel pointItemModel;
 
@@ -33,6 +38,7 @@ public class ViewMarkerWindow extends FrameLayout implements View.OnClickListene
 
     public ViewMarkerWindow(Context context) {
         super(context);
+        this.context = context;
         initView();
     }
 
@@ -78,6 +84,13 @@ public class ViewMarkerWindow extends FrameLayout implements View.OnClickListene
         tv_name.setText(model.getName());
         tv_address.setText(model.getAddress());
         tv_ph.setText(model.getMobile());
+
+        config = new ImageLoaderConfiguration.Builder(context).build();
+        ImageLoader.getInstance().init(config);
+        imageLoader = ImageLoader.getInstance();
+        if (model.getImage() != null)
+            imageLoader.displayImage(model.getImage(), iv);
+
         Glide.with(getContext())
                 .load(model.getImage())
                 .centerCrop().crossFade()

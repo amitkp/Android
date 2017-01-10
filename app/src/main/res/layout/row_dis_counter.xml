@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -11,13 +12,21 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
 
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:srcCompat="@mipmap/ic_counter"
+            android:layout_margin="5dp"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/imageView2"
+            android:scaleType="fitXY"
+            />
+
         <TextView
             android:id="@+id/txt_name"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/btn_call"
+            android:layout_toRightOf="@+id/imageView2"
             android:layout_margin="@dimen/dp_10"
             android:text="Name">
         </TextView>
@@ -26,8 +35,8 @@
             android:id="@+id/txt_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@+id/txt_name"
+            android:layout_toRightOf="@+id/imageView2"
             android:layout_margin="@dimen/dp_10"
             android:text="Address">
         </TextView>
@@ -37,12 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txt_address"
-            android:layout_marginLeft="@dimen/dp_10"
-            android:layout_marginRight="@dimen/dp_10"
             android:layout_marginTop="5dp"
             android:text="Edit"
-            android:layout_alignParentRight="true"
-            android:textSize="10sp"
+            android:layout_toRightOf="@+id/btn_call"
+            android:textSize="9sp"
             android:textColor="@android:color/white"
             android:background="@color/colorAccent">
         </Button>
@@ -53,10 +60,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_below="@+id/txt_address"
-            android:layout_toLeftOf="@+id/btn_edit"
+            android:layout_toRightOf="@+id/btn_order"
+            android:layout_marginRight="5dp"
             android:background="@color/colorAccent"
             android:text="Call"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textColor="@android:color/white"
             >
         </Button>
@@ -66,15 +74,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
             android:layout_below="@+id/txt_address"
-            android:layout_toLeftOf="@+id/btn_call"
+            android:layout_toRightOf="@+id/imageView2"
             android:background="@color/colorAccent"
             android:text="Create Order"
-            android:textSize="10sp"
-            android:layout_marginRight="@dimen/dp_10"
+            android:textSize="9sp"
             android:textColor="@android:color/white"
             >
         </Button>
+
+
     </RelativeLayout>
 
 

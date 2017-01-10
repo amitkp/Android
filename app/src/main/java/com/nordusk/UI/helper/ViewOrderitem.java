@@ -60,7 +60,6 @@ public class ViewOrderitem extends FrameLayout {
         tv_name.setText(mDataOrder.getName());
         tv_date.setText(getStringFromResource(R.string.date) + ":" + mDataOrder.getDateTime());
         tv_amount.setText(getStringFromResource(R.string.rs) + mDataOrder.getTotalPrice());
-
         ll.removeAllViews();
 
         for (int i = 0; i < mDataOrder.getItems().size(); i++) {

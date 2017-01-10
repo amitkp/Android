@@ -170,7 +170,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
         ImageLoader imageLoader = ImageLoader.getInstance();
-        if (dataDistributor.getName() != null)
+        if (dataDistributor.getImage() != null)
             imageLoader.displayImage(dataDistributor.getImage(), img_pic);
         if (dataDistributor.getName() != null)
             edt_countername.setText(dataDistributor.getName());
@@ -770,9 +770,6 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         mpProgressDialog.show();
         mpProgressDialog.setCancelable(true);
 
-        if (complete_address != null && complete_address.length() > 0)
-            complete_address = complete_address.replaceAll(" ", "%20");
-
         Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
         RestCallback.EditCounterCallback mEditCounterCallback = mRetrofit.create(RestCallback.EditCounterCallback.class);
         HashMap<String, RequestBody> map = new HashMap<>();
@@ -806,7 +803,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
         map.put("longitde", mBodyLng);*/
-        RequestBody mBodyAddress = createPartFromString(complete_address);
+        RequestBody mBodyAddress = createPartFromString(edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
                 ().trim());

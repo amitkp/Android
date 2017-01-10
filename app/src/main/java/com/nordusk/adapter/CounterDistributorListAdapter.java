@@ -5,6 +5,7 @@ import android.app.Activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -27,6 +28,12 @@ import com.nordusk.pojo.DataDistributor;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.utils.ImageSizeUtils;
 
 public class CounterDistributorListAdapter extends BaseAdapter {
 
@@ -36,13 +43,25 @@ public class CounterDistributorListAdapter extends BaseAdapter {
     private ArrayList<DataDistributor> arr_datacounterdis;
     private String calling_tag = "";
     private  String type="";
-
+    private ImageLoaderConfiguration config;
+    private ImageLoader imageLoader;
+    private DisplayImageOptions options;
 
     public CounterDistributorListAdapter(Activity context, ArrayList<DataDistributor> arr_datacounterdis, String type) {
         this.context = context;
         this.arr_datacounterdis = arr_datacounterdis;
         this.calling_tag = calling_tag;
         this.type=type;
+        config = new ImageLoaderConfiguration.Builder(context).build();
+        ImageLoader.getInstance().init(config);
+        imageLoader = ImageLoader.getInstance();
+
+        options = new DisplayImageOptions.Builder()
+                .showImageOnFail(R.mipmap.ic_counter).displayer(new RoundedBitmapDisplayer(100))
+                .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+                .cacheInMemory(true)
+                .cacheOnDisc(true).bitmapConfig(Bitmap.Config.RGB_565).build();
+
 
         this.mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
@@ -75,7 +94,7 @@ public class CounterDistributorListAdapter extends BaseAdapter {
             holder.btn_order=(Button)convertView.findViewById(R.id.btn_order);
             holder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
             holder.txt_address = (TextView) convertView.findViewById(R.id.txt_address);
-
+            holder.iv_collect = (ImageView) convertView.findViewById(R.id.imageView2);
 
             holder.btn_call = (Button) convertView.findViewById(R.id.btn_call);
             convertView.setTag(holder);
@@ -88,7 +107,8 @@ public class CounterDistributorListAdapter extends BaseAdapter {
         if (dataDistributor != null) {
             holder.txt_name.setText("Name : "+dataDistributor.getName());
             holder.txt_address.setText("Address : "+dataDistributor.getAddress());
-
+            if (dataDistributor.getImage() != null)
+                imageLoader.displayImage(dataDistributor.getImage(), holder.iv_collect,options);
         }
 
 

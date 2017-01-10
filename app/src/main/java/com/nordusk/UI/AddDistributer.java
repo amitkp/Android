@@ -172,7 +172,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
         ImageLoader imageLoader = ImageLoader.getInstance();
-        if (dataDistributor.getName() != null)
+        if (dataDistributor.getImage() != null)
             imageLoader.displayImage(dataDistributor.getImage(), img_pic);
         if (dataDistributor.getName() != null)
             edt_countername.setText(dataDistributor.getName());
@@ -794,7 +794,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
         map.put("longitde", mBodyLng);*/
-        RequestBody mBodyAddress = createPartFromString(complete_address);
+        RequestBody mBodyAddress = createPartFromString(edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
                 ().trim());
