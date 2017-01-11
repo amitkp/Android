@@ -613,7 +613,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                     }
                                 }
                                 HashMap<String, RequestBody> map = new HashMap<>();
-                                RequestBody mBodyType = createPartFromString("2");
+                                RequestBody mBodyType = createPartFromString(type);
                                 map.put("type", mBodyType);
                                 RequestBody userId = createPartFromString(new Prefs(AddDistributer.this).getString("userid", ""));
                                 map.put("userId", userId);
