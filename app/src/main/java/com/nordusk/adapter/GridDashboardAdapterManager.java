@@ -62,7 +62,8 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             R.mipmap.ic_track, R.mipmap.ic_teritory,
             R.mipmap.ic_create_target, R.mipmap.ic_target_list,
             R.mipmap.ic_attendance, R.mipmap.ic_order_vs_bill,
-            R.mipmap.ic_daily_track, R.mipmap.ic_notice};
+            R.mipmap.ic_daily_track, R.mipmap.ic_notice,
+            R.mipmap.ic_target_list};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -144,6 +145,8 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     dailyTrackingReport();
                 } else if (position == 9){
                     createNotice();
+                } else if (position == 10){
+                    targetTrackingSPDialog();
                 }
 
 
@@ -882,5 +885,69 @@ public class GridDashboardAdapterManager extends BaseAdapter {
     private void createNotice(){
         Intent intent = new Intent(mContext, CreateNoticeManager.class);
         mContext.startActivity(intent);
+    }
+
+    private void targetTrackingSPDialog() {
+        final AutoCompleteTextView login_edtxt_emailmobile;
+        final Button btn_save;
+
+        final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,android.R.style.Theme_DeviceDefault_Light_Dialog);
+        mDialog_SelectSelectAccount.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Window window = mDialog_SelectSelectAccount.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        mDialog_SelectSelectAccount.setCancelable(true);
+        mDialog_SelectSelectAccount.setContentView(R.layout.dialog_target_tracking_sp);
+        mDialog_SelectSelectAccount.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        login_edtxt_emailmobile = (AutoCompleteTextView) mDialog_SelectSelectAccount.findViewById(R.id.login_edtxt_emailmobile);
+        btn_save = (Button) mDialog_SelectSelectAccount.findViewById(R.id.btn_save);
+
+
+        if (name_list.size() < 1) {
+            for (int i = 0; i < Util.getUserList().size(); i++) {
+                name_list.add(Util.getUserList().get(i).getName());
+            }
+        }
+
+        if (name_list != null && name_list.size() > 0) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_dropdown_item_1line, name_list);
+            login_edtxt_emailmobile.setAdapter(adapter);
+        }
+
+
+        login_edtxt_emailmobile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String name = "";
+                name = parent.getItemAtPosition(position).toString();
+                for (int i = 0; i < Util.getUserList().size(); i++) {
+                    if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
+                        sp_id = Util.getUserList().get(i).getId();
+                    }
+                }
+
+            }
+        });
+
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sp_id != null && sp_id.length() > 0) {
+                    Intent intent = new Intent(mContext, ActivityTargetList.class);
+                    intent.putExtra("id", sp_id);
+                    mContext.startActivity(intent);
+                    Log.e("UserID","Dashboard-"+sp_id);
+
+                } else {
+                    Toast.makeText(mContext, "Please Sales Person name", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mDialog_SelectSelectAccount.show();
+
     }
 }

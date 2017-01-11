@@ -81,6 +81,7 @@
         <item>@string/order_vs_bill</item>
         <item>@string/daily_tracking</item>
         <item>@string/create_notice</item>
+        <item>Target Tracking SP</item>
     </array>
 
     <array name="options_dashboard_admin">

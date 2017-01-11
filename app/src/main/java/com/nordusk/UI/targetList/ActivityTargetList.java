@@ -35,13 +35,22 @@ public class ActivityTargetList extends AppCompatActivity
 
     private TextView tv_date,total_target,total_target_achieved;
     private RecyclerView rv;
+    private String sp_id;
     private TargetListPresenter.OnUserInteractionListener mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_target_list);
-        mPresenter = new TargetListPresenterImpl(this, getBaseContext());
+        if(getIntent().getStringExtra("id")!=null && getIntent().getStringExtra("id").length()>0)
+            sp_id=getIntent().getStringExtra("id");
+        if(sp_id != null && !sp_id.equals("")){
+            mPresenter = new TargetListPresenterImpl(this, getBaseContext(),sp_id);
+            Log.e("UserID","ActivityTargetList-"+sp_id);
+        }else {
+            mPresenter = new TargetListPresenterImpl(this, getBaseContext(), "");
+            Log.e("UserID","ActivityTargetList-"+sp_id);
+        }
         initView();
     }
 
@@ -78,7 +87,7 @@ public class ActivityTargetList extends AppCompatActivity
         total_target.setText("");
         total_target_achieved.setText("");
         getAdapterImpl().updateTargetElements(new ArrayList<DataTarget>(), new ArrayList<String>());
-        mPresenter.onDateSelect(i + "-" + (i1 + 1), getBaseContext());
+        mPresenter.onDateSelect(i + "-" + (i1 + 1), getBaseContext(),sp_id);
     }
 
     @Override

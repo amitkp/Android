@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public interface TargetListPresenter {
     interface OnUserInteractionListener{
         void onActivityDestroyed();
-        void onDateSelect(String date, Context mContext);
+        void onDateSelect(String date, Context mContext, String id);
     }
 
     interface OnNotifyUiListener{

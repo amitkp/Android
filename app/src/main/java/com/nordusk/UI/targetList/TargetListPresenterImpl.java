@@ -40,12 +40,20 @@ public class TargetListPresenterImpl implements TargetListPresenter.OnUserIntera
 
     private TargetListPresenter.OnNotifyUiListener mInteractor;
     private String userId = "";
+    private boolean idChanged = false;
 
     public TargetListPresenterImpl(TargetListPresenter.OnNotifyUiListener mInteractor,
-                                   Context mContext) {
+                                   Context mContext, String userIdSP) {
 
         this.mInteractor = mInteractor;
-        userId = new Prefs(mContext).getString("userid", "");
+        if(!userIdSP.equals("")) {
+            userId = new Prefs(mContext).getString("userid", "");
+            Log.e("UserID","Impl Constructor-"+userId);
+        }else{
+            userId = userIdSP;
+            Log.e("UserID","Impl Constructor-"+userId);
+            idChanged = true;
+        }
     }
 
     @Override
@@ -54,8 +62,14 @@ public class TargetListPresenterImpl implements TargetListPresenter.OnUserIntera
     }
 
     @Override
-    public void onDateSelect(String date, Context mContext) {
+    public void onDateSelect(String date, Context mContext, String id) {
         if (!TextUtils.isEmpty(date)) {
+            if(id != null && id.length()>0){
+                userId = id;
+            }else{
+                userId = new Prefs(mContext).getString("userid", "");
+            }
+            Log.e("UserID","Impl Async-"+userId);
             Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(mContext));
             RestCallback.TargetListCallback mLoginCallback = mRetrofit.create(RestCallback.TargetListCallback.class);
             try {
