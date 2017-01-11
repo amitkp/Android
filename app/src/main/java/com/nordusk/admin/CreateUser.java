@@ -160,8 +160,7 @@ public class CreateUser extends AppCompatActivity {
 
             }
         });
-//API to Add Manager
-//http://dynamicsglobal.net/app/user_add_admin.php?username=samm&password=999999&name=sourabh&mobile_no=9046787811&designation_text=1st%20Line%20Manager&designation=2&state=1
+
         Button counterprofile_btn_submit = (Button) findViewById(R.id.counterprofile_btn_submit);
         counterprofile_btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
