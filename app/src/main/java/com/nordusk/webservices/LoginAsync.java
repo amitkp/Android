@@ -57,7 +57,7 @@ public class LoginAsync extends AsyncTask<Void, Void, Void> {
         try {
 
             if(lat != null && lat != 0.0 && lon != null && lon != 0.0) {
-                String url = context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url) + "username=" + Username + "&password=" + Password + "&deviceId=" + deviceId + "&latitude" + lat + "&longitude" + lon + "";
+                String url = context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.loginasync_url) + "username=" + Username + "&password=" + Password + "&deviceId=" + deviceId + "&latitude=" + lat + "&longitude=" + lon + "";
                 Log.e("Login URL",url);
                 String[] responsedata = HttpConnectionUrl.post(context, url, jsonObject);
                 isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ public class Splash extends AppCompatActivity {
     private Button btn_login;
     private boolean isGranted = false;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
-    private String date="";
+    private String date = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class Splash extends AppCompatActivity {
 
         }
 
-         date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
         initView();
         setListener();
@@ -93,21 +93,32 @@ public class Splash extends AppCompatActivity {
         userId = new Prefs(Splash.this).getString("userid", "");
         if (userId != null && userId.length() > 0) {
             if (Util.LAST_LOGIN_DATE != null && Util.LAST_LOGIN_DATE.length() > 0) {
-
-                new Handler().postDelayed(new Runnable() {
+                GetDate getdate = new GetDate();
+                getdate.setOnContentListParserListner(new GetDate.OnContentListSchedules() {
                     @Override
-                    public void run() {
+                    public void OnSuccess(String data) {
+                        date = data;
                         if (!date.equalsIgnoreCase(Util.LAST_LOGIN_DATE)) {
                             loginAsyncCall();
-                        }else{
+                        } else {
                             startActivity(new Intent(Splash.this, Dashboard.class));
                             finish();
                         }
                     }
-                },1000);
+                });
+                getdate.execute();
+
 
             } else {
-                Util.LAST_LOGIN_DATE = date;
+                GetDate getdate = new GetDate();
+                getdate.setOnContentListParserListner(new GetDate.OnContentListSchedules() {
+                    @Override
+                    public void OnSuccess(String data) {
+                        Util.LAST_LOGIN_DATE = data;
+                    }
+                });
+                getdate.execute();
+
             }
         }
     }
@@ -242,10 +253,10 @@ public class Splash extends AppCompatActivity {
 
         if (HttpConnectionUrl.isNetworkAvailable(Splash.this)) {
             GPSTracker gpsTracker = new GPSTracker(this);
-            if(gpsTracker.canGetLocation()){
+            if (gpsTracker.canGetLocation()) {
                 Double lat = gpsTracker.getLatitude();
                 Double lon = gpsTracker.getLongitude();
-                if(lat != null && lat != 0.0 && lon != null && lon != 0.0) {
+                if (lat != null && lat != 0.0 && lon != null && lon != 0.0) {
                     initView();
                     LoginAsync loginAsync = new LoginAsync(Splash.this, new Prefs(Splash.this).getString("UserName", ""), new Prefs(Splash.this).getString("Password", ""), null, lat, lon);
                     loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
@@ -275,7 +286,7 @@ public class Splash extends AppCompatActivity {
                 } else {
 
                 }
-            }else{
+            } else {
                 gpsTracker.showSettingsAlert();
 
             }
@@ -285,4 +296,6 @@ public class Splash extends AppCompatActivity {
             startActivity(new Intent(Splash.this, Login.class));
         }
     }
+
+
 }

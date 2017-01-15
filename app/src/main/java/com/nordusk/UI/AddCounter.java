@@ -539,6 +539,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
                                 if (!TextUtils.isEmpty(txt_current_loc.getText().toString().trim())) {
 
+                                    if(!TextUtils.isEmpty(edt_countersize.getText().toString().trim())){
+
 
                                     if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                                         String validation = auto_text.getText().toString();
@@ -600,7 +602,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         RequestBody mBodyLay = createPartFromString(lat);
                                         map.put("latitude", mBodyLay);
                                         RequestBody mBodyLng = createPartFromString(longitude);
-                                        map.put("longitde", mBodyLng);
+                                        map.put("longitude", mBodyLng);
                                         RequestBody mBodyAddress = createPartFromString(complete_address);
                                         map.put("address", mBodyAddress);
                                         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
@@ -628,6 +630,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                                                 ());
                                         map.put("dob", mBodyDob);
+
+                                        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
+                                                ());
+                                        map.put("anniversary", mBodyAniversary);
 
 
 
@@ -666,6 +672,9 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                                 AddCounter.this.finish();
                                             }
                                         });
+                                    }
+                                    }else{
+                                        Toast.makeText(AddCounter.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
                                     }
 
                                 } else {
@@ -758,6 +767,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                 ());
         map.put("dob", mBodyDob);
+
+        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
+                ());
+        map.put("anniversary", mBodyAniversary);
 
 
 

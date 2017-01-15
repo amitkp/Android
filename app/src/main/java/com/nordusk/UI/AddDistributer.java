@@ -565,7 +565,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                     if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
                         if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
 
-                            //  if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+                           if(!TextUtils.isEmpty(edt_countersize.getText().toString().trim())){
+
+
 
 
                             if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
@@ -626,7 +628,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                 RequestBody mBodyLay = createPartFromString(lat);
                                 map.put("latitude", mBodyLay);
                                 RequestBody mBodyLng = createPartFromString(longitude);
-                                map.put("longitde", mBodyLng);
+                                map.put("longitude", mBodyLng);
                                 RequestBody mBodyAddress = createPartFromString(complete_address);
                                 map.put("address", mBodyAddress);
                                 RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
@@ -654,6 +656,10 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                 RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                                         ());
                                 map.put("dob", mBodyDob);
+
+                                RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
+                                        ());
+                                map.put("anniversary", mBodyAniversary);
 
                                 Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
                                 mCall.enqueue(new Callback<ResponseBody>() {
@@ -693,6 +699,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
                             }
+                           }else{
+                               Toast.makeText(AddDistributer.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
+                           }
                         } else
                             Toast.makeText(AddDistributer.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
                     } else {
@@ -776,6 +785,10 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                 ());
         map.put("dob", mBodyDob);
+
+        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
+                ());
+        map.put("anniversary", mBodyAniversary);
 
 
 
