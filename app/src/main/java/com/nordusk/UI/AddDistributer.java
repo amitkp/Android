@@ -41,6 +41,7 @@ import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.pojo.DataDistributor;
 import com.nordusk.utility.FileUtils;
+import com.nordusk.utility.GPSTracker;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
@@ -82,10 +83,12 @@ import retrofit2.Retrofit;
 
 public class AddDistributer extends AppCompatActivity implements LocationListener {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary,
+    private EditText edt_countername, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary,
             edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
+//    private EditText edt_counteraddress;
     private Button submit;
-    private TextView txt_counterlocation_press, txt_current_loc, textView_imgselect;
+    private TextView  textView_imgselect;
+//    private TextView txt_current_loc,txt_counterlocation_press;
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
@@ -176,8 +179,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             imageLoader.displayImage(dataDistributor.getImage(), img_pic);
         if (dataDistributor.getName() != null)
             edt_countername.setText(dataDistributor.getName());
-        if (dataDistributor.getAddress() != null)
-            edt_counteraddress.setText(dataDistributor.getAddress());
+//        if (dataDistributor.getAddress() != null)
+//            edt_counteraddress.setText(dataDistributor.getAddress());
         if (dataDistributor.getMobile() != null)
             edt_mobileno.setText(dataDistributor.getMobile());
         if (dataDistributor.getTerritory() != null)
@@ -212,7 +215,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
         if (call_from.equalsIgnoreCase("edit")) {
             press_current_loc = true;
-            txt_counterlocation_press.setVisibility(View.GONE);
+//            txt_counterlocation_press.setVisibility(View.GONE);
             rd_type.setVisibility(View.GONE);
 
         }
@@ -295,10 +298,10 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                         type = "2";
 
                         edt_countername.setHint("Distributor name");
-                        edt_counteraddress.setHint("Distributor address");
+//                        edt_counteraddress.setHint("Distributor address");
                         ((TextView) findViewById(R.id.txt_hdr_counterphoto)).setText("Distributor photo");
-                        txt_counterlocation_press.setText("Distributor location : Tap to locate*");
-                        txt_current_loc.setText("Distributor location");
+//                        txt_counterlocation_press.setText("Distributor location : Tap to locate*");
+//                        txt_current_loc.setText("Distributor location");
                         edt_counterownername.setHint("Distributor owner name");
 
                         break;
@@ -307,10 +310,10 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                         type = "3";
 
                         edt_countername.setHint("Prime partner name");
-                        edt_counteraddress.setHint("Prime partner address");
+//                        edt_counteraddress.setHint("Prime partner address");
                         ((TextView) findViewById(R.id.txt_hdr_counterphoto)).setText("Prime partner photo");
-                        txt_counterlocation_press.setText("Prime partner location : Tap to locate*");
-                        txt_current_loc.setText("Prime partner location");
+//                        txt_counterlocation_press.setText("Prime partner location : Tap to locate*");
+//                        txt_current_loc.setText("Prime partner location");
                         edt_counterownername.setHint("Prime partner owner name");
 
                         break;
@@ -319,13 +322,13 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             }
         });
 
-        txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                press_current_loc = true;
-                txt_current_loc.setText(complete_address);
-            }
-        });
+//        txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                press_current_loc = true;
+//                txt_current_loc.setText(complete_address);
+//            }
+//        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -396,15 +399,15 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private void initView() {
         auto_text_territory = (AutoCompleteTextView) findViewById(R.id.distridtls_edtxt_territory);
         edt_countername = (EditText) findViewById(R.id.counterdtls_edtxt_name);
-        edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
+//        edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
         edt_dob = (EditText) findViewById(R.id.counterdtls_edtxt_dob);
         edt_aniversary = (EditText) findViewById(R.id.distridtls_edtxt_anniversary);
         edt_mobileno = (EditText) findViewById(R.id.dis_edtxt_mobilenumber);
         edt_emailid = (EditText) findViewById(R.id.distributor_edtxt_emailid);
 
-        txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
-        txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
+//        txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
+//        txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit = (Button) findViewById(R.id.counterprofile_btn_submit);
         if (call_from.equalsIgnoreCase("edit")) {
             submit.setText("Update");
@@ -515,13 +518,13 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                 complete_address = TextUtils.join(System.getProperty("line.separator"),
                         addressFragments).replaceAll("\\s+", "");
 
-                if (press_current_loc) {
-                    //Toast.makeText(AddDistributer.this, complete_address, Toast.LENGTH_SHORT).show();
-                    if (!adress_set)
-                        txt_current_loc.setText(complete_address);
-                    if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
-                        adress_set = true;
-                }
+//                if (press_current_loc) {
+//                    //Toast.makeText(AddDistributer.this, complete_address, Toast.LENGTH_SHORT).show();
+//                    if (!adress_set)
+//                        txt_current_loc.setText(complete_address);
+//                    if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
+//                        adress_set = true;
+//                }
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -560,7 +563,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private void validateInputs() {
 
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
-            if (press_current_loc) {
+//            if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
                     if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
                         if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
@@ -603,6 +606,22 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                 if (complete_address != null && complete_address.length() > 0)
                                     complete_address = complete_address.replaceAll(" ", "%20");
 
+                                GPSTracker gpsTracker = new GPSTracker(AddDistributer.this);
+                                Double lat = 0.0, lon = 0.0;
+                                Location location = null;
+                                if(gpsTracker.canGetLocation()) {
+                                    location = gpsTracker.getLocation();
+                                    if(null != location) {
+                                        lat = location.getLatitude();
+                                        lon = location.getLongitude();
+                                        complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
+                                    }
+                                    Log.e("GPS","AddCounter-"+complete_address);
+                                }else{
+                                    gpsTracker.showSettingsAlert();
+                                    Log.e("GPS","AddCounter-Unable to get GPS");
+                                }
+
                                 Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
                                 RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
 
@@ -625,9 +644,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                 map.put("territory", mBodyTerritory);
                                 RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
                                 map.put("mobile", mBodyMobile);
-                                RequestBody mBodyLay = createPartFromString(lat);
+                                RequestBody mBodyLay = createPartFromString(lat.toString());
                                 map.put("latitude", mBodyLay);
-                                RequestBody mBodyLng = createPartFromString(longitude);
+                                RequestBody mBodyLng = createPartFromString(lon.toString());
                                 map.put("longitude", mBodyLng);
                                 RequestBody mBodyAddress = createPartFromString(complete_address);
                                 map.put("address", mBodyAddress);
@@ -709,8 +728,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                     }
                 } else
                     Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(AddDistributer.this, "Please press on current location", Toast.LENGTH_SHORT).show();
+//            } else
+//                Toast.makeText(AddDistributer.this, "Please press on current location", Toast.LENGTH_SHORT).show();
         } else
             Toast.makeText(AddDistributer.this, "Please enter distributor name", Toast.LENGTH_SHORT).show();
 
@@ -758,7 +777,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
         map.put("longitde", mBodyLng);*/
-        RequestBody mBodyAddress = createPartFromString(edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"));
+        RequestBody mBodyAddress = createPartFromString(dataDistributor.getAddress().replaceAll(" ", "%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
                 ().trim());

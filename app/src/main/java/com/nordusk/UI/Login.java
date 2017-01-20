@@ -75,13 +75,14 @@ public class Login extends AppCompatActivity {
     private void loginAsyncCall() {
 
         if(HttpConnectionUrl.isNetworkAvailable(Login.this)) {
-            LoginAsync loginAsync = new LoginAsync(Login.this, edt_username.getText().toString().trim(), edt_password.getText().toString().trim(), null, lon, lat);
+            LoginAsync loginAsync = new LoginAsync(Login.this, edt_username.getText().toString().trim(), edt_password.getText().toString().trim(), null, lat, lon);
             loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
                 @Override
                 public void OnSuccess(String response_code) {
 
                     new Prefs(Login.this).setString("UserName",edt_username.getText().toString().trim());
                     new Prefs(Login.this).setString("Password",edt_password.getText().toString().trim());
+                    new Prefs(Login.this).setString("LastLogin",Util.getCurrentDate());
 
                     Toast.makeText(Login.this, response_code, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(Login.this, Dashboard.class));

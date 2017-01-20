@@ -89,15 +89,16 @@ public class Splash extends AppCompatActivity {
 
         btn_login = (Button) findViewById(R.id.splash_btn_login);
 
-        String userId = "";
+        String userId = "", lastLogin="";
         userId = new Prefs(Splash.this).getString("userid", "");
+        lastLogin = new Prefs(Splash.this).getString("LastLogin", "");
         if (userId != null && userId.length() > 0) {
-            if (Util.LAST_LOGIN_DATE != null && Util.LAST_LOGIN_DATE.length() > 0) {
-                GetDate getdate = new GetDate();
+            if (lastLogin != null && lastLogin.length() > 0) {
+                /*GetDate getdate = new GetDate();
                 getdate.setOnContentListParserListner(new GetDate.OnContentListSchedules() {
                     @Override
                     public void OnSuccess(String data) {
-                        date = data;
+                        date = Util.getCurrentDate();
                         if (!date.equalsIgnoreCase(Util.LAST_LOGIN_DATE)) {
                             loginAsyncCall();
                         } else {
@@ -117,7 +118,15 @@ public class Splash extends AppCompatActivity {
                         Util.LAST_LOGIN_DATE = data;
                     }
                 });
-                getdate.execute();
+                getdate.execute();*/
+
+                date = Util.getCurrentDate();
+                if (!date.equalsIgnoreCase(lastLogin)) {
+                    loginAsyncCall();
+                } else {
+                    startActivity(new Intent(Splash.this, Dashboard.class));
+                    finish();
+                }
 
             }
         }

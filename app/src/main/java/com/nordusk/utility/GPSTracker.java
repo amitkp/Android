@@ -130,7 +130,7 @@ public class GPSTracker extends Service implements LocationListener {
 
 
         try {
-            Geocoder gcd = new Geocoder(context, Locale.ENGLISH);
+            Geocoder gcd = new Geocoder(context, Locale.getDefault());
             List<Address> addresses = gcd.getFromLocation(lat, lon, 5);
 
 //            procedure one
@@ -171,14 +171,14 @@ public class GPSTracker extends Service implements LocationListener {
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return "Parsing Error";
+                    return " ";
                 }
 
 
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            return "Co-ordinate Error";
+            return " ";
 
         }
         return complete_address;

@@ -58,51 +58,52 @@ public class AdapterAttendance extends BaseAdapter {
 			holder.txt_login_address = (TextView) convertView.findViewById(R.id.txt_login_address);
 			holder.txt_logout_address = (TextView) convertView.findViewById(R.id.txt_logout_address);
 
-			DataObjectAttendance dp = list_BeneficiaryItems.get(position);
 
-			if(dp.getLogin_latitude() != "" && dp.getLogin_longitutde()!= "" && dp.getLogout_latitude() != "" && dp.getLogout_longitude() != ""){
-				GPSTracker gpsTracker = new GPSTracker(context);
-				Double loginlat ,loginlon, logoutlat, logoutlon;
-
-				loginlat = Double.parseDouble(dp.getLogin_latitude());
-				loginlon = Double.parseDouble(dp.getLogin_longitutde());
-				logoutlat = Double.parseDouble(dp.getLogout_latitude());
-				logoutlon = Double.parseDouble(dp.getLogout_longitude());
-
-				if(loginlat > 0.0 && loginlon > 0.0 && logoutlat > 0.0 && logoutlon > 0.0){
-				/*Location loginloc = new Location("");
-				Location logoutloc = new Location("");
-				loginloc.setLatitude(loginlat);
-				loginloc.setLongitude(loginlon);
-				logoutloc.setLatitude(logoutlat);
-				logoutloc.setLongitude(logoutlon);*/
-					dp.setLogin_addresss(gpsTracker.addressSet(loginlat,loginlon));
-					dp.setLogout_address(gpsTracker.addressSet(logoutlat,logoutlon));
-					Log.e("GPS","Date-"+dp.getDate()+"Login-"+dp.getLogin_addresss()+"Logout"+dp.getLogout_address());
-				}
-
-			}
 
 			convertView.setTag(holder);
 		} else {
 			holder = (Holder) convertView.getTag();
 		}
 
-		DataObjectAttendance dataTargetManager=list_BeneficiaryItems.get(position);
 
-		if(dataTargetManager.getDate()!=null)
+		DataObjectAttendance dp = list_BeneficiaryItems.get(position);
+
+		if(dp.getLogin_latitude() != "" && dp.getLogin_longitutde()!= "" && dp.getLogout_latitude() != "" && dp.getLogout_longitude() != ""){
+			GPSTracker gpsTracker = new GPSTracker(context);
+			Double loginlat ,loginlon, logoutlat, logoutlon;
+
+			loginlat = Double.parseDouble(dp.getLogin_latitude());
+			loginlon = Double.parseDouble(dp.getLogin_longitutde());
+			logoutlat = Double.parseDouble(dp.getLogout_latitude());
+			logoutlon = Double.parseDouble(dp.getLogout_longitude());
+
+			if(loginlat > 0.0 && loginlon > 0.0 && logoutlat > 0.0 && logoutlon > 0.0){
+				/*Location loginloc = new Location("");
+				Location logoutloc = new Location("");
+				loginloc.setLatitude(loginlat);
+				loginloc.setLongitude(loginlon);
+				logoutloc.setLatitude(logoutlat);
+				logoutloc.setLongitude(logoutlon);*/
+				dp.setLogin_addresss(gpsTracker.addressSet(loginlat,loginlon));
+				dp.setLogout_address(gpsTracker.addressSet(logoutlat,logoutlon));
+				Log.e("GPS","Date-"+dp.getDate()+"Login-"+dp.getLogin_addresss()+"Logout"+dp.getLogout_address());
+			}
+
+		}
+
+		if(dp.getDate()!=null)
 			holder.txt_month.setText("Date : "+list_BeneficiaryItems.get(position).getDate());
 
-		if(dataTargetManager.getLogin_time()!=null)
+		if(dp.getLogin_time()!=null)
 			holder.txt_amount.setText("LogIn Time : "+list_BeneficiaryItems.get(position).getLogin_time());
 
-		if(dataTargetManager.getLogout_time()!=null)
+		if(dp.getLogout_time()!=null)
 			holder.txt_target.setText("LogOut Time : "+list_BeneficiaryItems.get(position).getLogout_time());
 
-		if(dataTargetManager.getLogin_addresss()!=null)
+		if(dp.getLogin_addresss()!=null)
 			holder.txt_login_address.setText("Login Address : "+list_BeneficiaryItems.get(position).getLogin_addresss());
 
-		if(dataTargetManager.getLogout_address()!=null)
+		if(dp.getLogout_address()!=null)
 			holder.txt_logout_address.setText("Logout Address : "+list_BeneficiaryItems.get(position).getLogout_address());
 
 

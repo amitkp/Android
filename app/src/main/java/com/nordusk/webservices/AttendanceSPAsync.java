@@ -29,7 +29,7 @@ public class AttendanceSPAsync extends AsyncTask<Void, Void, Void> {
 
     private String responsecode = "";
     private String responseMessage = "";
-    private ProgressDialog mpProgressDialog;
+//    private ProgressDialog mpProgressDialog;
     private JSONObject jsonObject = null;
     private String date,sp_id="";
     private Prefs my_prefs;
@@ -41,13 +41,13 @@ public class AttendanceSPAsync extends AsyncTask<Void, Void, Void> {
         this.context = context;
         this.date=date;
         this.sp_id=sp_id;
-         my_prefs = new Prefs(context);
-        mpProgressDialog = new ProgressDialog(context);
-        mpProgressDialog.setMessage("Loading..");
-        mpProgressDialog.show();
+        my_prefs = new Prefs(context);
+//        mpProgressDialog = new ProgressDialog(context);
+//        mpProgressDialog.setMessage("Loading..");
+//        mpProgressDialog.show();
 
 
-        mpProgressDialog.setCancelable(false);
+//        mpProgressDialog.setCancelable(false);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class AttendanceSPAsync extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (mpProgressDialog != null && mpProgressDialog.isShowing())
-            mpProgressDialog.dismiss();
+//        if (mpProgressDialog != null && mpProgressDialog.isShowing())
+//            mpProgressDialog.dismiss();
         if (isTimeOut) {
             if (onContentListParserListner != null) {
                 onContentListParserListner.OnConnectTimeout();

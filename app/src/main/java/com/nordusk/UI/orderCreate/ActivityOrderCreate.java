@@ -70,6 +70,7 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
 
     private AutoCompleteTextView login_edtxt_emailmobile;
     ArrayList<String> name_list = new ArrayList<String>();
+    ArrayList<String> name_listNew = new ArrayList<String>();
     private ArrayList<DataDistributor> mListDistributor = new ArrayList<DataDistributor>();
     private Prefs mpPrefs;
     private ArrayList<ParentId> tempParentIds = new ArrayList<>();
@@ -79,8 +80,8 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     private String product_id="",product_name="";
     private String product_id_fromlist="";
     private String type_from_list="";
-    private TextView txt_currentlocation;
-    private TextView txt_currentownerdetails;
+//    private TextView txt_currentlocation;
+//    private TextView txt_currentownerdetails;
     private Double lat=0.0,lon=0.0;
 
     @Override
@@ -98,6 +99,15 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         initPresenter();
         setContentView(R.layout.activity_create_order);
         initView();
+
+        GPSTracker gpsTracker = new GPSTracker(ActivityOrderCreate.this);
+        if (gpsTracker.canGetLocation()) {
+            lat = gpsTracker.getLatitude();
+            lon = gpsTracker.getLongitude();
+        } else {
+            gpsTracker.showSettingsAlert();
+        }
+//        txt_currentownerdetails.setText(gpsTracker.addressSet(lat,lon));
         if (HttpConnectionUrl.isNetworkAvailable(ActivityOrderCreate.this))
             fetchCategory();
 
@@ -155,8 +165,8 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         if(getIntent().getStringExtra("name")!=null && getIntent().getStringExtra("name").length()>0)
         login_edtxt_emailmobile.setText(getIntent().getStringExtra("name"));
         btn_save.setOnClickListener(this);
-        txt_currentlocation = (TextView) findViewById(R.id.txt_currentlocation);
-        txt_currentownerdetails = (TextView) findViewById(R.id.txt_currentownerdetails);
+//        txt_currentlocation = (TextView) findViewById(R.id.txt_currentlocation);
+//        txt_currentownerdetails = (TextView) findViewById(R.id.txt_currentownerdetails);
 
         //category and product
         spnr_category = (Spinner) findViewById(R.id.spnr_category);
@@ -302,21 +312,14 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
         /*
         Code for current town location
          */
-        txt_currentlocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        txt_currentlocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
 
-                GPSTracker gpsTracker = new GPSTracker(v.getContext());
-                if (gpsTracker.canGetLocation()) {
-                    lat = gpsTracker.getLatitude();
-                    lon = gpsTracker.getLongitude();
-                    txt_currentownerdetails.setText(gpsTracker.addressSet(lat, lon));
-                } else {
-                    gpsTracker.showSettingsAlert();
-                }
-                //
-            }
-        });
+//                //
+//            }
+//        });
     }
 
 //    private void fetchProduct(String s) {
@@ -393,6 +396,7 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     public void onClick(View view) {
         if(!TextUtils.isEmpty(et_orderName.getText().toString())) {
             if (Util.ORDER_FOR != null && Util.ORDER_FOR.length() > 0) {
+
                 if(lat != 0.0 && lon != 0.0) {
                     btn_save.setClickable(false);
                     mPresenter.createOrder(ll_container.getChildCount(),lat,lon);
@@ -429,7 +433,8 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
 
     @Override
     public void onCreateOrderFailure() {
-        btn_save.setClickable(true);
+//        btn_save.setClickable(true);
+        this.finish();
     }
 
     @Override
@@ -476,6 +481,7 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
                     if (name_list.size() < 1) {
                         for (int i = 0; i < mListDistributor.size(); i++) {
                             name_list.add(mListDistributor.get(i).getName());
+                          //  name_listNew.add(mListDistributor.get(i).getName().replaceAll("%20"," "));
                         }
                     }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.nordusk.R;
 import com.nordusk.utility.Prefs;
@@ -99,7 +100,7 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
             responsecode = jsonObject.getString("response_code");
             if (jsonObject != null && responsecode.equalsIgnoreCase("200")) {
 
-
+                String name="";
                 JSONArray jsonArray=jsonObject.getJSONArray("list");
                 if(jsonArray!=null && jsonArray.length()>0){
                     for(int i=0;i<jsonArray.length();i++){
@@ -119,7 +120,7 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
                         list.setImage(HttpConnectionUrl.getJSONKeyvalue(object, "image"));
                         arrayList.add(list);
-
+                        Log.e("Space","-"+name);
                     }
                 }
 

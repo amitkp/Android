@@ -31,16 +31,16 @@
         android:inputType="text"
         android:hint="Type to select order for"></AutoCompleteTextView>
 
-    <TextView
-        android:id="@+id/txt_currentlocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:layout_marginTop="@dimen/dp_10"
-        android:gravity="center_horizontal"
-        android:text="Order Location : Tap to locate*"
-        android:textColor="@color/TabTextColor"
-        android:textSize="@dimen/medium_textSize"></TextView>
+    <!--<TextView-->
+        <!--android:id="@+id/txt_currentlocation"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/dp_10"-->
+        <!--android:layout_marginTop="@dimen/dp_10"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="Order Location : Tap to locate*"-->
+        <!--android:textColor="@color/TabTextColor"-->
+        <!--android:textSize="@dimen/medium_textSize"></TextView>-->
 
     <RelativeLayout
         android:id="@+id/rltv_devider3"
@@ -50,7 +50,7 @@
         android:layout_marginTop="@dimen/dp_10"
         android:background="@color/colorPrimary"></RelativeLayout>
 
-    <TextView
+    <!--<TextView
         android:id="@+id/txt_currentownerdetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
         android:layout_marginTop="@dimen/dp_10"
         android:text="Counter Location"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/medium_textSize"></TextView>
+        android:textSize="@dimen/medium_textSize"></TextView>-->
 
     <RelativeLayout
         android:layout_width="match_parent"

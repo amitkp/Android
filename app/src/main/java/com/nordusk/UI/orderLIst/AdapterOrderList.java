@@ -3,6 +3,7 @@ package com.nordusk.UI.orderLIst;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -123,6 +124,8 @@ public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.Hold
                                 Toast.makeText(context,arrayList,Toast.LENGTH_SHORT).show();
                                 mDialog_SelectSelectAccount.dismiss();
                                 context.finish();
+                                Intent mIntent = new Intent(context, ActivityOrderList.class);
+                                context.startActivity(mIntent);
                             }
 
                             @Override

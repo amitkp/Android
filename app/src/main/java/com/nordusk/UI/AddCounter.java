@@ -39,6 +39,7 @@ import com.nordusk.R;
 import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.pojo.DataDistributor;
 import com.nordusk.utility.FileUtils;
+import com.nordusk.utility.GPSTracker;
 import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
@@ -88,15 +89,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class AddCounter extends AppCompatActivity implements LocationListener {
+public class AddCounter extends AppCompatActivity  {
 
-    private EditText edt_countername, edt_counteraddress, edt_counterownername, edt_dob, edt_mobileno,
+    private EditText edt_countername,  edt_counterownername, edt_dob, edt_mobileno,
             edt_emailid, edt_territory, edt_aniversary, edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
+//    private EditText edt_counteraddress;
     private Button submit;
-    private TextView txt_counterlocation_press, txt_current_loc;
+//    private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
 
-    private boolean press_current_loc = false;
+//    private boolean press_current_loc = false;
     private boolean adress_set = false;
     private String lat = "", longitude = "";
     String complete_address = "";
@@ -162,7 +164,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             //To setup location manager
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        LocationManager.requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
         }
     }
 
@@ -174,8 +176,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             imageLoader.displayImage(dataDistributor.getImage(), img_pic);
         if (dataDistributor.getName() != null)
             edt_countername.setText(dataDistributor.getName());
-        if (dataDistributor.getAddress() != null)
-            edt_counteraddress.setText(dataDistributor.getAddress());
+//        if (dataDistributor.getAddress() != null)
+//            edt_counteraddress.setText(dataDistributor.getAddress());
         if (dataDistributor.getMobile() != null)
             edt_mobileno.setText(dataDistributor.getMobile());
 //        if (dataDistributor.getTerritory() != null)
@@ -207,10 +209,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 //        }
 
 
-        if (call_from.equalsIgnoreCase("edit")) {
-            press_current_loc = true;
-            txt_counterlocation_press.setVisibility(View.GONE);
-        }
+//        if (call_from.equalsIgnoreCase("edit")) {
+//            press_current_loc = true;
+//            txt_counterlocation_press.setVisibility(View.GONE);
+//        }
 
 
     }
@@ -322,13 +324,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private void setListener() {
 
 
-        txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                press_current_loc = true;
-                txt_current_loc.setText(complete_address);
-            }
-        });
+//        txt_counterlocation_press.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                press_current_loc = true;
+//                txt_current_loc.setText(complete_address);
+//            }
+//        });
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -395,7 +397,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
     private void initView() {
         auto_text_territory = (AutoCompleteTextView) findViewById(R.id.counterdtls_edtxt_territory);
         edt_countername = (EditText) findViewById(R.id.counterdtls_edtxt_name);
-        edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
+//        edt_counteraddress = (EditText) findViewById(R.id.counterdtls_edtxt_address);
         edt_counterownername = (EditText) findViewById(R.id.counterdtls_edtxt_ownername);
         edt_dob = (EditText) findViewById(R.id.counterdtls_edtxt_dob);
 
@@ -405,8 +407,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
         edt_aniversary = (EditText) findViewById(R.id.counterdtls_edtxt_anniversary);
 
-        txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
-        txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
+//        txt_counterlocation_press = (TextView) findViewById(R.id.txt_courentlocation);
+//        txt_current_loc = (TextView) findViewById(R.id.txt_courentownerdetails);
         submit = (Button) findViewById(R.id.counterprofile_btn_submit);
         img_pic = (ImageView) findViewById(R.id.image_counter);
         txt_select = (TextView) findViewById(R.id.textView_imgselect);
@@ -445,29 +447,29 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        addressSet(location);
-        lat = String.valueOf(location.getLatitude());
-        longitude = String.valueOf(location.getLongitude());
-    }
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        addressSet(location);
+//        lat = String.valueOf(location.getLatitude());
+//        longitude = String.valueOf(location.getLongitude());
+//    }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+//    @Override
+//    public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderEnabled(String provider) {
+//
+//    }
+//
+//    @Override
+//    public void onProviderDisabled(String provider) {
 
-    }
+//    }
 
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    private void addressSet(Location location) {
+    /*private void addressSet(Location location) {
 
         String address_details = "", addressone = "", addresstwo = "", city = "", state = "", country = "", postalcode = "", knownname = "";
 
@@ -506,13 +508,13 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                 complete_address = TextUtils.join(System.getProperty("line.separator"),
                         addressFragments).replaceAll("\\s+", "");
 
-                if (press_current_loc) {
-
-                    if (!adress_set)
-                        txt_current_loc.setText(complete_address);
-                    if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
-                        adress_set = true;
-                }
+//                if (press_current_loc) {
+//
+//                    if (!adress_set)
+//                        txt_current_loc.setText(complete_address);
+//                    if (!TextUtils.isEmpty(complete_address) && complete_address.length() > 0)
+//                        adress_set = true;
+//                }
 
 //                        Toast.makeText(MapsActivity.this, complete_address, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -524,20 +526,20 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
             ex.printStackTrace();
 
         }
-    }
+    }*/
 
 
 
     private void validateInputs() {
 
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
-            if (press_current_loc) {
+//            if (press_current_loc) {
                 if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
                     if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
                         if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
                             if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
-                                if (!TextUtils.isEmpty(txt_current_loc.getText().toString().trim())) {
+//                                if (!TextUtils.isEmpty(txt_current_loc.getText().toString().trim())) {
 
                                     if(!TextUtils.isEmpty(edt_countersize.getText().toString().trim())){
 
@@ -572,8 +574,24 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         mpProgressDialog.show();
                                         mpProgressDialog.setCancelable(false);
 
-                                        if (complete_address != null && complete_address.length() > 0)
-                                            complete_address = complete_address.replaceAll(" ", "%20");
+//                                        if (complete_address != null && complete_address.length() > 0)
+//                                            complete_address = complete_address.replaceAll(" ", "%20");
+
+                                        GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
+                                        Double lat = 0.0, lon = 0.0;
+                                        Location location = null;
+                                        if(gpsTracker.canGetLocation()) {
+                                            location = gpsTracker.getLocation();
+                                            if(null != location) {
+                                                lat = location.getLatitude();
+                                                lon = location.getLongitude();
+                                                complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
+                                            }
+                                            Log.e("GPS","AddCounter-"+complete_address);
+                                        }else{
+                                            gpsTracker.showSettingsAlert();
+                                            Log.e("GPS","AddCounter-Unable to get GPS");
+                                        }
 
                                         Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
                                         RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
@@ -599,47 +617,35 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         map.put("territory", mBodyTerritory);
                                         RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
                                         map.put("mobile", mBodyMobile);
-                                        RequestBody mBodyLay = createPartFromString(lat);
+                                        map.put("alternative_mobile", mBodyMobile);
+                                        RequestBody mBodyLay = createPartFromString(lat.toString());
                                         map.put("latitude", mBodyLay);
-                                        RequestBody mBodyLng = createPartFromString(longitude);
+                                        RequestBody mBodyLng = createPartFromString(lon.toString());
                                         map.put("longitude", mBodyLng);
                                         RequestBody mBodyAddress = createPartFromString(complete_address);
                                         map.put("address", mBodyAddress);
-                                        RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
-                                                ().trim());
+                                        RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString().trim());
                                         map.put("email", mBodyEmail);
-                                        RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString
-                                                ().trim());
+                                        RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString().trim());
                                         map.put("bank_name", mBodyBank);
-
                                         RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
                                         map.put("account_no", mBodyAccount);
-
-                                        RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString
-                                                ().trim());
+                                        RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString().trim());
                                         map.put("ifsc_code", mBodyIfsc);
-
                                         RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
                                         map.put("counter_size", mBodyCounter);
-
                                         RequestBody mBodyParent = createPartFromString(parentId);
                                         map.put("parrent_id", mBodyParent);
-
-
-
-                                        RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
-                                                ());
+                                        RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim());
                                         map.put("dob", mBodyDob);
-
-                                        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
-                                                ());
+                                        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim());
                                         map.put("anniversary", mBodyAniversary);
 
 
 
-
-
                                         Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
+                                        Log.e("URL","AddCounterQuery-"+mCall.request().url().query());
+                                        Log.e("URL","AddCounterENCQuery-"+mCall.request().url().encodedQuery());
                                         mCall.enqueue(new Callback<ResponseBody>() {
                                             @Override
                                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -647,6 +653,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                                     mpProgressDialog.dismiss();
                                                 try {
                                                     Log.i("", "onResponse: ");
+                                                    Log.e("URL","AddCounterQuery-"+call.request().url().query());
+                                                    Log.e("URL","AddCounterENCQuery-"+call.request().url().encodedQuery());
                                                     if (response.code() == 200) {
                                                         Toast.makeText(AddCounter.this,"Success",Toast.LENGTH_SHORT).show();
                                                     }
@@ -662,6 +670,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                                     mpProgressDialog.dismiss();
                                                 try {
                                                     Log.i("", "onResponse: ");
+                                                    Log.e("URL","AddCounterQuery-"+call.request().url().query());
+                                                    Log.e("URL","AddCounterENCQuery-"+call.request().url().encodedQuery());
                                                     if (t instanceof SocketTimeoutException || t instanceof
                                                             ConnectException || t instanceof UnknownHostException) {
                                                         Log.e("TimeOut",t.getMessage());
@@ -677,10 +687,10 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                         Toast.makeText(AddCounter.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
                                     }
 
-                                } else {
-                                    Toast.makeText(AddCounter.this, "Please enter current location", Toast.LENGTH_SHORT)
-                                            .show();
-                                }
+//                                } else {
+//                                    Toast.makeText(AddCounter.this, "Please enter current location", Toast.LENGTH_SHORT)
+//                                            .show();
+//                                }
                             } else {
                                 Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
                             }
@@ -693,8 +703,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
 
                 } else
                     Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(AddCounter.this, "Please press on current location", Toast.LENGTH_SHORT).show();
+//            } else
+//                Toast.makeText(AddCounter.this, "Please press on current location", Toast.LENGTH_SHORT).show();
         } else
             Toast.makeText(AddCounter.this, "Please enter counter name", Toast.LENGTH_SHORT).show();
 
@@ -740,7 +750,7 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
         map.put("longitde", mBodyLng);*/
-        RequestBody mBodyAddress = createPartFromString(edt_counteraddress.getText().toString().trim().replaceAll(" ", "%20"));
+        RequestBody mBodyAddress = createPartFromString(dataDistributor.getAddress().toString().replaceAll(" ","%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
                 ().trim());

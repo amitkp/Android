@@ -90,13 +90,13 @@
 
                 ></EditText>
 
-            <EditText
+            <!--<EditText
                 android:id="@+id/counterdtls_edtxt_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Distributor address"
                 android:layout_margin="@dimen/dp_10"
-                ></EditText>
+                ></EditText>-->
 
             <TextView
                 android:id="@+id/txt_hdr_counterphoto"
@@ -135,7 +135,7 @@
 
             </RelativeLayout>
 
-            <TextView
+            <!--<TextView
                 android:id="@+id/txt_courentlocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -164,11 +164,12 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/medium_textSize"
-                android:text="Distributor location"></TextView>
+                android:text="Distributor location"></TextView>-->
 
             <RelativeLayout
                 android:id="@+id/rltv_devider2"
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp_10"
                 android:layout_height="@dimen/dp_1"
                 android:background="@color/colorPrimary">
             </RelativeLayout>

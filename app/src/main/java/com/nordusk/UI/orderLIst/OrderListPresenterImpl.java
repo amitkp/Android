@@ -109,7 +109,7 @@ public class OrderListPresenterImpl implements
         Gson mGson = new Gson();
         Type listType = new TypeToken<List<DataOrder>>() {
         }.getType();
-        ArrayList<DataOrder> mListOrder = mGson.fromJson(mNewArray.toString(), listType);
+        ArrayList<DataOrder> mListOrder = mGson.fromJson(mNewArray.toString().replaceAll("%20"," "), listType);
         mInteractor.getAdapterImpl().updateListElement(mListOrder);
         if(mpProgressDialog!=null&&mpProgressDialog.isShowing())
             mpProgressDialog.dismiss();
