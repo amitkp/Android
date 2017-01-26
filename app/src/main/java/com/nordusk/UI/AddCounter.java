@@ -605,6 +605,8 @@ public class AddCounter extends AppCompatActivity implements LocationListener {
                                             body = prepareFilePart("image", filePath);
                                         } catch (URISyntaxException e) {
                                             e.printStackTrace();
+                                        } catch (NullPointerException npe) {
+                                            npe.printStackTrace();
                                         }
                                         HashMap<String, RequestBody> map = new HashMap<>();
                                         RequestBody mBodyType = createPartFromString("1");
