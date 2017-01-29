@@ -1,6 +1,7 @@
 package com.nordusk.UI;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -10,8 +11,13 @@ import com.nordusk.adapter.AdapterHourlyAttendance;
 import com.nordusk.pojo.DataObjectAttendance;
 import com.nordusk.webservices.AttendanceHourlySPAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
+import com.nordusk.webservices.InsertDailyTraceAsync;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListattendanceHourlyReport extends AppCompatActivity {
 
@@ -43,6 +49,50 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
                     if(arrayList!=null && arrayList.size()>0){
                         adapterManagerTarget=new AdapterHourlyAttendance(ListattendanceHourlyReport.this,arrayList);
                         list_counter_dis.setAdapter(adapterManagerTarget);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                try{
+                                    JSONObject jsonObject=new JSONObject();
+                                    JSONArray jsonArray=new JSONArray();
+                                    jsonObject.put("userId",sp_id);
+                                    List<DataObjectAttendance> list=adapterManagerTarget.getUpdateList();
+                                    if(list!=null && list.size()>0){
+                                        for(int i=0;i<list.size();i++){
+                                            JSONObject jsonObject1=new JSONObject();
+                                            jsonObject1.put("date_time",list.get(i).getDate());
+                                            jsonObject1.put("address",list.get(i).getLogin_addresss());
+                                            jsonObject1.put("latitude",list.get(i).getLogin_latitude());
+                                            jsonObject1.put("longitude",list.get(i).getLogin_longitutde());
+                                            jsonArray.put(i,jsonObject1);
+                                        }
+                                    }
+                                    jsonObject.put("list",jsonArray);
+                                    InsertDailyTraceAsync insertDailyTraceAsync=new InsertDailyTraceAsync(ListattendanceHourlyReport.this,jsonObject);
+                                    insertDailyTraceAsync.setOnContentListParserListner(new InsertDailyTraceAsync.OnContentListSchedules() {
+                                        @Override
+                                        public void OnSuccess(String message) {
+
+                                        }
+
+                                        @Override
+                                        public void OnError(String str_err) {
+
+                                        }
+
+                                        @Override
+                                        public void OnConnectTimeout() {
+
+                                        }
+                                    });
+                                    insertDailyTraceAsync.execute();
+
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        },15000);
                     }else {
                         list_counter_dis.setAdapter(null);
                     }

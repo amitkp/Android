@@ -13,6 +13,7 @@ import com.nordusk.R;
 import com.nordusk.pojo.DataObjectAttendance;
 import com.nordusk.utility.GPSTracker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterHourlyAttendance extends BaseAdapter {
@@ -100,6 +101,10 @@ public class AdapterHourlyAttendance extends BaseAdapter {
 
 	public class Holder {
 		public TextView txt_date_time,txt_login_address;
+	}
+
+	public List<DataObjectAttendance> getUpdateList(){
+		return list_BeneficiaryItems;
 	}
 
 }
