@@ -182,7 +182,7 @@ public class HttpConnectionUrl {
 //			 File httpCacheDir = new File(context.getCacheDir(), "http");
 //	          long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
 //	          HttpResponseCache.install(httpCacheDir, httpCacheSize);
-			
+			   //test
 			//httpPost.addHeader("Cache-Control", "cache");
 			  //httpPost.setHeader("Cache-Control","max-age=0");
 
