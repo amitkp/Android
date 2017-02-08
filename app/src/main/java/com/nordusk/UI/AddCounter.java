@@ -89,16 +89,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class AddCounter extends AppCompatActivity  {
+public class AddCounter extends AppCompatActivity {
 
-    private EditText edt_countername,  edt_counterownername, edt_dob, edt_mobileno,
+    private EditText edt_countername, edt_counterownername, edt_dob, edt_mobileno,
             edt_emailid, edt_territory, edt_aniversary, edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
-//    private EditText edt_counteraddress;
+    //    private EditText edt_counteraddress;
     private Button submit;
-//    private TextView txt_counterlocation_press, txt_current_loc;
+    //    private TextView txt_counterlocation_press, txt_current_loc;
     private static int REQUEST_LOCATION = 2;
 
-//    private boolean press_current_loc = false;
+    //    private boolean press_current_loc = false;
     private boolean adress_set = false;
     private String lat = "", longitude = "";
     String complete_address = "";
@@ -422,8 +422,7 @@ public class AddCounter extends AppCompatActivity  {
             submit.setText("Update");
 
 
-        }
-        else
+        } else
             submit.setText("Add");
 
         // Initialize AutoCompleteTextView values
@@ -529,180 +528,66 @@ public class AddCounter extends AppCompatActivity  {
     }*/
 
 
-
     private void validateInputs() {
 
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
 //            if (press_current_loc) {
-                if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
-                        if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
-                            if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
+                if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
+                    if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
+                        if (!TextUtils.isEmpty(auto_text.getText().toString().trim())) {
 
 //                                if (!TextUtils.isEmpty(txt_current_loc.getText().toString().trim())) {
 
-                                    if(!TextUtils.isEmpty(edt_countersize.getText().toString().trim())){
+                            if (!TextUtils.isEmpty(edt_countersize.getText().toString().trim())) {
 
 
-                                    if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
-                                        String validation = auto_text.getText().toString();
-                                        if(validation.contains("-")){
-                                            String[] separated = auto_text.getText().toString().trim().split("-");
-                                            parentId = separated[1].toString();
+                                if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
+                                    String validation = auto_text.getText().toString();
+                                    if (validation.contains("-")) {
+                                        String[] separated = auto_text.getText().toString().trim().split("-");
+                                        parentId = separated[1].toString();
+                                    } else parentId = validation;
+                                }
+                                String path = "";
+                                if (filePath != null) {
+                                    path = getPath(filePath);
+                                }
+
+                                if (call_from.equalsIgnoreCase("edit"))
+
+                                {
+
+                                    for (int i = 0; i < auto_territory.size(); i++) {
+                                        if (auto_text_territory.getText().toString().trim().equalsIgnoreCase(auto_territory.get(i).getName())) {
+                                            territory_id = auto_territory.get(i).getId();
                                         }
-                                        else parentId = validation;
                                     }
-                                    String path = "";
-                                    if (filePath != null) {
-                                        path = getPath(filePath);
-                                    }
-
-                                    if (call_from.equalsIgnoreCase("edit"))
-
-                                    {
-
-                                        for (int i = 0; i < auto_territory.size(); i++) {
-                                            if (auto_text_territory.getText().toString().trim().equalsIgnoreCase(auto_territory.get(i).getName())) {
-                                                territory_id = auto_territory.get(i).getId();
-                                            }
-                                        }
-                                        populateEditDetails();
-                                        } else {
-
-                                        mpProgressDialog = new ProgressDialog(AddCounter.this);
-                                        mpProgressDialog.setMessage("Adding Counter..");
-                                        mpProgressDialog.show();
-                                        mpProgressDialog.setCancelable(false);
-
-//                                        if (complete_address != null && complete_address.length() > 0)
-//                                            complete_address = complete_address.replaceAll(" ", "%20");
-
-                                        GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
-                                        Double lat = 0.0, lon = 0.0;
-                                        Location location = null;
-                                        if(gpsTracker.canGetLocation()) {
-                                            location = gpsTracker.getLocation();
-                                            if(null != location) {
-                                                lat = location.getLatitude();
-                                                lon = location.getLongitude();
-                                                complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
-                                            }
-                                            Log.e("GPS","AddCounter-"+complete_address);
-                                        }else{
-                                            gpsTracker.showSettingsAlert();
-                                            Log.e("GPS","AddCounter-Unable to get GPS");
-                                        }
-
-                                        Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
-                                        RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
-
-                                        MultipartBody.Part body = null;
-                                        if (imageChanged) {
-                                            try {
-
-                                                body = prepareFilePart("image", filePath);
-                                            } catch (Exception e) {
-                                                Log.e("Image", "Null image");
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                        HashMap<String, RequestBody> map = new HashMap<>();
-                                        RequestBody mBodyType = createPartFromString("1");
-                                        map.put("type", mBodyType);
-                                        RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
-                                        map.put("userId", userId);
-                                        RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
-                                        map.put("name", mBody);
-                                        RequestBody mBodyTerritory = createPartFromString(territory_id);
-                                        map.put("territory", mBodyTerritory);
-                                        RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
-                                        map.put("mobile", mBodyMobile);
-                                        map.put("alternative_mobile", mBodyMobile);
-                                        RequestBody mBodyLay = createPartFromString(lat.toString());
-                                        map.put("latitude", mBodyLay);
-                                        RequestBody mBodyLng = createPartFromString(lon.toString());
-                                        map.put("longitude", mBodyLng);
-                                        RequestBody mBodyAddress = createPartFromString(complete_address);
-                                        map.put("address", mBodyAddress);
-                                        RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString().trim());
-                                        map.put("email", mBodyEmail);
-                                        RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString().trim());
-                                        map.put("bank_name", mBodyBank);
-                                        RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
-                                        map.put("account_no", mBodyAccount);
-                                        RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString().trim());
-                                        map.put("ifsc_code", mBodyIfsc);
-                                        RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
-                                        map.put("counter_size", mBodyCounter);
-                                        RequestBody mBodyParent = createPartFromString(parentId);
-                                        map.put("parrent_id", mBodyParent);
-                                        RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim());
-                                        map.put("dob", mBodyDob);
-                                        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim());
-                                        map.put("anniversary", mBodyAniversary);
-
-
-
-                                        Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
-                                        Log.e("URL","AddCounterQuery-"+mCall.request().url().query());
-                                        Log.e("URL","AddCounterENCQuery-"+mCall.request().url().encodedQuery());
-                                        mCall.enqueue(new Callback<ResponseBody>() {
-                                            @Override
-                                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                                if (mpProgressDialog != null && mpProgressDialog.isShowing())
-                                                    mpProgressDialog.dismiss();
-                                                try {
-                                                    Log.i("", "onResponse: ");
-                                                    Log.e("URL","AddCounterQuery-"+call.request().url().query());
-                                                    Log.e("URL","AddCounterENCQuery-"+call.request().url().encodedQuery());
-                                                    if (response.code() == 200) {
-                                                        Toast.makeText(AddCounter.this,"Success",Toast.LENGTH_SHORT).show();
-                                                    }
-                                                } catch (Exception npe) {
-                                                    npe.printStackTrace();
-                                                }
-                                                AddCounter.this.finish();
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                                if (mpProgressDialog != null && mpProgressDialog.isShowing())
-                                                    mpProgressDialog.dismiss();
-                                                try {
-                                                    Log.i("", "onResponse: ");
-                                                    Log.e("URL","AddCounterQuery-"+call.request().url().query());
-                                                    Log.e("URL","AddCounterENCQuery-"+call.request().url().encodedQuery());
-                                                    if (t instanceof SocketTimeoutException || t instanceof
-                                                            ConnectException || t instanceof UnknownHostException) {
-                                                        Log.e("TimeOut",t.getMessage());
-                                                    }
-                                                } catch (Exception npe) {
-                                                    npe.printStackTrace();
-                                                }
-                                                AddCounter.this.finish();
-                                            }
-                                        });
-                                    }
-                                    }else{
-                                        Toast.makeText(AddCounter.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
-                                    }
+                                    populateEditDetails();
+                                } else {
+//                                    retrofitAddCounter();
+                                    asyncAccCounter();
+                                }
+                            } else {
+                                Toast.makeText(AddCounter.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
+                            }
 
 //                                } else {
 //                                    Toast.makeText(AddCounter.this, "Please enter current location", Toast.LENGTH_SHORT)
 //                                            .show();
 //                                }
-                            } else {
-                                Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
-                            }
                         } else {
-                            Toast.makeText(AddCounter.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddCounter.this, "Please enter Parent Id", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(AddCounter.this, "Please enter territory", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddCounter.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(AddCounter.this, "Please enter territory", Toast.LENGTH_SHORT).show();
+                }
 
-                } else
-                    Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(AddCounter.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
 //            } else
 //                Toast.makeText(AddCounter.this, "Please press on current location", Toast.LENGTH_SHORT).show();
         } else
@@ -710,8 +595,176 @@ public class AddCounter extends AppCompatActivity  {
 
     }
 
+    private void asyncAccCounter(){
 
-    private void populateEditDetails(){
+        mpProgressDialog = new ProgressDialog(AddCounter.this);
+        mpProgressDialog.setMessage("Adding Counter..");
+        mpProgressDialog.show();
+        mpProgressDialog.setCancelable(false);
+
+//                                        if (complete_address != null && complete_address.length() > 0)
+//                                            complete_address = complete_address.replaceAll(" ", "%20");
+
+        GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
+        Double lat = 0.0, lon = 0.0;
+        Location location = null;
+        if (gpsTracker.canGetLocation()) {
+            location = gpsTracker.getLocation();
+            if (null != location) {
+                lat = location.getLatitude();
+                lon = location.getLongitude();
+                complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
+            }
+            Log.e("GPS", "AddCounter-" + complete_address);
+        } else {
+            gpsTracker.showSettingsAlert();
+            Log.e("GPS", "AddCounter-Unable to get GPS");
+        }
+
+        AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
+                edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
+                lat.toString(), lon.toString(), complete_address, edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(), edt_countersize.getText().toString().trim(),
+                parentId, null, territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+            @Override
+            public void OnSuccess(String responsecode) {
+                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void OnError(String str_err) {
+                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void OnConnectTimeout() {
+
+            }
+        });
+
+        addCounterAsync.execute();
+    }
+
+    private void retrofitAddCounter(){
+
+            mpProgressDialog = new ProgressDialog(AddCounter.this);
+            mpProgressDialog.setMessage("Adding Counter..");
+            mpProgressDialog.show();
+            mpProgressDialog.setCancelable(false);
+
+//                                        if (complete_address != null && complete_address.length() > 0)
+//                                            complete_address = complete_address.replaceAll(" ", "%20");
+
+            GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
+            Double lat = 0.0, lon = 0.0;
+            Location location = null;
+            if (gpsTracker.canGetLocation()) {
+                location = gpsTracker.getLocation();
+                if (null != location) {
+                    lat = location.getLatitude();
+                    lon = location.getLongitude();
+                    complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
+                }
+                Log.e("GPS", "AddCounter-" + complete_address);
+            } else {
+                gpsTracker.showSettingsAlert();
+                Log.e("GPS", "AddCounter-Unable to get GPS");
+            }
+
+            Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
+            RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
+
+            MultipartBody.Part body = null;
+            if (imageChanged) {
+                try {
+
+                    body = prepareFilePart("image", filePath);
+                } catch (Exception e) {
+                    Log.e("Image", "Null image");
+                    e.printStackTrace();
+                }
+            }
+            HashMap<String, RequestBody> map = new HashMap<>();
+            RequestBody mBodyType = createPartFromString("1");
+            map.put("type", mBodyType);
+            RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
+            map.put("userId", userId);
+            RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
+            map.put("name", mBody);
+            RequestBody mBodyTerritory = createPartFromString(territory_id);
+            map.put("territory", mBodyTerritory);
+            RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
+            map.put("mobile", mBodyMobile);
+            map.put("alternative_mobile", mBodyMobile);
+            RequestBody mBodyLay = createPartFromString(lat.toString());
+            map.put("latitude", mBodyLay);
+            RequestBody mBodyLng = createPartFromString(lon.toString());
+            map.put("longitude", mBodyLng);
+            RequestBody mBodyAddress = createPartFromString(complete_address);
+            map.put("address", mBodyAddress);
+            RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString().trim());
+            map.put("email", mBodyEmail);
+            RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString().trim());
+            map.put("bank_name", mBodyBank);
+            RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
+            map.put("account_no", mBodyAccount);
+            RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString().trim());
+            map.put("ifsc_code", mBodyIfsc);
+            RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
+            map.put("counter_size", mBodyCounter);
+            RequestBody mBodyParent = createPartFromString(parentId);
+            map.put("parrent_id", mBodyParent);
+            RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim());
+            map.put("dob", mBodyDob);
+            RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim());
+            map.put("anniversary", mBodyAniversary);
+
+
+            Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
+            Log.e("URL", "AddCounterQuery-" + mCall.request().url().query());
+            Log.e("URL", "AddCounterENCQuery-" + mCall.request().url().encodedQuery());
+            mCall.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                        mpProgressDialog.dismiss();
+                    try {
+                        Log.i("", "onResponse: ");
+                        Log.e("URL", "AddCounterQuery-" + call.request().url().query());
+                        Log.e("URL", "AddCounterENCQuery-" + call.request().url().encodedQuery());
+                        if (response.code() == 200) {
+                            Toast.makeText(AddCounter.this, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception npe) {
+                        npe.printStackTrace();
+                    }
+                    AddCounter.this.finish();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                        mpProgressDialog.dismiss();
+                    try {
+                        Log.i("", "onResponse: ");
+                        Log.e("URL", "AddCounterQuery-" + call.request().url().query());
+                        Log.e("URL", "AddCounterENCQuery-" + call.request().url().encodedQuery());
+                        if (t instanceof SocketTimeoutException || t instanceof
+                                ConnectException || t instanceof UnknownHostException) {
+                            Log.e("TimeOut", t.getMessage());
+                        }
+                    } catch (Exception npe) {
+                        npe.printStackTrace();
+                    }
+                    AddCounter.this.finish();
+                }
+            });
+    }
+
+
+    private void populateEditDetails() {
         mpProgressDialog = new ProgressDialog(AddCounter.this);
         mpProgressDialog.setMessage("Updating Counter..");
         mpProgressDialog.show();
@@ -721,7 +774,7 @@ public class AddCounter extends AppCompatActivity  {
         RestCallback.EditCounterCallback mEditCounterCallback = mRetrofit.create(RestCallback.EditCounterCallback.class);
         HashMap<String, RequestBody> map = new HashMap<>();
         MultipartBody.Part body = null;
-        if(imageChanged) {
+        if (imageChanged) {
             try {
                 body = prepareFilePart("image", filePath);
                 RequestBody new_image = createPartFromString("1");
@@ -729,7 +782,7 @@ public class AddCounter extends AppCompatActivity  {
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             RequestBody new_image = createPartFromString("0");
             map.put("new_image", new_image);
         }
@@ -750,7 +803,7 @@ public class AddCounter extends AppCompatActivity  {
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
         map.put("longitde", mBodyLng);*/
-        RequestBody mBodyAddress = createPartFromString(dataDistributor.getAddress().toString().replaceAll(" ","%20"));
+        RequestBody mBodyAddress = createPartFromString(dataDistributor.getAddress().toString().replaceAll(" ", "%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
                 ().trim());
@@ -773,7 +826,6 @@ public class AddCounter extends AppCompatActivity  {
         map.put("parrent_id", mBodyParent);
 
 
-
         RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                 ());
         map.put("dob", mBodyDob);
@@ -781,9 +833,6 @@ public class AddCounter extends AppCompatActivity  {
         RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
                 ());
         map.put("anniversary", mBodyAniversary);
-
-
-
 
 
         Call<ResponseBody> mCall = mEditCounterCallback.onEditCounterResponse(map, body);
@@ -796,9 +845,9 @@ public class AddCounter extends AppCompatActivity  {
                 try {
                     Log.i("", "onResponse: ");
                     if (response.code() == 200) {
-                        Toast.makeText(AddCounter.this,"Success",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddCounter.this, "Success", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 AddCounter.this.finish();
@@ -812,7 +861,7 @@ public class AddCounter extends AppCompatActivity  {
                     Log.i("", "onResponse: ");
                     if (t instanceof SocketTimeoutException || t instanceof
                             ConnectException || t instanceof UnknownHostException) {
-                        Log.e("TimeOut",t.getMessage());
+                        Log.e("TimeOut", t.getMessage());
                     }
                 } catch (Exception npe) {
                     npe.printStackTrace();
