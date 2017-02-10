@@ -84,10 +84,10 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
+/*import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+import retrofit2.Retrofit;*/
 
 public class AddCounter extends AppCompatActivity {
 
@@ -100,7 +100,8 @@ public class AddCounter extends AppCompatActivity {
 
     //    private boolean press_current_loc = false;
     private boolean adress_set = false;
-    private String lat = "", longitude = "";
+    Double lat = 0.0, lon = 0.0;
+    Location location = null;
     String complete_address = "";
     private SimpleDateFormat dateFormatter;
     private String userChoosenTask;
@@ -554,6 +555,21 @@ public class AddCounter extends AppCompatActivity {
                                     path = getPath(filePath);
                                 }
 
+                                GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
+
+                                if (gpsTracker.canGetLocation()) {
+                                    location = gpsTracker.getLocation();
+                                    if (null != location) {
+                                        lat = location.getLatitude();
+                                        lon = location.getLongitude();
+                                        complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
+                                    }
+                                    Log.e("GPS", "AddCounter-" + complete_address);
+                                } else {
+                                    gpsTracker.showSettingsAlert();
+                                    Log.e("GPS", "AddCounter-Unable to get GPS");
+                                }
+
                                 if (call_from.equalsIgnoreCase("edit"))
 
                                 {
@@ -563,10 +579,11 @@ public class AddCounter extends AppCompatActivity {
                                             territory_id = auto_territory.get(i).getId();
                                         }
                                     }
-                                    populateEditDetails();
+//                                    populateRetroEditDetails();
+                                    populateAsyncEditDetails();
                                 } else {
 //                                    retrofitAddCounter();
-                                    asyncAccCounter();
+                                    asyncAddCounter();
                                 }
                             } else {
                                 Toast.makeText(AddCounter.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
@@ -595,31 +612,12 @@ public class AddCounter extends AppCompatActivity {
 
     }
 
-    private void asyncAccCounter(){
+    private void asyncAddCounter(){
 
         mpProgressDialog = new ProgressDialog(AddCounter.this);
         mpProgressDialog.setMessage("Adding Counter..");
         mpProgressDialog.show();
-        mpProgressDialog.setCancelable(false);
-
-//                                        if (complete_address != null && complete_address.length() > 0)
-//                                            complete_address = complete_address.replaceAll(" ", "%20");
-
-        GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
-        Double lat = 0.0, lon = 0.0;
-        Location location = null;
-        if (gpsTracker.canGetLocation()) {
-            location = gpsTracker.getLocation();
-            if (null != location) {
-                lat = location.getLatitude();
-                lon = location.getLongitude();
-                complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
-            }
-            Log.e("GPS", "AddCounter-" + complete_address);
-        } else {
-            gpsTracker.showSettingsAlert();
-            Log.e("GPS", "AddCounter-Unable to get GPS");
-        }
+        mpProgressDialog.setCancelable(true);
 
         AddCounterAsync addCounterAsync = new AddCounterAsync(AddCounter.this, "1",
                 edt_countername.getText().toString().trim().replaceAll(" ", ""), edt_mobileno.getText().toString().trim(),
@@ -629,17 +627,23 @@ public class AddCounter extends AppCompatActivity {
         addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
             @Override
             public void OnSuccess(String responsecode) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
                 Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             @Override
             public void OnError(String str_err) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
                 Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void OnConnectTimeout() {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
 
             }
         });
@@ -647,7 +651,7 @@ public class AddCounter extends AppCompatActivity {
         addCounterAsync.execute();
     }
 
-    private void retrofitAddCounter(){
+    /*private void retrofitAddCounter(){
 
             mpProgressDialog = new ProgressDialog(AddCounter.this);
             mpProgressDialog.setMessage("Adding Counter..");
@@ -657,21 +661,7 @@ public class AddCounter extends AppCompatActivity {
 //                                        if (complete_address != null && complete_address.length() > 0)
 //                                            complete_address = complete_address.replaceAll(" ", "%20");
 
-            GPSTracker gpsTracker = new GPSTracker(AddCounter.this);
-            Double lat = 0.0, lon = 0.0;
-            Location location = null;
-            if (gpsTracker.canGetLocation()) {
-                location = gpsTracker.getLocation();
-                if (null != location) {
-                    lat = location.getLatitude();
-                    lon = location.getLongitude();
-                    complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
-                }
-                Log.e("GPS", "AddCounter-" + complete_address);
-            } else {
-                gpsTracker.showSettingsAlert();
-                Log.e("GPS", "AddCounter-Unable to get GPS");
-            }
+
 
             Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
             RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
@@ -761,10 +751,55 @@ public class AddCounter extends AppCompatActivity {
                     AddCounter.this.finish();
                 }
             });
+    }*/
+
+
+    private void populateAsyncEditDetails(){
+
+
+        if(complete_address!=null && complete_address.length()>0)
+            complete_address=complete_address.replaceAll(" ","%20");
+
+        mpProgressDialog = new ProgressDialog(AddCounter.this);
+        mpProgressDialog.setMessage("Adding Counter..");
+        mpProgressDialog.show();
+        mpProgressDialog.setCancelable(true);
+
+        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddCounter.this, "1",
+                edt_countername.getText().toString().trim().replaceAll(" ", "%20"), edt_mobileno.getText().toString().trim(),
+                lat.toString(), lon.toString(), complete_address, edt_emailid.getText().toString().trim(),
+                edt_bankname.getText().toString().trim(), edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(),
+                edt_dob.getText().toString(), id, null);
+        editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
+            @Override
+            public void OnSuccess(String responsecode) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddCounter.this, responsecode, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void OnError(String str_err) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddCounter.this, str_err, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void OnConnectTimeout() {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddCounter.this, "Timed Out", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        editCounterAsync.execute();
+
     }
 
-
-    private void populateEditDetails() {
+    /*private void populateRetroEditDetails() {
         mpProgressDialog = new ProgressDialog(AddCounter.this);
         mpProgressDialog.setMessage("Updating Counter..");
         mpProgressDialog.show();
@@ -789,8 +824,8 @@ public class AddCounter extends AppCompatActivity {
 
         RequestBody mBodyType = createPartFromString("1");
         map.put("type", mBodyType);
-        /*RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
-        map.put("userId", userId);*/
+        RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
+        map.put("userId", userId);*//*
         RequestBody id = createPartFromString(dataDistributor.getId());
         map.put("id", id);
         RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
@@ -799,10 +834,10 @@ public class AddCounter extends AppCompatActivity {
         map.put("territory", mBodyTerritory);
         RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
         map.put("mobile", mBodyMobile);
-        /*RequestBody mBodyLay = createPartFromString(lat);
+        RequestBody mBodyLay = createPartFromString(lat);
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
-        map.put("longitde", mBodyLng);*/
+        map.put("longitde", mBodyLng);*//*
         RequestBody mBodyAddress = createPartFromString(dataDistributor.getAddress().toString().replaceAll(" ", "%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
@@ -869,7 +904,7 @@ public class AddCounter extends AppCompatActivity {
                 AddCounter.this.finish();
             }
         });
-    }
+    }*/
 
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",

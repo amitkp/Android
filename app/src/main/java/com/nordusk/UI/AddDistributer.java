@@ -76,24 +76,23 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
+/*import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+import retrofit2.Retrofit;*/
 
-public class AddDistributer extends AppCompatActivity implements LocationListener {
+public class AddDistributer extends AppCompatActivity  {
 
     private EditText edt_countername, edt_counterownername, edt_dob, edt_mobileno, edt_emailid, edt_aniversary,
             edt_bankname, edt_accno, edt_ifsccode, edt_countersize;
-//    private EditText edt_counteraddress;
+    //    private EditText edt_counteraddress;
     private Button submit;
-    private TextView  textView_imgselect;
-//    private TextView txt_current_loc,txt_counterlocation_press;
+    private TextView textView_imgselect;
+    //    private TextView txt_current_loc,txt_counterlocation_press;
     private static int REQUEST_LOCATION = 2;
 
     private boolean press_current_loc = false;
     private boolean adress_set = false;
-    private String lat = "", longitude = "";
     String complete_address = "";
     private SimpleDateFormat dateFormatter;
     private String userChoosenTask;
@@ -115,6 +114,8 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     private Context context;
     private ProgressDialog mpProgressDialog;
     private boolean imageChanged = false;
+    private Double lat = 0.0, lon = 0.0;
+    private Location location = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,9 +166,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
         if (!call_from.equalsIgnoreCase("edit")) {
             //To setup location manager
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 //        LocationManager.requestLocationUpdates(String provider, long minTime, float minDistance, LocationListener listener);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
+//            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 5, this);
         }
     }
 
@@ -412,8 +413,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         if (call_from.equalsIgnoreCase("edit")) {
             submit.setText("Update");
 
-        }
-        else
+        } else
             submit.setText("Add");
 
         edt_bankname = (EditText) findViewById(R.id.distributor_edtxt_bankname);
@@ -457,7 +457,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
     }
 
 
-    @Override
+    /*@Override
     public void onLocationChanged(Location location) {
         addressSet(location);
         lat = String.valueOf(location.getLatitude());
@@ -557,34 +557,47 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         } else {
             // Permission was denied or request was cancelled
         }
-    }
+    }*/
 
 
     private void validateInputs() {
 
         if (!TextUtils.isEmpty(edt_countername.getText().toString().trim())) {
 //            if (press_current_loc) {
-                if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
-                    if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
-                        if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(edt_mobileno.getText().toString().trim())) {
+                if (!TextUtils.isEmpty(auto_text_territory.getText().toString().trim())) {
+                    if (!TextUtils.isEmpty(edt_dob.getText().toString().trim())) {
 
-                           if(!TextUtils.isEmpty(edt_countersize.getText().toString().trim())){
-
-
+                        if (!TextUtils.isEmpty(edt_countersize.getText().toString().trim())) {
 
 
                             if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                                 String validation = auto_text.getText().toString();
-                                if(validation.contains("-")){
+                                if (validation.contains("-")) {
                                     String[] separated = auto_text.getText().toString().trim().split("-");
                                     parentId = separated[1].toString();
-                                }
-                                else parentId = validation;
+                                } else parentId = validation;
                             }
                             String path = "";
                             if (filePath != null) {
                                 path = getPath(filePath);
                             }
+
+                            GPSTracker gpsTracker = new GPSTracker(AddDistributer.this);
+
+                            if (gpsTracker.canGetLocation()) {
+                                location = gpsTracker.getLocation();
+                                if (null != location) {
+                                    lat = location.getLatitude();
+                                    lon = location.getLongitude();
+                                    complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
+                                }
+                                Log.e("GPS", "AddCounter-" + complete_address);
+                            } else {
+                                gpsTracker.showSettingsAlert();
+                                Log.e("GPS", "AddCounter-Unable to get GPS");
+                            }
+
                             if (call_from.equalsIgnoreCase("edit"))
 
                             {
@@ -595,139 +608,28 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                                     }
                                 }
 
-                                populateEditDetails();
+//                                populateRetroEditDetails();
+                                populateAsyncEditDetails();
 
                             } else {
-                                mpProgressDialog = new ProgressDialog(context);
-                                mpProgressDialog.setMessage("Adding Distributor..");
-                                mpProgressDialog.show();
-                                mpProgressDialog.setCancelable(false);
 
-                                if (complete_address != null && complete_address.length() > 0)
-                                    complete_address = complete_address.replaceAll(" ", "%20");
+//                                retrofitAddDistributor();
+                                asyncAddDistributor();
 
-                                GPSTracker gpsTracker = new GPSTracker(AddDistributer.this);
-                                Double lat = 0.0, lon = 0.0;
-                                Location location = null;
-                                if(gpsTracker.canGetLocation()) {
-                                    location = gpsTracker.getLocation();
-                                    if(null != location) {
-                                        lat = location.getLatitude();
-                                        lon = location.getLongitude();
-                                        complete_address = gpsTracker.addressSet(lat, lon).replaceAll(" ", "%20");
-                                    }
-                                    Log.e("GPS","AddCounter-"+complete_address);
-                                }else{
-                                    gpsTracker.showSettingsAlert();
-                                    Log.e("GPS","AddCounter-Unable to get GPS");
-                                }
-
-                                Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
-                                RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
-
-                                MultipartBody.Part body = null;
-                                if(imageChanged) {
-                                    try {
-                                        body = prepareFilePart("image", filePath);
-                                    } catch (URISyntaxException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                HashMap<String, RequestBody> map = new HashMap<>();
-                                RequestBody mBodyType = createPartFromString(type);
-                                map.put("type", mBodyType);
-                                RequestBody userId = createPartFromString(new Prefs(AddDistributer.this).getString("userid", ""));
-                                map.put("userId", userId);
-                                RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
-                                map.put("name", mBody);
-                                RequestBody mBodyTerritory = createPartFromString(territory_id);
-                                map.put("territory", mBodyTerritory);
-                                RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
-                                map.put("mobile", mBodyMobile);
-                                RequestBody mBodyLay = createPartFromString(lat.toString());
-                                map.put("latitude", mBodyLay);
-                                RequestBody mBodyLng = createPartFromString(lon.toString());
-                                map.put("longitude", mBodyLng);
-                                RequestBody mBodyAddress = createPartFromString(complete_address);
-                                map.put("address", mBodyAddress);
-                                RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
-                                        ().trim());
-                                map.put("email", mBodyEmail);
-                                RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString
-                                        ().trim());
-                                map.put("bank_name", mBodyBank);
-
-                                RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
-                                map.put("account_no", mBodyAccount);
-
-                                RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString
-                                        ().trim());
-                                map.put("ifsc_code", mBodyIfsc);
-
-                                RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
-                                map.put("counter_size", mBodyCounter);
-
-                                RequestBody mBodyParent = createPartFromString(parentId);
-                                map.put("parrent_id", mBodyParent);
-
-
-
-                                RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
-                                        ());
-                                map.put("dob", mBodyDob);
-
-                                RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
-                                        ());
-                                map.put("anniversary", mBodyAniversary);
-
-                                Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
-                                mCall.enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (mpProgressDialog != null && mpProgressDialog.isShowing())
-                                            mpProgressDialog.dismiss();
-
-                                        try {
-                                            Log.i("", "onResponse: ");
-                                            if (response.code() == 200) {
-                                                Toast.makeText(context,"Success",Toast.LENGTH_SHORT);
-                                            }
-                                        } catch (Exception npe) {
-                                            npe.printStackTrace();
-                                        }
-                                        AddDistributer.this.finish();
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                        if (mpProgressDialog != null && mpProgressDialog.isShowing())
-                                            mpProgressDialog.dismiss();
-                                        try {
-                                            Log.i("", "onResponse: ");
-                                            if (t instanceof SocketTimeoutException || t instanceof
-                                                    ConnectException || t instanceof UnknownHostException) {
-                                                Log.e("TimeOut",t.getMessage());
-                                            }
-                                        } catch (Exception npe) {
-                                            npe.printStackTrace();
-                                        }
-                                        AddDistributer.this.finish();
-                                    }
-                                });
 //                    } else {
 //                        Toast.makeText(AddDistributer.this, "Please enter Prime partner", Toast.LENGTH_SHORT).show();
 //                    }
                             }
-                           }else{
-                               Toast.makeText(AddDistributer.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
-                           }
-                        } else
-                            Toast.makeText(AddDistributer.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(AddDistributer.this, "Please enter territory", Toast.LENGTH_SHORT).show();
-                    }
-                } else
-                    Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(AddDistributer.this, "Please enter counter size", Toast.LENGTH_SHORT).show();
+                        }
+                    } else
+                        Toast.makeText(AddDistributer.this, "Please enter date of birth", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddDistributer.this, "Please enter territory", Toast.LENGTH_SHORT).show();
+                }
+            } else
+                Toast.makeText(AddDistributer.this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
 //            } else
 //                Toast.makeText(AddDistributer.this, "Please press on current location", Toast.LENGTH_SHORT).show();
         } else
@@ -735,7 +637,205 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
 
     }
 
-    private void populateEditDetails(){
+    private void asyncAddDistributor(){
+
+        mpProgressDialog = new ProgressDialog(context);
+        mpProgressDialog.setMessage("Adding Distributor..");
+        mpProgressDialog.show();
+        mpProgressDialog.setCancelable(true);
+
+        if (complete_address != null && complete_address.length() > 0)
+            complete_address = complete_address.replaceAll(" ", "%20");
+
+
+        if(complete_address!=null && complete_address.length()>0)
+            complete_address=complete_address.replaceAll(" ","%20");
+
+        AddCounterAsync addCounterAsync = new AddCounterAsync(AddDistributer.this, type,
+                edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
+                edt_mobileno.getText().toString().trim(), lat.toString(), lon.toString(), complete_address,
+                edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), null);
+        addCounterAsync.setOnContentListParserListner(new AddCounterAsync.OnContentListSchedules() {
+            @Override
+            public void OnSuccess(String responsecode) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void OnError(String str_err) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void OnConnectTimeout() {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+
+            }
+        });
+
+        addCounterAsync.execute();
+
+    }
+
+    /*private void retrofitAddDistributor(){
+
+        mpProgressDialog = new ProgressDialog(context);
+        mpProgressDialog.setMessage("Adding Distributor..");
+        mpProgressDialog.show();
+        mpProgressDialog.setCancelable(false);
+
+        if (complete_address != null && complete_address.length() > 0)
+            complete_address = complete_address.replaceAll(" ", "%20");
+
+        Retrofit mRetrofit = WebApiClient.getClient(new WeakReference<Context>(getBaseContext()));
+        RestCallback.AddCounterCallback mAddCounterCallback = mRetrofit.create(RestCallback.AddCounterCallback.class);
+
+        MultipartBody.Part body = null;
+        if (imageChanged) {
+            try {
+                body = prepareFilePart("image", filePath);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        HashMap<String, RequestBody> map = new HashMap<>();
+        RequestBody mBodyType = createPartFromString(type);
+        map.put("type", mBodyType);
+        RequestBody userId = createPartFromString(new Prefs(AddDistributer.this).getString("userid", ""));
+        map.put("userId", userId);
+        RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
+        map.put("name", mBody);
+        RequestBody mBodyTerritory = createPartFromString(territory_id);
+        map.put("territory", mBodyTerritory);
+        RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
+        map.put("mobile", mBodyMobile);
+        RequestBody mBodyLay = createPartFromString(lat.toString());
+        map.put("latitude", mBodyLay);
+        RequestBody mBodyLng = createPartFromString(lon.toString());
+        map.put("longitude", mBodyLng);
+        RequestBody mBodyAddress = createPartFromString(complete_address);
+        map.put("address", mBodyAddress);
+        RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
+                ().trim());
+        map.put("email", mBodyEmail);
+        RequestBody mBodyBank = createPartFromString(edt_bankname.getText().toString
+                ().trim());
+        map.put("bank_name", mBodyBank);
+
+        RequestBody mBodyAccount = createPartFromString(edt_accno.getText().toString().trim());
+        map.put("account_no", mBodyAccount);
+
+        RequestBody mBodyIfsc = createPartFromString(edt_ifsccode.getText().toString
+                ().trim());
+        map.put("ifsc_code", mBodyIfsc);
+
+        RequestBody mBodyCounter = createPartFromString(edt_countersize.getText().toString().trim());
+        map.put("counter_size", mBodyCounter);
+
+        RequestBody mBodyParent = createPartFromString(parentId);
+        map.put("parrent_id", mBodyParent);
+
+
+        RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
+                ());
+        map.put("dob", mBodyDob);
+
+        RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
+                ());
+        map.put("anniversary", mBodyAniversary);
+
+        Call<ResponseBody> mCall = mAddCounterCallback.onAddCounterResponse(map, body);
+        mCall.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+
+                try {
+                    Log.i("", "onResponse: ");
+                    if (response.code() == 200) {
+                        Toast.makeText(context, "Success", Toast.LENGTH_SHORT);
+                    }
+                } catch (Exception npe) {
+                    npe.printStackTrace();
+                }
+                AddDistributer.this.finish();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                try {
+                    Log.i("", "onResponse: ");
+                    if (t instanceof SocketTimeoutException || t instanceof
+                            ConnectException || t instanceof UnknownHostException) {
+                        Log.e("TimeOut", t.getMessage());
+                    }
+                } catch (Exception npe) {
+                    npe.printStackTrace();
+                }
+                AddDistributer.this.finish();
+            }
+        });
+    }*/
+    private void populateAsyncEditDetails(){
+
+        for (int i = 0; i < auto_territory.size(); i++) {
+            if (auto_text_territory.getText().toString().trim().equalsIgnoreCase(auto_territory.get(i).getName())) {
+                territory_id = auto_territory.get(i).getId();
+            }
+        }
+
+        mpProgressDialog = new ProgressDialog(context);
+        mpProgressDialog.setMessage("Adding Distributor..");
+        mpProgressDialog.show();
+        mpProgressDialog.setCancelable(true);
+
+        EditCounterDistributorAsync editCounterAsync = new EditCounterDistributorAsync(AddDistributer.this,
+                type, edt_countername.getText().toString().trim().replaceAll(" ", "%20"),
+                edt_mobileno.getText().toString().trim(), lat.toString(), lon.toString(), complete_address,
+                edt_emailid.getText().toString().trim(), edt_bankname.getText().toString().trim(),
+                edt_accno.getText().toString().trim(), edt_ifsccode.getText().toString().trim(),
+                edt_countersize.getText().toString().trim(), parentId, "", territory_id, edt_aniversary.getText().toString(), edt_dob.getText().toString(), id, null);
+        editCounterAsync.setOnContentListParserListner(new EditCounterDistributorAsync.OnContentListSchedules() {
+            @Override
+            public void OnSuccess(String responsecode) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddDistributer.this, responsecode, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void OnError(String str_err) {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddDistributer.this, str_err, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void OnConnectTimeout() {
+                if (mpProgressDialog != null && mpProgressDialog.isShowing())
+                    mpProgressDialog.dismiss();
+                Toast.makeText(AddDistributer.this, "Timed Out", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        editCounterAsync.execute();
+
+    }
+
+    /*private void populateRetroEditDetails() {
         mpProgressDialog = new ProgressDialog(context);
         mpProgressDialog.setMessage("Updating Distributor..");
         mpProgressDialog.show();
@@ -748,7 +848,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         RestCallback.EditCounterCallback mEditCounterCallback = mRetrofit.create(RestCallback.EditCounterCallback.class);
         HashMap<String, RequestBody> map = new HashMap<>();
         MultipartBody.Part body = null;
-        if(imageChanged) {
+        if (imageChanged) {
             try {
                 body = prepareFilePart("image", filePath);
                 RequestBody new_image = createPartFromString("1");
@@ -756,15 +856,15 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             RequestBody new_image = createPartFromString("0");
             map.put("new_image", new_image);
         }
 
         RequestBody mBodyType = createPartFromString("2");
         map.put("type", mBodyType);
-        /*RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
-        map.put("userId", userId);*/
+        *//*RequestBody userId = createPartFromString(new Prefs(AddCounter.this).getString("userid", ""));
+        map.put("userId", userId);*//*
         RequestBody id = createPartFromString(dataDistributor.getId());
         map.put("id", id);
         RequestBody mBody = createPartFromString(edt_countername.getText().toString().trim().replaceAll(" ", "%20"));
@@ -773,10 +873,10 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         map.put("territory", mBodyTerritory);
         RequestBody mBodyMobile = createPartFromString(edt_mobileno.getText().toString().trim());
         map.put("mobile", mBodyMobile);
-        /*RequestBody mBodyLay = createPartFromString(lat);
+        *//*RequestBody mBodyLay = createPartFromString(lat);
         map.put("latitude", mBodyLay);
         RequestBody mBodyLng = createPartFromString(longitude);
-        map.put("longitde", mBodyLng);*/
+        map.put("longitde", mBodyLng);*//*
         RequestBody mBodyAddress = createPartFromString(dataDistributor.getAddress().replaceAll(" ", "%20"));
         map.put("address", mBodyAddress);
         RequestBody mBodyEmail = createPartFromString(edt_emailid.getText().toString
@@ -800,7 +900,6 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         map.put("parrent_id", mBodyParent);
 
 
-
         RequestBody mBodyDob = createPartFromString(edt_dob.getText().toString().trim
                 ());
         map.put("dob", mBodyDob);
@@ -808,9 +907,6 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
         RequestBody mBodyAniversary = createPartFromString(edt_aniversary.getText().toString().trim
                 ());
         map.put("anniversary", mBodyAniversary);
-
-
-
 
 
         Call<ResponseBody> mCall = mEditCounterCallback.onEditCounterResponse(map, body);
@@ -823,9 +919,9 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                 try {
                     Log.i("", "onResponse: ");
                     if (response.code() == 200) {
-                        Toast.makeText(context,"Success",Toast.LENGTH_SHORT);
+                        Toast.makeText(context, "Success", Toast.LENGTH_SHORT);
                     }
-                } catch (Exception t){
+                } catch (Exception t) {
                     t.printStackTrace();
                 }
                 AddDistributer.this.finish();
@@ -839,7 +935,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                     Log.i("", "onResponse: ");
                     if (t instanceof SocketTimeoutException || t instanceof
                             ConnectException || t instanceof UnknownHostException) {
-                        Log.e("TimeOut",t.getMessage());
+                        Log.e("TimeOut", t.getMessage());
                     }
                 } catch (Exception npe) {
                     npe.printStackTrace();
@@ -847,7 +943,7 @@ public class AddDistributer extends AppCompatActivity implements LocationListene
                 AddDistributer.this.finish();
             }
         });
-    }
+    }*/
 
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library",

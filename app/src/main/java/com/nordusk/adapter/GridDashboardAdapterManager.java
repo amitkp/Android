@@ -38,6 +38,7 @@ import com.nordusk.UI.Listattendance;
 import com.nordusk.UI.ListattendanceHourlyReport;
 import com.nordusk.UI.MapsActivity;
 import com.nordusk.UI.MapsActivityContractorDistributor;
+import com.nordusk.UI.ViewNoticeSalesPerson;
 import com.nordusk.UI.createTarget.DialogTargetCreate;
 import com.nordusk.UI.dialogTracker.DialogAddTracker;
 import com.nordusk.UI.orderCreate.ActivityOrderCreate;
@@ -62,8 +63,8 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             R.mipmap.ic_track, R.mipmap.ic_teritory,
             R.mipmap.ic_create_target, R.mipmap.ic_target_list,
             R.mipmap.ic_attendance, R.mipmap.ic_order_vs_bill,
-            R.mipmap.ic_daily_track, R.mipmap.ic_notice,
-            R.mipmap.ic_target_list};
+            R.mipmap.ic_daily_track,R.mipmap.ic_target_list,
+            R.mipmap.ic_notice, R.mipmap.ic_reports};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -144,9 +145,12 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                 } else if (position == 8){
                     dailyTrackingReport();
                 } else if (position == 9){
-                    createNotice();
-                } else if (position == 10){
                     targetTrackingSPDialog();
+                } else if (position == 10){
+                    createNotice();
+                } else if(position == 11){
+                    Intent mIntent = new Intent(mContext, ViewNoticeSalesPerson.class);
+                    mContext.startActivity(mIntent);
                 }
 
 

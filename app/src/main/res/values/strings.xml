@@ -36,6 +36,7 @@
     <string name="daily_tracking">Daily Tracking</string>
     <string name="create_notice">Create Notice</string>
     <string name="view_notice">View Notice</string>
+    <string name="Target_Tracking_SP">Target Tracking SP</string>
 
     <!-- Url-->
     <string name="base_url">http://dynamicsglobal.net/app/</string>
@@ -80,8 +81,9 @@
         <item>@string/check_attendance</item>
         <item>@string/order_vs_bill</item>
         <item>@string/daily_tracking</item>
+        <item>@string/Target_Tracking_SP</item>
         <item>@string/create_notice</item>
-        <item>Target Tracking SP</item>
+        <item>@string/view_notice</item>
     </array>
 
     <array name="options_dashboard_admin">
@@ -89,7 +91,7 @@
         <item>@string/txt_viewdistributor</item>
         <item>@string/txt_view_prime_partner</item>
         <item>@string/txt_order_list</item>
-        <item>@string/txt_create_user</item>
+        <item>Contact Picker</item>
     </array>
 
     <string name="parseError">Parseing Error</string>

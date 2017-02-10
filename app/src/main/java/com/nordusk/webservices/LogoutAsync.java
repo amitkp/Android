@@ -49,7 +49,7 @@ public class LogoutAsync extends AsyncTask<Void, Void, Void> {
         try {
             if(lat != null && lat != 0.0 && lon != null && lon != 0.0){
                 String url = context.getResources().getString(R.string.base_url) + context.getResources().getString(R.string.logoutasync_url)+ "userId="+ new Prefs(context).getString("userid","")+"&latitude=" + lat + "&longitude=" + lon + "";
-                Log.e("GPS logout",url);
+                Log.e("Logout",url);
                 String[] responsedata = HttpConnectionUrl.post(context, url, jsonObject);
                 isTimeOut = (!TextUtils.isEmpty(responsedata[0]) && responsedata[0].equals(HttpConnectionUrl.RESPONSECODE_REQUESTSUCCESS)) ? false : true;
                 if (!isTimeOut && !TextUtils.isEmpty(responsedata[1])) {

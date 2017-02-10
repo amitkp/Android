@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -43,14 +46,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by DELL on 17-11-2016.
  */
 public class GridDashboardAdapterAdmin extends BaseAdapter {
 
     private int[] img_ids = {R.mipmap.ic_counter, R.mipmap.ic_distributor,
-            R.mipmap.ic_view_prime_partner,
-            R.mipmap.ic_target_list, R.mipmap.ic_create_user};
+            R.mipmap.ic_view_prime_partner,R.mipmap.ic_target_list,
+            R.mipmap.ic_create_user};
     private String[] options_dashboard;
 
     private AppCompatActivity mContext;
@@ -117,7 +122,9 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
                     selectCounterDistributorDialog();
                 } else if (position == 4) {
                     selectCreateUserDialog();
-                }
+                }/* else if (position == 5) {
+                    pickContact(v);
+                }*/
             }
 
         });
@@ -329,10 +336,6 @@ public class GridDashboardAdapterAdmin extends BaseAdapter {
         mDialog_SelectSelectAccount.show();
 
     }
-
-
-
-
 
 
 }

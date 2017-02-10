@@ -2,8 +2,10 @@ package com.nordusk.UI;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -26,6 +28,7 @@ import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.LoginAsync;
+import com.nordusk.webservices.LogoutAsync;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +45,9 @@ public class Splash extends AppCompatActivity {
     private boolean isGranted = false;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
     private String date = "";
+    private Context context;
+    private Double lat;
+    private Double lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,7 @@ public class Splash extends AppCompatActivity {
             executeUserPermissionTree();
 
         }
-
+        this.context = Splash.this;
 
         initView();
         setListener();
@@ -85,7 +91,7 @@ public class Splash extends AppCompatActivity {
         imgicon_three = (ImageView) findViewById(R.id.splash_imgthree);
         imgicon_four = (ImageView) findViewById(R.id.splash_imgfour);
         hTextView = (HTextView) findViewById(R.id.splash_htxt);
-        hTextView.setText("Hello Nordust");
+        hTextView.setText("Hello Nordusk");
 
         btn_login = (Button) findViewById(R.id.splash_btn_login);
 
@@ -122,7 +128,7 @@ public class Splash extends AppCompatActivity {
 
                 date = Util.getCurrentDate();
                 if (!date.equalsIgnoreCase(lastLogin)) {
-                    loginAsyncCall();
+                    logoutLoginAsyncCall();
                 } else {
                     startActivity(new Intent(Splash.this, Dashboard.class));
                     finish();
@@ -258,40 +264,66 @@ public class Splash extends AppCompatActivity {
         }
     }
 
-    private void loginAsyncCall() {
+    private void logoutLoginAsyncCall() {
 
         if (HttpConnectionUrl.isNetworkAvailable(Splash.this)) {
             GPSTracker gpsTracker = new GPSTracker(this);
             if (gpsTracker.canGetLocation()) {
-                Double lat = gpsTracker.getLatitude();
-                Double lon = gpsTracker.getLongitude();
+                lat = gpsTracker.getLatitude();
+                lon = gpsTracker.getLongitude();
                 if (lat != null && lat != 0.0 && lon != null && lon != 0.0) {
-                    initView();
-                    LoginAsync loginAsync = new LoginAsync(Splash.this, new Prefs(Splash.this).getString("UserName", ""), new Prefs(Splash.this).getString("Password", ""), null, lat, lon);
-                    loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
+
+
+
+                    LogoutAsync logoutAsync = new LogoutAsync(Splash.this, null, lat, lon);
+                    logoutAsync.setOnContentListParserListner(new LogoutAsync.OnContentListSchedules() {
                         @Override
-                        public void OnSuccess(String response_code) {
+                        public void OnSuccess(String responsecode) {
+//                            Toast.makeText(context, "Logout:"+responsecode, Toast.LENGTH_SHORT).show();
 
+                            LoginAsync loginAsync = new LoginAsync(Splash.this, new Prefs(Splash.this).getString("UserName", ""), new Prefs(Splash.this).getString("Password", ""), null, lat, lon);
+                            loginAsync.setOnContentListParserListner(new LoginAsync.OnContentListSchedules() {
+                                @Override
+                                public void OnSuccess(String response_code) {
 
-                            //Toast.makeText(Splash.this, response_code, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(Splash.this, Dashboard.class));
-                            finish();
+                                    new Prefs(context).setString("LastLogin",Util.getCurrentDate());
+                                    //Toast.makeText(Splash.this, response_code, Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(Splash.this, Dashboard.class));
+                                    finish();
 
+                                }
+
+                                @Override
+                                public void OnError(String str_err) {
+                                    Toast.makeText(Splash.this, str_err, Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(Splash.this, Login.class));
+                                }
+
+                                @Override
+                                public void OnConnectTimeout() {
+                                    Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(Splash.this, Login.class));
+                                }
+                            });
+                            loginAsync.execute();
                         }
 
                         @Override
                         public void OnError(String str_err) {
-                            Toast.makeText(Splash.this, str_err, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(Splash.this, Login.class));
+                            Toast.makeText(context, str_err, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void OnConnectTimeout() {
-                            Toast.makeText(Splash.this, "Please check your network connection", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(Splash.this, Login.class));
+                            Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();
                         }
                     });
-                    loginAsync.execute();
+
+                    logoutAsync.execute();
+
+
+
+
                 } else {
 
                 }
