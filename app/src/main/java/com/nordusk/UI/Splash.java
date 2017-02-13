@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nordusk.R;
@@ -40,7 +41,7 @@ import java.util.Map;
 public class Splash extends AppCompatActivity {
 
     private ImageView imgicon_one, imgicon_two, imgicon_three, imgicon_four;
-    private HTextView hTextView;
+    private TextView hTextView;
     private Button btn_login;
     private boolean isGranted = false;
     final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
@@ -76,12 +77,6 @@ public class Splash extends AppCompatActivity {
         imgicon_two.setAnimation(animation_two);
         imgicon_three.setAnimation(animation_three);
         imgicon_four.setAnimation(animation_four);
-
-
-        hTextView.setText("Hello Nordusk");
-        hTextView.setAnimateType(HTextViewType.LINE);
-
-
     }
 
     private void initView() {
@@ -90,8 +85,8 @@ public class Splash extends AppCompatActivity {
         imgicon_two = (ImageView) findViewById(R.id.splash_imgtwo);
         imgicon_three = (ImageView) findViewById(R.id.splash_imgthree);
         imgicon_four = (ImageView) findViewById(R.id.splash_imgfour);
-        hTextView = (HTextView) findViewById(R.id.splash_htxt);
-        hTextView.setText("Hello Nordusk");
+        hTextView = (TextView) findViewById(R.id.splash_htxt);
+        hTextView.setText("Welcome to Nordusk");
 
         btn_login = (Button) findViewById(R.id.splash_btn_login);
 
@@ -155,6 +150,12 @@ public class Splash extends AppCompatActivity {
 
             }
         });
+        /*hTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });*/
     }
 
     private void executeUserPermissionTree() {

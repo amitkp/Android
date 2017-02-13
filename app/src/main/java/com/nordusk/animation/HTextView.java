@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.TextView;
 
 import com.nordusk.R;
@@ -93,5 +94,15 @@ public class HTextView extends TextView {
         }
 
         initHText(attrs, defStyle);
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        super.setOnClickListener(l);
+    }
+
+    @Override
+    public boolean callOnClick() {
+        return super.callOnClick();
     }
 }
