@@ -75,12 +75,12 @@ public class ViewCategoryItem extends FrameLayout {
         spinner_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, listcategory.get(position), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, listcategory.get(position), Toast.LENGTH_SHORT).show();
                 if (HttpConnectionUrl.isNetworkAvailable(context))
                     if (listcategory.get(position) != null) {
                         String cat = "";
                         cat = listcategory.get(position).toString().trim().replaceAll(" ", "%20");
-                        Toast.makeText(context, cat, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, cat, Toast.LENGTH_SHORT).show();
                         fetchProduct(cat);
                     } else
                         Toast.makeText(context, "Please check your network connection", Toast.LENGTH_SHORT).show();

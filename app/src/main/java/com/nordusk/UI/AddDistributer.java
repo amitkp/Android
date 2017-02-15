@@ -9,30 +9,24 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,17 +36,13 @@ import com.nordusk.adapter.CustomAutoCompleteAdapter;
 import com.nordusk.pojo.DataDistributor;
 import com.nordusk.utility.FileUtils;
 import com.nordusk.utility.GPSTracker;
-import com.nordusk.utility.Prefs;
 import com.nordusk.utility.Util;
 import com.nordusk.webservices.AddCounterAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.ParentId;
-import com.nordusk.webservices.ParentIdAsync;
 import com.nordusk.webservices.PrimePatnerAsync;
 import com.nordusk.webservices.TerritoryAsync;
 import com.nordusk.webservices.rest.EditCounterDistributorAsync;
-import com.nordusk.webservices.rest.RestCallback;
-import com.nordusk.webservices.rest.WebApiClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -61,21 +51,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 /*import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -233,7 +217,8 @@ public class AddDistributer extends AppCompatActivity  {
                 if (call_from != null && call_from.equals("edit")) {
                     for (int i = 0; i < auto_territory.size(); i++) {
                         if (dataDistributor.getTerritory().equals(auto_territory.get(i).getId())) {
-                            auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i).getId());
+//                            auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i).getId());
+                            auto_text_territory.setText(auto_territory.get(i).getName());
                             territory_id = auto_territory.get(i).getId();
                             break;
                         }
@@ -266,7 +251,8 @@ public class AddDistributer extends AppCompatActivity  {
                 if (call_from != null && call_from.equals("edit")) {
                     for (int i = 0; i < tempParentIds.size(); i++) {
                         if (dataDistributor.getParrentId().equals(tempParentIds.get(i).getId())) {
-                            auto_text.setText(tempParentIds.get(i).getName() + "-" + tempParentIds.get(i).getId());
+//                            auto_text.setText(tempParentIds.get(i).getName() + "-" + tempParentIds.get(i).getId());
+                            auto_text.setText(tempParentIds.get(i).getName());
                             break;
                         }
                     }
@@ -442,12 +428,10 @@ public class AddDistributer extends AppCompatActivity  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                // String name = "";
-                //name = parent.getItemAtPosition(position).toString();
                 for (int i = 0; i < auto_territory.size(); i++) {
-                    // if (name.equalsIgnoreCase(auto_territory.get(i).getName())) {
-                    territory_id = auto_territory.get(i).getId();
-                    // }
+                    if (auto_text_territory.getText().toString().trim().equalsIgnoreCase(auto_territory.get(i).getName())) {
+                        territory_id = auto_territory.get(i).getId();
+                    }
                 }
 
             }
@@ -573,10 +557,18 @@ public class AddDistributer extends AppCompatActivity  {
 
                             if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                                 String validation = auto_text.getText().toString();
-                                if (validation.contains("-")) {
+                                for(int iter = 0; iter < tempParentIds.size();iter++){
+                                    if(validation.trim().equalsIgnoreCase(tempParentIds.get(iter).getName())){
+                                        parentId = tempParentIds.get(iter).getId();
+                                        Log.e("ParentID","Searching-"+validation+" in Name-"+tempParentIds.get(iter).getName()
+                                        +" ID-"+tempParentIds.get(iter).getId());
+                                    }
+                                }
+                                /*if (validation.contains("-")) {
                                     String[] separated = auto_text.getText().toString().trim().split("-");
                                     parentId = separated[1].toString();
-                                } else parentId = validation;
+                                }*/
+                                if(parentId == null || parentId.length()<1) parentId = validation;
                             }
                             String path = "";
                             if (filePath != null) {

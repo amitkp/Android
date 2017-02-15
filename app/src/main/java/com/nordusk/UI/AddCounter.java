@@ -200,14 +200,14 @@ public class AddCounter extends AppCompatActivity {
         id = dataDistributor.getId();
 
 
-//        if(dataDistributor.getParrentId()!=null){
-//           parentId=dataDistributor.getParrentId();
-//            for(int i=0;i<tempParentIds.size();i++){
-//                if(parentId.equalsIgnoreCase(tempParentIds.get(i).getId())){
-//                    auto_text.setText(tempParentIds.get(i).getName());
-//                }
-//            }
-//        }
+        if(dataDistributor.getParrentId()!=null){
+           parentId=dataDistributor.getParrentId();
+            for(int i=0;i<tempParentIds.size();i++){
+                if(parentId.equalsIgnoreCase(tempParentIds.get(i).getId())){
+                    auto_text.setText(tempParentIds.get(i).getName());
+                }
+            }
+        }
 
 
 //        if (call_from.equalsIgnoreCase("edit")) {
@@ -258,16 +258,16 @@ public class AddCounter extends AppCompatActivity {
                     if (response.length >= 2) {
                         for (int i = 0; i < auto_territory.size(); i++) {
                             if (response[1].equals(auto_territory.get(i).getId())) {
-                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i)
-                                        .getId());
+//                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i).getId());
+                                auto_text_territory.setText(auto_territory.get(i).getName());
                                 territory_id = auto_territory.get(i).getId();
                             }
                         }
                     } else if (response.length == 1) {
                         for (int i = 0; i < auto_territory.size(); i++) {
                             if (response[0].equals(auto_territory.get(i).getId())) {
-                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i)
-                                        .getId());
+//                                auto_text_territory.setText(auto_territory.get(i).getName() + "-" + auto_territory.get(i).getId());
+                                auto_text_territory.setText(auto_territory.get(i).getName());
                                 territory_id = auto_territory.get(i).getId();
                             }
                         }
@@ -300,7 +300,8 @@ public class AddCounter extends AppCompatActivity {
                 if (call_from != null && call_from.equalsIgnoreCase("edit")) {
                     for (int i = 0; i < tempParentIds.size(); i++) {
                         if (dataDistributor.getParrentId().equals(tempParentIds.get(i).getId())) {
-                            auto_text.setText(tempParentIds.get(i).getName() + "-" + tempParentIds.get(i).getId());
+//                            auto_text.setText(tempParentIds.get(i).getName() + "-" + tempParentIds.get(i).getId());
+                            auto_text.setText(tempParentIds.get(i).getName());
                             break;
                         }
                     }
@@ -545,10 +546,12 @@ public class AddCounter extends AppCompatActivity {
 
                                 if (auto_text.getText().toString().trim() != null && auto_text.getText().toString().trim().length() > 0) {
                                     String validation = auto_text.getText().toString();
-                                    if (validation.contains("-")) {
-                                        String[] separated = auto_text.getText().toString().trim().split("-");
-                                        parentId = separated[1].toString();
-                                    } else parentId = validation;
+                                    for(int iter = 0; iter < tempParentIds.size();iter++){
+                                        if (validation.trim().equalsIgnoreCase(tempParentIds.get(iter).getName())) {
+                                            parentId = tempParentIds.get(iter).getId();
+                                        }
+                                    }
+
                                 }
                                 String path = "";
                                 if (filePath != null) {
