@@ -3,6 +3,7 @@ package com.nordusk.UI;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
                                         }
                                     }
                                     jsonObject.put("list",jsonArray);
+                                    Log.e("Hourly Json",jsonObject.toString());
                                     InsertDailyTraceAsync insertDailyTraceAsync=new InsertDailyTraceAsync(ListattendanceHourlyReport.this,jsonObject);
                                     insertDailyTraceAsync.setOnContentListParserListner(new InsertDailyTraceAsync.OnContentListSchedules() {
                                         @Override

@@ -130,13 +130,13 @@ public class AdapterOrderList extends RecyclerView.Adapter<AdapterOrderList.Hold
 
                             @Override
                             public void OnError(String str_err) {
-                                Toast.makeText(context,"Please check your network",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context,str_err,Toast.LENGTH_SHORT).show();
                                 mDialog_SelectSelectAccount.dismiss();
                             }
 
                             @Override
                             public void OnConnectTimeout() {
-
+                                Toast.makeText(context,"Please check your network",Toast.LENGTH_SHORT).show();
                             }
                         });
                         approveOrderAsync.execute();

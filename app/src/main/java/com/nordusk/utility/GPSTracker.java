@@ -181,7 +181,7 @@ public class GPSTracker extends Service implements LocationListener {
             return " ";
 
         }
-        return complete_address;
+        return complete_address.substring(0,50);
 
     }
 
