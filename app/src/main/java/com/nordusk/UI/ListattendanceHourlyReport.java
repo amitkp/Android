@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.nordusk.R;
 import com.nordusk.adapter.AdapterHourlyAttendance;
 import com.nordusk.pojo.DataObjectAttendance;
+import com.nordusk.utility.Prefs;
 import com.nordusk.webservices.AttendanceHourlySPAsync;
 import com.nordusk.webservices.HttpConnectionUrl;
 import com.nordusk.webservices.InsertDailyTraceAsync;
@@ -26,6 +27,7 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
     private AdapterHourlyAttendance adapterManagerTarget;
     private  String sp_id="";
     private String date="";
+    private  Prefs my_prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
             sp_id=getIntent().getStringExtra("id");
         if(getIntent().getStringExtra("date")!=null && getIntent().getStringExtra("date").length()>0)
             date=getIntent().getStringExtra("date");
+         my_prefs = new Prefs(this);
         initView();
         populateData();
     }
@@ -54,24 +57,25 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                try{
-                                    JSONObject jsonObject=new JSONObject();
-                                    JSONArray jsonArray=new JSONArray();
-                                    jsonObject.put("userId",sp_id);
-                                    List<DataObjectAttendance> list=adapterManagerTarget.getUpdateList();
-                                    if(list!=null && list.size()>0){
-                                        for(int i=0;i<list.size();i++){
-                                            JSONObject jsonObject1=new JSONObject();
-                                            jsonObject1.put("date_time",list.get(i).getDate());
-                                            jsonObject1.put("address",list.get(i).getLogin_addresss());
-                                            jsonObject1.put("latitude",list.get(i).getLogin_latitude());
-                                            jsonObject1.put("longitude",list.get(i).getLogin_longitutde());
-                                            jsonArray.put(i,jsonObject1);
+                                try {
+                                    JSONObject jsonObject = new JSONObject();
+                                    JSONArray jsonArray = new JSONArray();
+                                    jsonObject.put("userId", sp_id);
+                                    jsonObject.put("userName", my_prefs.getString("name", ""));
+                                    List<DataObjectAttendance> list = adapterManagerTarget.getUpdateList();
+                                    if (list != null && list.size() > 0) {
+                                        for (int i = 0; i < list.size(); i++) {
+                                            JSONObject jsonObject1 = new JSONObject();
+                                            jsonObject1.put("date_time", list.get(i).getDate());
+                                            jsonObject1.put("address", list.get(i).getLogin_addresss());
+                                            jsonObject1.put("latitude", list.get(i).getLogin_latitude());
+                                            jsonObject1.put("longitude", list.get(i).getLogin_longitutde());
+                                            jsonArray.put(i, jsonObject1);
                                         }
                                     }
-                                    jsonObject.put("list",jsonArray);
-                                    Log.e("Hourly Json",jsonObject.toString());
-                                    InsertDailyTraceAsync insertDailyTraceAsync=new InsertDailyTraceAsync(ListattendanceHourlyReport.this,jsonObject);
+                                    jsonObject.put("list", jsonArray);
+                                    Log.e("Hourly Json", jsonObject.toString());
+                                    InsertDailyTraceAsync insertDailyTraceAsync = new InsertDailyTraceAsync(ListattendanceHourlyReport.this, jsonObject);
                                     insertDailyTraceAsync.setOnContentListParserListner(new InsertDailyTraceAsync.OnContentListSchedules() {
                                         @Override
                                         public void OnSuccess(String message) {

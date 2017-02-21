@@ -176,12 +176,16 @@ public class GPSTracker extends Service implements LocationListener {
 
 
             }
+            if(complete_address.length()>50){
+                complete_address = complete_address.substring(0,50);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             return " ";
 
         }
-        return complete_address.substring(0,50);
+
+        return complete_address;
 
     }
 
