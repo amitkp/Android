@@ -26,6 +26,7 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
     private ListView list_counter_dis;
     private AdapterHourlyAttendance adapterManagerTarget;
     private  String sp_id="";
+    private String userName="";
     private String date="";
     private  Prefs my_prefs;
 
@@ -35,6 +36,8 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
         setContentView(R.layout.activity_list_counter_distributor);
         if(getIntent().getStringExtra("id")!=null && getIntent().getStringExtra("id").length()>0)
             sp_id=getIntent().getStringExtra("id");
+        if(getIntent().getStringExtra("userName")!=null && getIntent().getStringExtra("userName").length()>0)
+            userName=getIntent().getStringExtra("userName");
         if(getIntent().getStringExtra("date")!=null && getIntent().getStringExtra("date").length()>0)
             date=getIntent().getStringExtra("date");
          my_prefs = new Prefs(this);
@@ -61,20 +64,19 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
                                     JSONObject jsonObject = new JSONObject();
                                     JSONArray jsonArray = new JSONArray();
                                     jsonObject.put("userId", sp_id);
-                                    jsonObject.put("userName", my_prefs.getString("name", ""));
+                                    jsonObject.put("userName", userName);
                                     List<DataObjectAttendance> list = adapterManagerTarget.getUpdateList();
                                     if (list != null && list.size() > 0) {
                                         for (int i = 0; i < list.size(); i++) {
                                             JSONObject jsonObject1 = new JSONObject();
-                                            jsonObject1.put("date_time", list.get(i).getDate());
-                                            jsonObject1.put("address", list.get(i).getLogin_addresss());
-                                            jsonObject1.put("latitude", list.get(i).getLogin_latitude());
-                                            jsonObject1.put("longitude", list.get(i).getLogin_longitutde());
+                                            jsonObject1.put("date_time", isNull(list.get(i).getDate()));
+                                            jsonObject1.put("address", isNull(list.get(i).getLogin_addresss()));
+                                            jsonObject1.put("latitude", isNull(list.get(i).getLogin_latitude()));
+                                            jsonObject1.put("longitude", isNull(list.get(i).getLogin_longitutde()));
                                             jsonArray.put(i, jsonObject1);
                                         }
                                     }
                                     jsonObject.put("list", jsonArray);
-                                    Log.e("Hourly Json", jsonObject.toString());
                                     InsertDailyTraceAsync insertDailyTraceAsync = new InsertDailyTraceAsync(ListattendanceHourlyReport.this, jsonObject);
                                     insertDailyTraceAsync.setOnContentListParserListner(new InsertDailyTraceAsync.OnContentListSchedules() {
                                         @Override
@@ -124,6 +126,12 @@ public class ListattendanceHourlyReport extends AppCompatActivity {
 
     }
 
+    private String isNull(String data){
+        if(data == null)
+            return "";
+        else
+            return data;
+    }
     private void initView() {
 
         list_counter_dis = (ListView) findViewById(R.id.listView_counr_dis);

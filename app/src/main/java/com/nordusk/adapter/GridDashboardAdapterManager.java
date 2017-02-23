@@ -794,11 +794,12 @@ public class GridDashboardAdapterManager extends BaseAdapter {
 
     }
 
-
+private String  name = "";
     private void dailyTrackingReport() {
         final AutoCompleteTextView login_edtxt_emailmobile;
         final Button btn_save;
         final EditText et_date;
+
 
         final Dialog mDialog_SelectSelectAccount = new Dialog(mContext,
                 android.R.style.Theme_DeviceDefault_Light_Dialog);
@@ -851,7 +852,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String name = "";
+
                 name = parent.getItemAtPosition(position).toString();
                 for (int i = 0; i < Util.getUserList().size(); i++) {
                     if (name.equalsIgnoreCase(Util.getUserList().get(i).getName())) {
@@ -874,6 +875,7 @@ public class GridDashboardAdapterManager extends BaseAdapter {
                     Intent intent = new Intent(mContext, ListattendanceHourlyReport.class);
                     intent.putExtra("date", date);
                     intent.putExtra("id", sp_id);
+                    intent.putExtra("userName",name);
                     mContext.startActivity(intent);
 
                 } else {

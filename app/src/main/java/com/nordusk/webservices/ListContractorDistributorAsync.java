@@ -120,7 +120,6 @@ public class ListContractorDistributorAsync extends AsyncTask<Void, Void, Void> 
                         list.setName(HttpConnectionUrl.getJSONKeyvalue(object, "name"));
                         list.setImage(HttpConnectionUrl.getJSONKeyvalue(object, "image"));
                         arrayList.add(list);
-                        Log.e("Space","-"+name);
                     }
                 }
 

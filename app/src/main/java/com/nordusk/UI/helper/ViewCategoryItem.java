@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +36,7 @@ public class ViewCategoryItem extends FrameLayout {
 
     ArrayList<String> listcategory = new ArrayList<String>();
     private ArrayList<DataProduct> listProducts=new ArrayList<DataProduct>();
+    private String desc = "";
     private  Context context;
 
     public ViewCategoryItem(Context context, ArrayList<String> listcategory ,ArrayList<DataProduct> listProducts) {
@@ -125,6 +127,10 @@ public class ViewCategoryItem extends FrameLayout {
 
     public String getProductName(){
         return listcategory.get(spinner_category.getSelectedItemPosition()).toLowerCase();
+    }
+
+    public String getProductDesc(){
+        return listProducts.get(spinner_product.getSelectedItemPosition()).getDescription();
     }
 
     public String getProductPrice(){

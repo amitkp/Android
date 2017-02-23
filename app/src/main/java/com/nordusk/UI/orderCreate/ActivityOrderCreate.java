@@ -363,6 +363,11 @@ public class ActivityOrderCreate extends AppCompatActivity implements OrderCreat
     }
 
     @Override
+    public String getProductDesc(int childPos) {
+        return ((ViewCategoryItem) ll_container.getChildAt(childPos)).getProductDesc();
+    }
+
+    @Override
     public String getProductName(int childPos) {
         return ((ViewCategoryItem) ll_container.getChildAt(childPos)).getProductName();
     }

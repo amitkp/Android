@@ -19,6 +19,7 @@ public interface OrderCreatePresenter {
     }
     interface OnNotifyUiListener{
         void onAddProductItem(ArrayList<DataProducts> mListProducts);
+        String getProductDesc(int childPos);
         String getProductName(int childPos);
         String getProductId(int childPos);
         String getProductPrice(int childPos);

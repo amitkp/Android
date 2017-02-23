@@ -105,8 +105,14 @@ mInteractor.onHideLoader();
         RestCallback.OrderCreateCallback mLoginCallback = mRetrofit.create(RestCallback.OrderCreateCallback.class);
 
         try {
-            String url = "http://dynamicsglobal.net/app/order_create.php?created_by=" + userId +
+            /*String url = "http://dynamicsglobal.net/app/order_create.php?created_by=" + userId +
                     "&product_name=" + getProductNames(childCount).replaceAll(" ","%20") + "&product_id=" +
+                    getProductId(childCount) + "&price=" + getProductPrice(childCount) + "&quantity=" +
+                    getProductQty(childCount) + "&order_for=" + Util.ORDER_FOR + "&order_for_type=" + Util.ORDER_FOR_TYPE
+                    +"&latitude=" + lat + "&longitude=" + lon;*/
+
+            String url = "http://dynamicsglobal.net/app/order_create.php?created_by=" + userId +
+                    "&product_name=" + getProductDesc(childCount).replaceAll(" ","%20") + "&product_id=" +
                     getProductId(childCount) + "&price=" + getProductPrice(childCount) + "&quantity=" +
                     getProductQty(childCount) + "&order_for=" + Util.ORDER_FOR + "&order_for_type=" + Util.ORDER_FOR_TYPE
                     +"&latitude=" + lat + "&longitude=" + lon;
@@ -162,6 +168,17 @@ mInteractor.onHideLoader();
             mInteractor.onHideLoader();
             mInteractor.onCreateOrderFailure();
         }
+    }
+
+    private String getProductDesc(int count) {
+        StringBuilder mProductDesc = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            if (i != 0) {
+                mProductDesc.append("|");
+            }
+            mProductDesc.append(mInteractor.getProductDesc(i));
+        }
+        return mProductDesc.toString();
     }
 
     private String getProductNames(int count) {
